@@ -1,0 +1,9 @@
+#date:required:invalid::-webkit-datetime-edit {
+    color: transparent !important;
+}
+#date:focus::-webkit-datetime-edit {
+    color: black !important;
+}
+#date::placeholder {
+    color: transparent !important;
+  }
