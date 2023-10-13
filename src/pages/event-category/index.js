@@ -14,7 +14,8 @@ import {ItemSearch} from "@/custom-components/items/item-search";
 import {useItemsIds, useItemsStore} from "@/utils/item-filters";
 
 const Page = () => {
-    const customersStore = useItemsStore();
+    let location = window.location.href.split("/")[3];
+    const customersStore = useItemsStore(location);
     const customersIds = useItemsIds(customersStore.customers);
     const customersSelection = useSelection(customersIds);
     const router = useRouter();
@@ -102,22 +103,19 @@ const Page = () => {
                                 isActive={customersStore.isActive}
                             />
                             <ItemsTable
+                                location={location}
                                 isActive={customersStore.isActive}
                                 hasMore={customersStore.hasMore}
                                 getCustomers={customersStore.handleCustomersGet}
                                 sortOn={customersStore.sortOn}
-                                onChangeSort={customersStore.onChangeSort}
+                                sortOrder={customersStore.sortOrder}
+                                handleSort={customersStore.handleSort}
                                 count={customersStore.customersCount}
                                 items={customersStore.customers}
                                 onDeselectAll={customersSelection.handleDeselectAll}
                                 onDeselectOne={customersSelection.handleDeselectOne}
                                 onRowsPerPageChange={(e) => {
-                                    // console.log(e.target.value);
                                     customersStore.setRowsPerPage(+e.target.value);
-                                    // customersStore.handleCustomersGet(
-                                    //   customersStore.page,
-                                    //   +e.target.value
-                                    // );
                                 }} onSelectAll={customersSelection.handleSelectAll}
                                 onSelectOne={customersSelection.handleSelectOne}
                                 page={customersStore.page}

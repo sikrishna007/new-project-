@@ -20,7 +20,7 @@ import {RouterLink} from 'src/components/router-link';
 import {paths} from 'src/paths';
 import {SeverityPill} from "@/components/severity-pill";
 import {TableContainer, TableSortLabel} from "@mui/material";
-import {ToggleOffOutlined, ToggleOnOutlined} from "@mui/icons-material";
+import {ArrowDownward, ArrowUpward, ToggleOffOutlined, ToggleOnOutlined} from "@mui/icons-material";
 import CommonDialog from "../CommonDialog";
 import * as React from "react";
 import {useState} from "react";
@@ -30,6 +30,7 @@ import Tooltip from "@mui/material/Tooltip";
 import Cookies from "js-cookie";
 import {patchMethod} from "@/utils/util";
 import {status} from "nprogress";
+import {visuallyHidden} from "@mui/utils";
 
 const getTableHeaders = () => {
     let location = window.location.href.split("/")[4];
@@ -208,6 +209,11 @@ export const CustomerTable = (props) => {
                                         onClick={() => handleSort(header.key)}
                                     >
                                         {header.label}
+                                        {sortOn ===  header.key ? (
+                                            <Box component="span" sx={visuallyHidden}>
+                                                {sortOrder === 'desc' ? 'sorted descending' : 'sorted ascending'}
+                                            </Box>
+                                        ) : null}
                                     </TableSortLabel>
                                 </TableCell>
                             ))}

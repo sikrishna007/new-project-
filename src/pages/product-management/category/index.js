@@ -19,7 +19,8 @@ import {useItemsIds, useItemsStore} from "@/utils/item-filters";
 
 
 const Page = () => {
-    const customersStore = useItemsStore();
+    let location = window.location.href.split("/")[4];
+    const customersStore = useItemsStore(location);
     const customersIds = useItemsIds(customersStore.customers);
     const customersSelection = useSelection(customersIds);
 
@@ -57,20 +58,19 @@ const Page = () => {
                             <ItemSearch
                                 onChangeActive={customersStore.onChangeActive}
                                 isActive={customersStore.isActive}
-                                sortBy={customersSearch.state.sortBy}
-                                sortDir={customersSearch.state.sortDir}
                             />
                             <ItemsTable
+                                location={location}
                                 isActive={customersStore.isActive}
                                 hasMore={customersStore.hasMore}
                                 getCustomers={customersStore.handleCustomersGet}
                                 sortOn={customersStore.sortOn}
-                                onChangeSort={customersStore.onChangeSort}
+                                sortOrder={customersStore.sortOrder}
+                                handleSort={customersStore.handleSort}
                                 count={customersStore.customersCount}
                                 items={customersStore.customers}
                                 onDeselectAll={customersSelection.handleDeselectAll}
                                 onDeselectOne={customersSelection.handleDeselectOne}
-                                onPageChange={customersSearch.handlePageChange}
                                 onRowsPerPageChange={(e) => {
                                     customersStore.setRowsPerPage(+e.target.value);
                                 }} onSelectAll={customersSelection.handleSelectAll}

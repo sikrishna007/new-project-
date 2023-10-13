@@ -227,24 +227,24 @@ const Page = () => {
                                                     onRemoveAll={handleFilesRemoveAll}
                                                     disabled
                                                 />
-                                            </Grid>
-                                            <Grid xs={12} md={8}>
-                                                <Stack spacing={3}>
+                                                <Grid mt={5} xs={12} md={8}>
                                                     <TextField
                                                         error={
-                                                            !!(formik.touched.name && formik.errors.name)
+                                                            !!(formik.touched.longDescription && formik.errors.longDescription)
                                                         }
                                                         fullWidth
                                                         helperText={
-                                                            formik.touched.name && formik.errors.name
+                                                            formik.touched.longDescription && formik.errors.longDescription
                                                         }
-                                                        label="Event Category Name"
-                                                        name="name"
+                                                        label="Description"
+                                                        name="longDescription"
+                                                        multiline
+                                                        rows={6}
                                                         onBlur={formik.handleBlur}
                                                         onChange={formik.handleChange}
-                                                        value={formik.values.name}
+                                                        value={formik.values.longDescription}
                                                     />
-                                                </Stack>
+                                                </Grid>
                                             </Grid>
                                         </Grid>
                                     </CardContent>

@@ -25,36 +25,8 @@ import Cookies from "js-cookie";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import ArrowRightSharpIcon from '@mui/icons-material/ArrowRightSharp';
 
-const Page = () => {
+const Page = ({category}) => {
     const router = useRouter();
-    // console.log(router.query);
-    const [category, setCategory] = useState({});
-
-    const getCategory = async () => {
-        try {
-            const token = Cookies.get("accessToken")
-            const res = await fetch(
-                process.env.NEXT_PUBLIC_BASE_URL +
-                endpoints.eventCategories.index +
-                "/" +
-                router.query.id,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
-            const {data} = await res.json();
-            setCategory(data[0]);
-            // console.log(data);
-        } catch (error) {
-            // console.log(error);
-        }
-    };
-
-    useEffect(() => {
-        getCategory();
-    }, []);
 
     return (
         <>
@@ -195,6 +167,35 @@ const Page = () => {
             </Box>
         </>
     );
+};
+
+export const getServerSideProps = async (context) => {
+    const token = context.req.cookies.accessToken;
+    const res = await fetch(
+        process.env.NEXT_PUBLIC_BASE_URL +
+        endpoints.eventCategories.index +
+        "/" +
+        context.params.id,
+        {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        }
+    );
+    if (!res.ok) {
+        return {
+            props: {
+                category: {},
+
+            },
+        };
+    }
+    const {data} = await res.json();
+    return {
+        props: {
+            category: data[0],
+        },
+    };
 };
 
 Page.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;

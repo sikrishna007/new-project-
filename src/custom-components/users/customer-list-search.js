@@ -57,9 +57,7 @@ export const CustomerListSearch = (props) => {
             filteredRoles=[defaultRole,...filteredRoles]
             setRoles(filteredRoles)
         } else if (location === "vendors") {
-            let filteredRoles = roles.filter(role => {
-                return role.name === "VENDOR";
-            });
+            let filteredRoles = []
 
             setRoles(filteredRoles)
         } else {

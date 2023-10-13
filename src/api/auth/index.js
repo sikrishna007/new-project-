@@ -59,10 +59,14 @@ class AuthApi {
           return;
         }
         const data = await response.json();
-        resolve({ accessToken: data.token, user: data.employee });
+        const decode=jwtDecode(data.token)
+        if (decode.Role ==="VENDOR"){
+        resolve({ accessToken: data.token, user: data.vendors });}
+
+        else {
+          resolve({ accessToken: data.token, user: data.employee })
+        }
       } catch (err) {
-        // console.log("hi");
-        // console.error("[Auth Api]: ", err);
         reject(new Error("Internal server error"));
       }
     });

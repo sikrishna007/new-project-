@@ -208,7 +208,6 @@ const MapComponent = (props) => {
         formik.values.addressLine2 = address.addressLine2 ? address.addressLine2 : "";
         formik.values.pincode = address.pincode ? address.pincode:""
         setTest(formik.values.city)
-        console.log(formik.values)
     }
 
     const handleGetCurrentLocation = () => {

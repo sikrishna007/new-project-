@@ -7,7 +7,7 @@ import Stack from "@mui/material/Stack";
 import Checkbox from "@mui/material/Checkbox";
 import Button from "@mui/material/Button";
 import CommonDialog from "@/custom-components/CommonDialog";
-import {TableContainer} from "@mui/material";
+import {TableContainer, TableSortLabel} from "@mui/material";
 import Table from "@mui/material/Table";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
@@ -23,38 +23,35 @@ import Edit02Icon from "@untitled-ui/icons-react/build/esm/Edit02";
 import {ToggleOffOutlined, ToggleOnOutlined} from "@mui/icons-material";
 import ArrowRightIcon from "@untitled-ui/icons-react/build/esm/ArrowRight";
 import TablePagination from "@mui/material/TablePagination";
+import {visuallyHidden} from "@mui/utils";
 
 const getTableHeaders = () => {
     let location = window.location.href.split("/")[4];
-    if (location === 'event-category') {
+    if (location === 'category') {
         return [
             {key:"name",label:"Name"},
             {key:"createdAt",label:"Created"},
             {key:"updatedAt",label:"Updated"},
         ];
-    } else if (location === 'customers') {
+    } else if (location === 'subCategory') {
         return [
-            "Name",
-            "Business Name",
-            "Email",
-            "Phone",
-            "Role",
-            "Created",
-            "Updated",
+            {key:"name",label:"Name"},
+            {key:"offeringCategories.name",label: "Category"},
+            {key:"createdAt",label:"Created"},
+            {key:"updatedAt",label:"Updated"},
         ];
     } else {
         // Default headers
         return [
-            "Name",
-            "Created",
-            "Updated",
+            {key:"name",label:"Name"},
+            {key:"createdAt",label:"Created"},
+            {key:"updatedAt",label:"Updated"},
         ];
     }
 };
 
 export const ItemsTable = (props) => {
     const [status, setStatus] = useState("");
-    let location = window.location.href.split("/")[4];
     const {
         count = 0,
         items = [],
@@ -63,7 +60,10 @@ export const ItemsTable = (props) => {
         onRowsPerPageChange,
         onSelectAll,
         onSelectOne,
-        role,
+        location,
+        sortOn,
+        sortOrder,
+        handleSort,
         page = 0,
         rowsPerPage = 0,
         selected = [],
@@ -184,7 +184,18 @@ export const ItemsTable = (props) => {
                             </TableCell>
                             {tableHeaders.map((header, index) => (
                                 <TableCell key={index} sx={{ textAlign: "left" }}>
-                                    {header}
+                                    <TableSortLabel
+                                        active={sortOn === header.key}
+                                        direction={sortOn === header.key ? sortOrder : 'asc'}
+                                        onClick={() => handleSort(header.key)}
+                                    >
+                                        {header.label}
+                                        {sortOn ===  header.key ? (
+                                            <Box component="span" sx={visuallyHidden}>
+                                                {sortOrder === 'desc' ? 'sorted descending' : 'sorted ascending'}
+                                            </Box>
+                                        ) : null}
+                                    </TableSortLabel>
                                 </TableCell>
                             ))}
                             <TableCell sx={{textAlign: "left"}}>Status</TableCell>
@@ -217,12 +228,17 @@ export const ItemsTable = (props) => {
                                                 <Link
                                                     color="inherit"
                                                     variant="subtitle2"
+                                                    component={RouterLink}
+                                                    href={`${location}/${eventCategory.id}`}
                                                 >
                                                     {eventCategory.name && eventCategory.name.charAt(0).toUpperCase() + eventCategory.name.slice(1)}
                                                 </Link>
                                             </div>
                                         </Tooltip>
                                     </TableCell>
+                                    { location !== 'subCategory' ? "":<TableCell sx={{textAlign: "left"}}>
+                                        {eventCategory.offeringCategories?.name}
+                                    </TableCell>}
                                     <TableCell sx={{textAlign: "left"}}>
                                         {new Date(eventCategory?.createdAt).toLocaleDateString(undefined, {
                                             day: "2-digit",
@@ -263,6 +279,8 @@ export const ItemsTable = (props) => {
                                     }}>
                                         <Tooltip title="Edit">
                                             <IconButton
+                                                component={RouterLink}
+                                                href={`${location}/edit/${eventCategory.id}`}
                                                 disabled={!eventCategory?.isActive}
                                                 >
                                                 <SvgIcon>
@@ -311,6 +329,8 @@ export const ItemsTable = (props) => {
 
                                         <Tooltip title="View">
                                             <IconButton
+                                                component={RouterLink}
+                                                href={`${location}/${eventCategory.id}`}
                                                  >
                                                 <SvgIcon>
                                                     <ArrowRightIcon/>

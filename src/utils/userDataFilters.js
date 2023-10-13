@@ -8,8 +8,8 @@ import {getList} from "@/utils/util";
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [isActive, setIsActive] = useState("");
     const [role, setRole] = useState("")
-    const [sortOn, setSortOn] = useState("UpdatedAt");
-    const [sortOrder, setSortOrder] = useState("desc")
+    const [sortOn, setSortOn] = useState("");
+    const [sortOrder, setSortOrder] = useState("")
     const [state, setState] = useState({
         customers: [],
         customersCount: 0,
@@ -17,7 +17,8 @@ import {getList} from "@/utils/util";
 
 
 
-     const handleCustomersGet = useCallback(async (page = 0, limit = 10, isActive = "", role = "", sorton = "updatedAt", sortOrder = "desc") => {
+     const handleCustomersGet = useCallback(async (page = 0, limit = 10, isActive = "", role = "", sortOn = "updatedAt", sortOrder = "desc") => {
+         if(sortOn ===""){sortOn="updatedAt";sortOrder="desc"}
          const getEndpoint=(location)=> {
              let endpoint;
 
@@ -25,14 +26,14 @@ import {getList} from "@/utils/util";
 
                  case 'employees':
                      if (role) {
-                         endpoint = `${endpoints.userManagement.employees.index}?pageNo=${page}&pageSize=${limit}&isActive=${isActive}&roleName=${role}&sortOn=updatedAt&sortOrder=desc`;
+                         endpoint = `${endpoints.userManagement.employees.index}?pageNo=${page}&pageSize=${limit}&isActive=${isActive}&roleName=${role}&sortOn=${sortOn}&sortOrder=${sortOrder}`;
                      } else {
-                         endpoint = `${endpoints.userManagement.employees.index}?pageNo=${page}&pageSize=${limit}&isActive=${isActive}&sortOn=updatedAt&sortOrder=desc`;
+                         endpoint = `${endpoints.userManagement.employees.index}?pageNo=${page}&pageSize=${limit}&isActive=${isActive}&sortOn=${sortOn}&sortOrder=${sortOrder}`;
                      }
                      break;
 
                  case 'customers':
-                     endpoint = `${endpoints.userManagement.customers.index}?pageNo=${page}&pageSize=${limit}&sortOn=${sorton}&isActive=${isActive}&isBusinessCustomer=${role}&sortOrder=${sortOrder}`;
+                     endpoint = `${endpoints.userManagement.customers.index}?pageNo=${page}&pageSize=${limit}&sortOn=${sortOn}&isActive=${isActive}&isBusinessCustomer=${role}&sortOrder=${sortOrder}`;
                      break;
 
                  default: // Assuming 'vendors' as the default case
@@ -48,6 +49,8 @@ import {getList} from "@/utils/util";
             customersCount: data.totalElements,
             hasMore: data.hasMore,
             isActive: isActive,
+            sortOn:sortOn,
+            sortOrder:sortOrder,
             role: role
         });
 

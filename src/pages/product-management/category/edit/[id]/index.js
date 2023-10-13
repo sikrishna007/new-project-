@@ -199,7 +199,24 @@ const Page = ({ category }) => {
                               onRemoveAll={handleFilesRemoveAll}
                               disabled
                           />
-
+                          <Grid mt={5} xs={12} md={8}>
+                            <TextField
+                                error={
+                                  !!(formik.touched.longDescription && formik.errors.longDescription)
+                                }
+                                fullWidth
+                                helperText={
+                                    formik.touched.longDescription && formik.errors.longDescription
+                                }
+                                label="Description"
+                                name="longDescription"
+                                multiline
+                                rows={6}
+                                onBlur={formik.handleBlur}
+                                onChange={formik.handleChange}
+                                value={formik.values.longDescription}
+                            />
+                          </Grid>
                         </Grid>
                       </Grid>
                     </CardContent>

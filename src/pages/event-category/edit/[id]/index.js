@@ -219,33 +219,24 @@ const Page = ({category}) => {
                                                     onRemoveAll={handleFilesRemoveAll}
                                                     disabled
                                                 />
-                                                <div style={{marginTop: "5%"}}>
-                                                    <Typography
-                                                        color="text.secondary"
-                                                        sx={{mb: 2}}
-                                                        variant="subtitle2"
-                                                    >
-                                                        Description (Optional)
-                                                    </Typography>
-                                                    <QuillEditor
-                                                        onChange={(value) => {
-                                                            formik.setFieldValue("longDescription", value);
-                                                        }}
-                                                        placeholder="Write something"
-                                                        sx={{height: 400}}
+                                                <Grid mt={5} xs={12} md={8}>
+                                                    <TextField
+                                                        error={
+                                                            !!(formik.touched.longDescription && formik.errors.longDescription)
+                                                        }
+                                                        fullWidth
+                                                        helperText={
+                                                            formik.touched.longDescription && formik.errors.longDescription
+                                                        }
+                                                        label="Description"
+                                                        name="longDescription"
+                                                        multiline
+                                                        rows={6}
+                                                        onBlur={formik.handleBlur}
+                                                        onChange={formik.handleChange}
                                                         value={formik.values.longDescription}
                                                     />
-                                                    {!!(
-                                                        formik.touched.longDescription &&
-                                                        formik.errors.longDescription
-                                                    ) && (
-                                                        <Box sx={{mt: 2}}>
-                                                            <FormHelperText error>
-                                                                {formik.errors.longDescription}
-                                                            </FormHelperText>
-                                                        </Box>
-                                                    )}
-                                                </div>
+                                                </Grid>
                                             </Grid>
                                         </Grid>
                                     </CardContent>

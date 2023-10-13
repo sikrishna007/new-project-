@@ -5,6 +5,23 @@ import toast from "react-hot-toast";
 
 let token = Cookies.get("accessToken");
 
+export const handleGetById = async (id,path) => {
+      try {
+        const response = await fetch(
+            process.env.NEXT_PUBLIC_BASE_URL +
+            path + "/" + id,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+        );
+        const data = await response.json();
+        return data.data
+      } catch (err) {
+        console.error(err);
+      }
+    };
 export const patchMethod = async (id, temp, path) => {
     try {
         let jsonString = JSON.stringify({isActive: temp});
