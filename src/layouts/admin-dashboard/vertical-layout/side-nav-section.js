@@ -15,7 +15,7 @@ const renderItems = ({ depth = 0, items, pathname }) => items.reduce((acc,
 const reduceChildRoutes = ({ acc, depth, item, pathname }) => {
   const checkPath = !!(item.path && pathname);
   const partialMatch = checkPath ? pathname.includes(item.path) : false;
-  const exactMatch = checkPath ? pathname === item.path : false;
+  const exactMatch = checkPath ? pathname.includes(item.path) : false;
 
   if (item.items) {
     acc.push(
