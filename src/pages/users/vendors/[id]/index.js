@@ -75,7 +75,7 @@ const Page = ({vendor}) => {
                                 {vendor?.isVerified ? (
                                         <SeverityPill color="success"><VerifiedIcon/> VERIFIED</SeverityPill>) :
                                     (vendor?.isRejected ? (<SeverityPill
-                                        color="error"><Block/> REJECT</SeverityPill>) : (
+                                        color="error"><Block/> REJECTED</SeverityPill>) : (
                                         <SeverityPill
                                             color="warning"><Pending/> PENDING</SeverityPill>))}
                                 {vendor?.isActive ? (

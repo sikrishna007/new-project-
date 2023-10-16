@@ -75,7 +75,7 @@ const Page = ({customer}) => {
                                 {customer.isBusinessCustomer ? (customer?.isVerified ? (
                                         <SeverityPill color="success"><VerifiedIcon/> VERIFIED</SeverityPill>) :
                                     (customer?.isRejected ? (<SeverityPill
-                                        color="error"><Block/> REJECT</SeverityPill>) : (
+                                        color="error"><Block/> REJECTED</SeverityPill>) : (
                                         <SeverityPill
                                             color="warning"><Pending/> PENDING</SeverityPill>))):""}
                                 {customer?.isActive ? (
