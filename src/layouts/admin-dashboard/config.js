@@ -177,7 +177,14 @@ export const useSections = () => {
                   <SvgIcon fontSize="small">
                     <Inventory/>
                   </SvgIcon>
-              )
+              ),
+              items: [
+
+                {
+                  title: t(tokens.nav.products),
+                  path: paths.productManagement.products.index,
+                },
+              ],
             }
           ]
         }

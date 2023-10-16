@@ -25,10 +25,11 @@ import Breadcrumbs from "@mui/material/Breadcrumbs";
 import ArrowRightSharpIcon from "@mui/icons-material/ArrowRightSharp";
 import React from "react";
 import {SeverityPill} from "@/components/severity-pill";
+import Cookies from "js-cookie";
 
 
 const Page = ({vendor}) => {
-    // console.log(address)
+    let role = Cookies.get("role");
     const router = useRouter();
     return (
         <>
@@ -58,17 +59,26 @@ const Page = ({vendor}) => {
                                     display: "flex"
                                 }}
                             >
-                                <Link
+
+                                {role === "VENDOR" ? <Link
+                                    color="text.primary"
+                                    component={RouterLink}
+                                    href={paths.dashboard.index}
+                                    underline="hover"
+                                    >
+                                    <SvgIcon sx={{marginTop: "10px"}}>
+                                    <ArrowLeftIcon/>
+                                    </SvgIcon>
+                                    </Link> : <Link
                                     color="text.primary"
                                     component={RouterLink}
                                     href={paths.userManagement.vendors.index}
-
                                     underline="hover"
                                 >
                                     <SvgIcon sx={{marginTop: "10px"}}>
                                         <ArrowLeftIcon/>
                                     </SvgIcon>
-                                </Link>
+                                </Link>}
                                 <Typography variant="h4">User Information</Typography>
                             </div>
                             <Stack direction="row" spacing={2} >

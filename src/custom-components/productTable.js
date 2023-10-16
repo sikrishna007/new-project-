@@ -33,7 +33,7 @@ import {patchMethod} from "@/utils/util";
 
 export const ProductTable = (props) => {
     // const router = useRouter()
-
+    let role = Cookies.get("role");
     const activate_deactivate = async (id, temp) => {
         const path = endpoints.product.index
         const json = await patchMethod(id,temp,path)
@@ -347,7 +347,7 @@ export const ProductTable = (props) => {
                                             backgroundColor: "#F5f5f5",
                                         },
                                     }}>
-                                        <Tooltip title="Edit">
+                                        {role ==="VENDOR" ?"":<Tooltip title="Edit">
                                             <IconButton
                                                 disabled={!product?.isActive}
                                                 component={RouterLink}
@@ -357,7 +357,7 @@ export const ProductTable = (props) => {
                                                     <Edit02Icon/>
                                                 </SvgIcon>
                                             </IconButton>
-                                        </Tooltip>
+                                        </Tooltip>}
                                         {product?.isActive ? (
                                             <Tooltip title="Deactivate">
                                                 <IconButton

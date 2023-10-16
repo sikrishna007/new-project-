@@ -15,10 +15,12 @@ import {RouterLink} from "@/components/router-link";
 import {paths} from "@/paths";
 import Button from "@mui/material/Button";
 import {Link} from "@mui/material";
+import Cookies from "js-cookie";
 
 
 const Page = () => {
     let location = window.location.href.split("/")[4];
+    let role = Cookies.get("role");
     const customersStore = useItemsStore(location);
     const customersIds = useCustomersIds(customersStore.customers);
     const customersSelection = useSelection(customersIds);
@@ -96,7 +98,10 @@ const Page = () => {
                                 direction="row"
                                 spacing={3}
                             >
-                                <Link
+                                {role ==="VENDOR" ?"":
+
+
+                                    <Link
                                     component={RouterLink}
                                     href={paths.productManagement.products.index + "/add"}
                                 >
@@ -105,7 +110,7 @@ const Page = () => {
                                     >
                                         Create New
                                     </Button>
-                                </Link>
+                                </Link>}
                             </Stack>
                         </Stack>
 

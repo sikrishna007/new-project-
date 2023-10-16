@@ -17,12 +17,12 @@ export const useItemsStore = ( location) => {
         if(sortOn ===""){sortOn="updatedAt";sortOrder="desc"}
         const getEndpoint=(location)=> {
             let endpoint;
-            console.log(location)
-            switch (location) {
+            let role = Cookies.get("role")
+            if(role !== "VENDOR"){ switch (location) {
 
                 case 'category':
 
-                        endpoint = `${endpoints.category.index}?pageNo=${page}&pageSize=${limit}&isActive=${isActive}&sortOn=${sortOn}&sortOrder=${sortOrder}`;
+                    endpoint = `${endpoints.category.index}?pageNo=${page}&pageSize=${limit}&isActive=${isActive}&sortOn=${sortOn}&sortOrder=${sortOrder}`;
                     break;
                 case 'hsn':
                     endpoint = `${endpoints.hsnSac.index}?pageNo=${page}&pageSize=${limit}&isHsn=true&isActive=true&sortOn=${sortOn}&sortOrder=${sortOrder}`;
@@ -39,6 +39,10 @@ export const useItemsStore = ( location) => {
                     break;
                 default: // Assuming 'vendors' as the default case
                     endpoint = `${endpoints.product.index}?pageNo=${page}&pageSize=${limit}&isActive=${isActive}&sortOn=${sortOn}`;
+            }}
+           else{
+               let id = Cookies.get("id")
+                endpoint = `/offerings/vendor/${id}`;
             }
             return endpoint
         }
