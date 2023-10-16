@@ -148,8 +148,8 @@ const Page = ({product, vendor}) => {
                                     </Grid>
                                     <Grid xs={12} md={4}>
                                         <PropertyListItem
-                                            label="HSN Code"
-                                            value={product.hsnSacCode}
+                                            label="HSN/SAC Code"
+                                            value={product.hsnSacCode?.code}
                                         />
                                     </Grid>
                                     <Grid xs={12} md={4}>
@@ -253,19 +253,19 @@ const Page = ({product, vendor}) => {
                                     <Grid xs={12} md={3}>
                                         <PropertyListItem
                                             label="SGST"
-                                            value={product.sgst + "%"}
+                                            value={product.hsnSacCode?.sgstPercentage + "%"}
                                         />
                                     </Grid>
                                     <Grid xs={12} md={3}>
                                         <PropertyListItem
                                             label="CGST"
-                                            value={product.cgst + "%"}
+                                            value={product.hsnSacCode?.cgstPercentage + "%"}
                                         />
                                     </Grid>
                                     <Grid xs={12} md={3}>
                                         <PropertyListItem
                                             label="IGST"
-                                            value={product.igst + "%"}
+                                            value={product.hsnSacCode?.igstPercentage + "%"}
                                         />
                                     </Grid>
                                     <Grid xs={12} md={3}></Grid>

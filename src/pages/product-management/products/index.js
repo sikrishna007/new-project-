@@ -27,7 +27,7 @@ const Page = () => {
 
     return (
         <>
-            <Seo title="Settings: Categories List"/>
+            <Seo title="Product Management: Products List"/>
             <Box
                 component="main"
                 sx={{

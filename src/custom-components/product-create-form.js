@@ -107,10 +107,7 @@ export const ProductCreateForm = (props) => {
         // }
         // console.log(formik.errors);
         const newArray = selectedEvent.map((obj) => ({id: obj.id}));
-
         try {
-            // console.log(formik.values);
-            // console.log("Testing!!!!")
             let token = Cookies.get("accessToken")
             const response = await fetch(
                 process.env.NEXT_PUBLIC_BASE_URL + endpoints.product.index,
@@ -133,10 +130,7 @@ export const ProductCreateForm = (props) => {
                         vendorPrice: formik.values.vendorShare,
                         unitPrice: (parseFloat(formik.values.organizationShare || 0)) + (parseFloat(formik.values.vendorShare || 0)),
                         discountPrice: formik.values.costPrice,
-                        sgst: formik.values.sgst,
-                        cgst: formik.values.cgst,
-                        igst: formik.values.igst,
-                        hsnSacCode: formik.values.hsnSacCode,
+                        hsnSacCode: {id:formik.values.hsnSacCode.id},
                         unitOfMeasurement: {
                             id: "1"
                         },
@@ -243,21 +237,6 @@ export const ProductCreateForm = (props) => {
             );
             const data = await response.json();
             setVendors(data.data);
-
-            const hsnSacCodes = await fetch(
-                process.env.NEXT_PUBLIC_BASE_URL +
-                endpoints.hsnSac.index +
-                `?pageNo=0&pageSize=50&isActive=true&sortOn=createdBy&sortOrder=desc`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
-            const {data: hsnSacCodesData} = await hsnSacCodes.json();
-            setHsnSacCodes(hsnSacCodesData);
-
-
             const eventCategories = await fetch(
                 process.env.NEXT_PUBLIC_BASE_URL + endpoints.eventCategories.index +
                 `?pageNo=0&pageSize=50&isActive=true&sortOn=createdBy&sortOrder=desc`,
@@ -268,7 +247,7 @@ export const ProductCreateForm = (props) => {
                 }
             );
             const {data: eventCategoriesData} = await eventCategories.json();
-            setEventCategories(eventCategoriesData);
+            setAvailableEventCategories(eventCategoriesData);
 
         } catch (err) {
             console.error(err);
@@ -284,7 +263,7 @@ export const ProductCreateForm = (props) => {
         if (selectedHsnCode) {
             formik.setValues({
                 ...formik.values,
-                hsnSacCode: selectedHsnCode.code,
+                hsnSacCode: selectedHsnCode,
                 cgst: selectedHsnCode.cgstPercentage,
                 sgst: selectedHsnCode.sgstPercentage,
                 igst: selectedHsnCode.igstPercentage,
@@ -295,7 +274,7 @@ export const ProductCreateForm = (props) => {
         if (selectedSacCode) {
             formik.setValues({
                 ...formik.values,
-                hsnSacCode: selectedSacCode.code,
+                hsnSacCode: selectedSacCode,
                 cgst: selectedSacCode.cgstPercentage,
                 sgst: selectedSacCode.sgstPercentage,
                 igst: selectedSacCode.igstPercentage,
@@ -322,7 +301,7 @@ export const ProductCreateForm = (props) => {
         setSubCategories(subCategoryData);
     }
 
-    const [isGoods, setIsGoods] = useState(true);
+    const [isGoods, setIsGoods] = useState(null);
 
     const [showHSNDropdown, setShowHSNDropdown] = useState(true);
     const [showSACDropdown, setShowSACDropdown] = useState(false);
@@ -335,8 +314,25 @@ export const ProductCreateForm = (props) => {
         setCategories(result.hits);
     }
 
+    const getHsnSacCodes = async (isHsn)=>{
+        let token = Cookies.get("accessToken");
+        const hsnSacCodes = await fetch(
+            process.env.NEXT_PUBLIC_BASE_URL +
+            endpoints.hsnSac.index +
+            `?pageNo=0&pageSize=100&isHsn=${isHsn}&isActive=true&sortOn=createdBy&sortOrder=desc`,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+        const {data: hsnSacCodesData} = await hsnSacCodes.json();
+        setHsnSacCodes(hsnSacCodesData);
+    }
+
     const handleRadioChange = (event) => {
-        const selectedValue = event.target.value === 'true';
+        const selectedValue = event.target.value;
+        getHsnSacCodes(selectedValue)
         setIsGoods(selectedValue);
         setShowHSNDropdown(selectedValue); // Show HSN dropdown for "Goods"
         setShowSACDropdown(!selectedValue); // Show SAC dropdown for "Service"
@@ -380,12 +376,12 @@ export const ProductCreateForm = (props) => {
                                         row
                                     >
                                         <FormControlLabel
-                                            value="true"
+                                            value={true}
                                             control={<Radio/>}
                                             label="Goods"
                                         />
                                         <FormControlLabel
-                                            value="false"
+                                            value={false}
                                             control={<Radio/>}
                                             label="Service"
                                         />
@@ -394,7 +390,7 @@ export const ProductCreateForm = (props) => {
 
                                 {showHSNDropdown && (
                                     <Autocomplete
-                                        options={hsnSacCodes.filter((option) => option.isHsn)}
+                                        options={hsnSacCodes}
                                         getOptionLabel={(option) => option.code}
                                         renderInput={(params) => (
                                             <TextField {...params} label="Select Hsn Codes"/>
@@ -407,7 +403,7 @@ export const ProductCreateForm = (props) => {
 
                                 {showSACDropdown && (
                                     <Autocomplete
-                                        options={hsnSacCodes.filter((option) => !option.isHsn)}
+                                        options={hsnSacCodes}
                                         getOptionLabel={(option) => option.code}
                                         renderInput={(params) => (
                                             <TextField {...params} label="Select SAC Codes"/>
