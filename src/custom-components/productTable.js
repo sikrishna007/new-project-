@@ -34,7 +34,7 @@ import {visuallyHidden} from "@mui/utils";
 const getTableHeaders = () => {
     return [
             {key:"name",label:"PRODUCT"},
-            {key:"offeringSubCategories.name",label:"CATEGORY"},
+            {key:"offeringSubCategories.offeringCategories.name",label:"CATEGORY"},
             {key:"inStock",label:"STOCK"},
             {key:"unitPrice",label:"PRICE"},
             {key:"vendor",label:"VENDOR"},
@@ -305,7 +305,7 @@ export const ProductTable = (props) => {
                                         </Tooltip>
                                     </TableCell>
                                     <TableCell sx={{textAlign: "left"}}>
-                                        {product.offeringSubCategories?.name}
+                                        {product.offeringSubCategories?.offeringCategories?.name}
                                     </TableCell>
                                     <TableCell sx={{textAlign: "left"}}>
                                         <Typography variant="subtitle2">
