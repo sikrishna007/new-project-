@@ -38,7 +38,7 @@ export const useItemsStore = ( location) => {
                     endpoint =`${endpoints.subCategory.index}?pageNo=${page}&pageSize=${limit}&sortOrder=${sortOrder}&isActive=${isActive}&sortOn=${sortOn}`;
                     break;
                 default: // Assuming 'vendors' as the default case
-                    endpoint = `${endpoints.product.index}?pageNo=${page}&pageSize=${limit}&isActive=${isActive}&sortOn=${sortOn}`;
+                    endpoint = `${endpoints.product.index}?pageNo=${page}&pageSize=${limit}&isActive=${isActive}&sortOn=${sortOn}&sortOrder=${sortOrder}`;
             }}
            else{
                let id = Cookies.get("id")

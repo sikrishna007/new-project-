@@ -137,7 +137,8 @@ const Page = () => {
                                 hasMore={customersStore.hasMore}
                                 getCustomers={customersStore.handleCustomersGet}
                                 sortOn={customersStore.sortOn}
-                                onChangeSort={customersStore.onChangeSort}
+                                sortOrder={customersStore.sortOrder}
+                                handleSort={customersStore.handleSort}
                                 count={customersStore.customersCount}
                                 items={customersStore.customers}
                                 onDeselectAll={customersSelection.handleDeselectAll}
