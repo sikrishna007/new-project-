@@ -51,6 +51,7 @@ const getTableHeaders = () => {
 };
 
 export const ItemsTable = (props) => {
+
     const {
         count = 0,
         items = [],
@@ -68,7 +69,7 @@ export const ItemsTable = (props) => {
         selected = [],
     } = props;
     const activate_deactivate = async (id, temp) => {
-        const path = endpoints.eventCategories.index
+        const path = location ==="subCategory"? endpoints.subCategory.index:location ==="category"? endpoints.category.index:endpoints.eventCategories.index
         const json = await patchMethod(id,temp,path)
         props.getCustomers(page, rowsPerPage, props.isActive);
     };
