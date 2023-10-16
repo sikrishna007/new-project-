@@ -51,7 +51,6 @@ const getTableHeaders = () => {
 };
 
 export const ItemsTable = (props) => {
-    const [status, setStatus] = useState("");
     const {
         count = 0,
         items = [],
@@ -71,7 +70,7 @@ export const ItemsTable = (props) => {
     const activate_deactivate = async (id, temp) => {
         const path = endpoints.eventCategories.index
         const json = await patchMethod(id,temp,path)
-        props.getCustomers(page, rowsPerPage, props.isActive, role);
+        props.getCustomers(page, rowsPerPage, props.isActive);
     };
 
     const tableHeaders = getTableHeaders();
@@ -145,7 +144,7 @@ export const ItemsTable = (props) => {
                     >
                         Activate
                     </Button>
-                    <CommonDialog title="Activate" onConfirm={() => {
+                    <CommonDialog onConfirm={() => {
                         setActivateOpenAll(false)
                         selected.forEach((item) => activate_deactivate(item, true));
                     }} onClose={handleAllActivateClose} open={activateOpenAll}
@@ -158,7 +157,7 @@ export const ItemsTable = (props) => {
                     >
                         Deactivate
                     </Button>
-                    <CommonDialog title="Deactivate" onConfirm={() => {
+                    <CommonDialog  onConfirm={() => {
                         setDeactivateOpenAll(false)
                         selected.forEach((item) => activate_deactivate(item, false));
                     }} onClose={handleAllDeactivateClose} open={deactivateOpenAll}
@@ -344,7 +343,6 @@ export const ItemsTable = (props) => {
                     </TableBody>
 
                     <CommonDialog
-                        title={commonDialogData.eventCategoryIsActive ? "Deactivate" : "Activate"} // Dialog title
                         onConfirm={() => {
                             if (commonDialogData.eventCategoryIsActive) {
 

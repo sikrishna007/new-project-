@@ -73,6 +73,24 @@ export const getList = async (params)=>{
 
 };
 
+export const search = async (query,path)=>{
+    try {
+        const response = await fetch(
+            process.env.NEXT_PUBLIC_BASE_URL +`/offering_categories/search?search=${query}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+
+        return await response.json();
+
+        // }
+    } catch (err) {
+        console.error(err);
+    }
+};
 
 
 export const getSubmitHandler = (router, method = "POST") => {

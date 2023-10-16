@@ -105,21 +105,21 @@ const HsnSacId = ({CodeName, codePath, customer}) => {
                                 <CardContent sx={{marginLeft:"5%", marginTop: "1.5%"}}>
                                     <Grid container spacing={3}>
                                         <Grid xs={12} md={4} sx={{display:"flex"}} >
-                                            <Typography variant="h6"  >SGST: </Typography>
+                                            <Typography variant="title" sx={{ fontWeight: 'medium' }} >SGST: </Typography>
                                             <Typography variant="body1" sx={{marginLeft:"2%"}}> {customer?.sgstPercentage}%</Typography>
                                         </Grid>
                                         <Grid xs={12} md={4} sx={{display:"flex"}} >
-                                            <Typography variant="h6"  >CGST: </Typography>
+                                            <Typography variant="title" sx={{ fontWeight: 'medium' }} >CGST: </Typography>
                                             <Typography variant="body1" sx={{marginLeft:"2%"}}> {customer?.cgstPercentage}%</Typography>
                                         </Grid>
                                         <Grid xs={12} md={4} sx={{display:"flex"}} >
-                                            <Typography variant="h6"  >IGST: </Typography>
+                                            <Typography variant="title" sx={{ fontWeight: 'medium' }} >IGST: </Typography>
                                             <Typography variant="body1" sx={{marginLeft:"2%"}}> {customer?.igstPercentage}%</Typography>
                                         </Grid>
                                     </Grid>
                                     <Grid container spacing={3} sx={{marginTop:"4%"}}>
-                                        <Typography variant="h6" sx={{display:"flex",direction:"row"}}  >DESCRIPTION</Typography>
-                                        <Typography variant="body1" sx={{marginTop:"2%"}}> {customer?.description}</Typography>
+                                        <Typography variant="title" sx={{display:"flex",direction:"row",fontWeight: 'medium'}}  >DESCRIPTION : </Typography>
+                                        <Typography variant="body1" sx={{marginLeft:"2%"}}> {customer?.description}</Typography>
                                     </Grid>
                                 </CardContent>
 

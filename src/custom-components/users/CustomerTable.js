@@ -164,7 +164,7 @@ export const CustomerTable = (props) => {
                     >
                         Activate
                     </Button>
-                    <CommonDialog title="Activate" onConfirm={() => {
+                    <CommonDialog onConfirm={() => {
                         setActivateOpenAll(false)
                         selected.forEach((item) => activate_deactivate(item, true));
                     }} onClose={handleAllActivateClose} open={activateOpenAll}
@@ -177,7 +177,7 @@ export const CustomerTable = (props) => {
                     >
                         Deactivate
                     </Button>
-                    <CommonDialog title="Deactivate" onConfirm={() => {
+                    <CommonDialog  onConfirm={() => {
                         setDeactivateOpenAll(false)
                         selected.forEach((item) => activate_deactivate(item, false));
                     }} onClose={handleAllDeactivateClose} open={deactivateOpenAll}
@@ -390,7 +390,6 @@ export const CustomerTable = (props) => {
                         })}
                     </TableBody>
                     <CommonDialog
-                        title={commonDialogData.customerIsActive ? "Deactivate" : "Activate"} // Dialog title
                         onConfirm={() => {
                             // Action to perform when confirmed
                             // You can add your activate or deactivate logic here

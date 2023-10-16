@@ -281,7 +281,6 @@ const HsnSacCreate = ({CodeName, codePath, isHsn}) => {
                                     </Button>
                                 </Stack>
                                 <CommonDialog
-                                    title={"Create"}
                                     onConfirm={() => {
                                         formik.handleSubmit();
                                         handleCreateDialogClose();
@@ -291,7 +290,6 @@ const HsnSacCreate = ({CodeName, codePath, isHsn}) => {
                                     description={"Are you sure you want to create ?"}
                                 />
                                 <CommonDialog
-                                    title={"Yes"}
                                     onConfirm={() => {
                                         router.push(`/setup/${codePath}`);
                                         handleCancelDialogClose();

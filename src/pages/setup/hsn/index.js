@@ -13,161 +13,17 @@ import {paths} from "src/paths";
 import {endpoints} from "src/endpoints";
 import Cookies from "js-cookie";
 import Grid from "@mui/material/Unstable_Grid2";
-import {ItemSearch} from "@/custom-components/product-management/item-search";
 import {Layout as DashboardLayout} from "src/layouts/admin-dashboard";
 import {HsnSacTable} from "@/custom-components/setup/hsnSacTable";
-
-const useCustomersSearch = () => {
-    const [state, setState] = useState({
-        filters: {
-            query: undefined,
-            hasAcceptedMarketing: undefined,
-            isProspect: undefined,
-            isReturning: undefined,
-        },
-        page: 0,
-        rowsPerPage: 10,
-        sortBy: "updatedAt",
-        sortDir: "desc",
-    });
-
-    const handleFiltersChange = useCallback((filters) => {
-        setState((prevState) => ({
-            ...prevState,
-            filters,
-        }));
-    }, []);
-
-    const handleSortChange = useCallback((sort) => {
-        setState((prevState) => ({
-            ...prevState,
-            sortBy: sort.sortBy,
-            sortDir: sort.sortDir,
-        }));
-    }, []);
-
-    const handlePageChange = useCallback((event, page) => {
-        setState((prevState) => ({
-            ...prevState,
-            page,
-        }));
-    }, []);
-
-    const handleRowsPerPageChange = useCallback((event) => {
-        setState((prevState) => ({
-            ...prevState,
-            rowsPerPage: parseInt(event.target.value, 10),
-        }));
-    }, []);
-
-    return {
-        handleFiltersChange,
-        handleSortChange,
-        handlePageChange,
-        handleRowsPerPageChange,
-        state,
-    };
-};
-const useCustomersStore = () => {
-    const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(10);
-    const [isActive, setIsActive] = useState("");
-    const [state, setState] = useState({
-        customers: [],
-        customersCount: 5,
-    });
-
-    const handleCustomersGet = useCallback(async (page = 0, limit = 10, isActive = "", sortOn = "updatedAt", sortOrder = "desc") => {
-        try {
-            const response = await fetch(
-                process.env.NEXT_PUBLIC_BASE_URL +
-                endpoints.hsnSac.index +
-                `?pageNo=${page}&pageSize=${limit}&isHsn=true&isActive=true&sortOn=${sortOn}&sortOrder=${sortOrder}`,
-                {headers: {Authorization: `Bearer ${Cookies.get("accessToken")}`}}
-            );
-            const data = await response.json();
-            setState({
-                customers: data.data,
-                customersCount: data.totalElements,
-                hasMore: data.hasMore,
-                isActive: isActive,
-            });
-        } catch (err) {
-            console.error(err);
-        }
-    }, []);
-
-    const onChangeActive = (e) => {
-        if (e.target.value === "Active") return setIsActive("");
-        setIsActive(e.target.value);
-    };
-
-    const handlePageChange = (event, page) => {
-        // handleCustomersGet(page, rowsPerPage);
-        setPage(page);
-    };
-
-    const handleRowsPerPageChange = (e) => setRowsPerPage(+e.target.value);
-
-    useEffect(
-        () => {
-            handleCustomersGet(page, rowsPerPage, isActive);
-        },
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [rowsPerPage, page, isActive]
-    );
-
-    return {
-        ...state,
-        page,
-        rowsPerPage,
-        handleCustomersGet,
-        handlePageChange,
-        handleRowsPerPageChange,
-        setRowsPerPage,
-        onChangeActive,
-    };
-};
-
-const useCustomersIds = (customers = []) => {
-    return useMemo(() => {
-        return customers.map((customer) => customer.id);
-    }, [customers]);
-};
+import {ItemSearch} from "@/custom-components/items/item-search";
+import {useItemsIds, useItemsStore} from "@/utils/item-filters";
 
 const Page = () => {
-    const itemsSearch = useCustomersSearch();
     const [view, setView] = useState('grid');
-    const customersStore = useCustomersStore();
-    const customersIds = useCustomersIds(customersStore.customers);
+    let location = window.location.href.split("/")[4];
+    const customersStore = useItemsStore(location);
+    const customersIds = useItemsIds(customersStore.customers);
     const customersSelection = useSelection(customersIds);
-
-    const changeActive = async (id, temp) => {
-        try {
-            let jsonString = JSON.stringify({isActive: temp});
-            const requestOptions = {
-                method: "PATCH",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${Cookies.get("accessToken")}`,
-                },
-                body: jsonString,
-            };
-            const response = await fetch(
-                process.env.NEXT_PUBLIC_BASE_URL + endpoints.hsnSac.index + "/" + id,
-                requestOptions
-            );
-            if (!response.ok) {
-                throw new Error(response);
-            }
-            customersStore.handleCustomersGet(
-                customersStore.page,
-                customersStore.rowsPerPage
-            );
-        } catch (error) {
-            console.error("Error sending data:", error);
-        }
-    };
 
     return (
         <>
@@ -219,11 +75,7 @@ const Page = () => {
                                 <ItemSearch
                                     onChangeActive={customersStore.onChangeActive}
                                     isActive={customersStore.isActive}
-                                    onFiltersChange={itemsSearch.handleFiltersChange}
-                                    onSortChange={itemsSearch.handleSortChange}
                                     onViewChange={setView}
-                                    sortBy={itemsSearch.state.sortBy}
-                                    sortDir={itemsSearch.state.sortDir}
                                     view={view}
                                     isStatusShow={false}
                                 />
@@ -240,7 +92,6 @@ const Page = () => {
                                 rowsPerPage={customersStore.rowsPerPage}
                                 selected={customersSelection.selected}
                                 onDeselectAll={customersSelection.handleDeselectAll}
-                                changeActive={changeActive}
                                 getCustomers={customersStore.handleCustomersGet}
                                 onDeselectOne={customersSelection.handleDeselectOne}
                                 onPageChange={customersStore.handlePageChange}

@@ -285,7 +285,6 @@ const HsnSacEdit = ({CodeName, codePath, code }) => {
                                     </Button>
                                 </Stack>
                                 <CommonDialog
-                                    title={"Save"}
                                     onConfirm={() => {
                                         formik.handleSubmit();
                                         handleCreateDialogClose();
@@ -295,7 +294,6 @@ const HsnSacEdit = ({CodeName, codePath, code }) => {
                                     description={"Are you sure you want to Change Details ?"}
                                 />
                                 <CommonDialog
-                                    title={"Yes"}
                                     onConfirm={() => {
                                         router.push(`/setup/${codePath}`);
                                         handleCancelDialogClose();

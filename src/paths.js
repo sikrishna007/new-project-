@@ -64,7 +64,7 @@ export const paths = {
     },
     products: {
       index: "/product-management/products",
-      createproduct: {
+      createProduct: {
         index: "/product-management/products/add/:index",
       },
       edit: "/product-management/products/edit/"

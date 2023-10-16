@@ -18,12 +18,14 @@ import Avatar from "@mui/material/Avatar";
 import User01Icon from "@untitled-ui/icons-react/build/esm/User01";
 import {useRouter} from "next/router";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
-import {Email, Phone} from "@mui/icons-material";
+import {Block, Email, Pending, Phone} from "@mui/icons-material";
 import Divider from "@mui/material/Divider";
 import CardHeader from "@mui/material/CardHeader";
 import Grid from "@mui/material/Grid";
 import React, {useState} from "react";
 import ArrowRightSharpIcon from "@mui/icons-material/ArrowRightSharp";
+import {SeverityPill} from "@/components/severity-pill";
+import VerifiedIcon from "@mui/icons-material/Verified";
 
 
 const Page = ({customer}) => {
@@ -69,40 +71,48 @@ const Page = ({customer}) => {
                                 </Link>
                                 <Typography variant="h4">User Information</Typography>
                             </div>
-                            {customer?.isActive ? (
-                                <Button
-                                    onClick={() =>
-                                        router.push(paths.userManagement.customers.edit + customer.id)
-                                    }
-                                    color="inherit"
-                                    style={{backgroundColor: "#4338CA", color: "white"}}
-                                    endIcon={
-                                        <SvgIcon>
-                                            <Edit02Icon/>
-                                        </SvgIcon>
-                                    }
-                                >
-                                    Edit
-                                </Button>
-                            ) : (
-                                <Button
-                                    color="inherit"
-                                    style={{
-                                        backgroundColor: "#CACACA",
-                                        color: "white",
-                                        opacity: "1",
-                                        cursor: "not-allowed"
-                                    }}
-                                    title="Deactive records cant't edit"
-                                    endIcon={
-                                        <SvgIcon>
-                                            <Edit02Icon/>
-                                        </SvgIcon>
-                                    }
-                                >
-                                    Edit
-                                </Button>
-                            )}
+                            <Stack direction="row" spacing={2} >
+                                {customer.isBusinessCustomer ? (customer?.isVerified ? (
+                                        <SeverityPill color="success"><VerifiedIcon/> VERIFIED</SeverityPill>) :
+                                    (customer?.isRejected ? (<SeverityPill
+                                        color="error"><Block/> REJECT</SeverityPill>) : (
+                                        <SeverityPill
+                                            color="warning"><Pending/> PENDING</SeverityPill>))):""}
+                                {customer?.isActive ? (
+                                    <Button
+                                        onClick={() =>
+                                            router.push(paths.userManagement.customers.edit + customer.id)
+                                        }
+                                        color="inherit"
+                                        style={{backgroundColor: "#4338CA", color: "white"}}
+                                        endIcon={
+                                            <SvgIcon>
+                                                <Edit02Icon/>
+                                            </SvgIcon>
+                                        }
+                                    >
+                                        Edit
+                                    </Button>
+                                ) : (
+                                    <Button
+                                        color="inherit"
+                                        style={{
+                                            backgroundColor: "#CACACA",
+                                            color: "white",
+                                            opacity: "1",
+                                            cursor: "not-allowed"
+                                        }}
+                                        title="Deactive records cant't edit"
+                                        endIcon={
+                                            <SvgIcon>
+                                                <Edit02Icon/>
+                                            </SvgIcon>
+                                        }
+                                    >
+                                        Edit
+                                    </Button>
+                                )}
+                            </Stack>
 
                         </div>
                         <div style={{marginLeft: '1.8%', marginTop: '0.5%'}}>

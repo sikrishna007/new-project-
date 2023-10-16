@@ -73,7 +73,6 @@ export const CreateCustomer = (props) => {
                         Create
                     </Button>
                     <CommonDialog
-                        title={create ?  "Create": "yes"} // Dialog title
                         onConfirm={() => {
                             if(create){
                             handleCreateDialogClose();
@@ -154,7 +153,6 @@ export const EditCustomer = (props) => {
                         Save Changes
                     </Button>
                     <CommonDialog
-                        title={create ?  "Create": "yes"} // Dialog title
                         onConfirm={() => {
                             if(create){
                                 handleCreateDialogClose();
@@ -166,7 +164,7 @@ export const EditCustomer = (props) => {
                         }}
                         onClose={handleCreateDialogClose}
                         open={createDialogOpen}
-                        description={create ?"Are you sure you want to create ?":"Are you sure you want to go back ?"}
+                        description={create ?"Are you sure you want to Save Changes ?":"Are you sure you want to go back ?"}
                     />
                 </Stack></Grid>
             </CardContent>

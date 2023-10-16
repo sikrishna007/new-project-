@@ -24,7 +24,13 @@ export const useItemsStore = ( location) => {
 
                         endpoint = `${endpoints.category.index}?pageNo=${page}&pageSize=${limit}&isActive=${isActive}&sortOn=${sortOn}&sortOrder=${sortOrder}`;
                     break;
+                case 'hsn':
+                    endpoint = `${endpoints.hsnSac.index}?pageNo=${page}&pageSize=${limit}&isHsn=true&isActive=true&sortOn=${sortOn}&sortOrder=${sortOrder}`;
+                    break;
+                case 'sac':
 
+                    endpoint = `${endpoints.hsnSac.index}?pageNo=${page}&pageSize=${limit}&isHsn=false&isActive=true&sortOn=${sortOn}&sortOrder=${sortOrder}`;
+                    break;
                 case 'event-category':
                     endpoint = `${endpoints.eventCategories.index}?pageNo=${page}&pageSize=${limit}&sortOrder=${sortOrder}&isActive=${isActive}&sortOn=${sortOn}`;
                     break;
@@ -32,7 +38,7 @@ export const useItemsStore = ( location) => {
                     endpoint =`${endpoints.subCategory.index}?pageNo=${page}&pageSize=${limit}&sortOrder=${sortOrder}&isActive=${isActive}&sortOn=${sortOn}`;
                     break;
                 default: // Assuming 'vendors' as the default case
-                    endpoint = `${endpoints.userManagement.vendors.index}?pageNo=${page}&pageSize=${limit}&isActive=${isActive}&sortOn=${sortOn}&sortOrder=${sortOrder}`;
+                    endpoint = `${endpoints.product.index}?pageNo=${page}&pageSize=${limit}&isActive=${isActive}&sortOn=${sortOn}`;
             }
             return endpoint
         }

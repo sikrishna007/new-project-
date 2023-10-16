@@ -23,8 +23,6 @@ import {createEmotionCache} from 'src/utils/create-emotion-cache';
 
 // Remove if locales are not used
 import 'src/locales/i18n';
-import {DevSupport} from "@react-buddy/ide-toolbox-next";
-import {ComponentPreviews, useInitial} from "@/components/dev";
 
 const clientSideEmotionCache = createEmotionCache();
 
@@ -86,17 +84,30 @@ const CustomApp = (props) => {
                                                     <RTL direction={settings.direction}>
                                                         <CssBaseline/>
                                                         {showSlashScreen
-                                                            ? <SplashScreen/>
+                                                            ? <SplashScreen />
                                                             : (
                                                                 <>
                                                                     {getLayout(
-                                                                        <DevSupport
-                                                                            ComponentPreviews={ComponentPreviews}
-                                                                            useInitialHook={useInitial}
-                                                                        >
-                                                                            <Component {...pageProps} />
-                                                                        </DevSupport>
+                                                                        <Component {...pageProps} />
                                                                     )}
+                                                                    {/*<SettingsButton onClick={settings.handleDrawerOpen} />*/}
+                                                                    {/*<SettingsDrawer*/}
+                                                                    {/*    canReset={settings.isCustom}*/}
+                                                                    {/*    onClose={settings.handleDrawerClose}*/}
+                                                                    {/*    onReset={settings.handleReset}*/}
+                                                                    {/*    onUpdate={settings.handleUpdate}*/}
+                                                                    {/*    open={settings.openDrawer}*/}
+                                                                    {/*    values={{*/}
+                                                                    {/*        colorPreset: settings.colorPreset,*/}
+                                                                    {/*        contrast: settings.contrast,*/}
+                                                                    {/*        direction: settings.direction,*/}
+                                                                    {/*        paletteMode: settings.paletteMode,*/}
+                                                                    {/*        responsiveFontSizes: settings.responsiveFontSizes,*/}
+                                                                    {/*        stretch: settings.stretch,*/}
+                                                                    {/*        layout: settings.layout,*/}
+                                                                    {/*        navColor: settings.navColor*/}
+                                                                    {/*    }}*/}
+                                                                    {/*/>*/}
                                                                 </>
                                                             )}
                                                         <Toaster/>

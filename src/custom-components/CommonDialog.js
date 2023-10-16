@@ -17,9 +17,9 @@ const CommonDialog = ({ open, onClose, onConfirm, title, description}) => {
                 </DialogContentText>
             </DialogContent>
             <DialogActions>
-                <Button onClick={onClose}>Cancel</Button>
+                <Button onClick={onClose}>No</Button>
                 <Button type="submit" onClick={onConfirm} autoFocus>
-                    {title}
+                    Yes
                 </Button>
             </DialogActions>
         </Dialog>

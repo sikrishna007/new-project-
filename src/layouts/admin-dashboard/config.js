@@ -76,27 +76,6 @@ export const useSections = () => {
                     <CategoryOutlined/>
                   </SvgIcon>
               ),
-              items: [
-                {
-                  title: t(tokens.nav.businessCustomer),
-                  path: paths.kycVerification.businessCustomer.index,
-                  icon: (
-                      <SvgIcon fontSize="small">
-                        <VerifiedIcon/>
-                      </SvgIcon>
-                  ),
-                },
-                {
-                  title: t(tokens.nav.vendor),
-                  path: paths.kycVerification.vendor.index,
-                  icon: (
-                      <SvgIcon fontSize="small">
-                        <VerifiedIcon/>
-                      </SvgIcon>
-                  ),
-                },
-
-              ],
             },
 
             {
@@ -190,6 +169,17 @@ export const useSections = () => {
       return [
         {
           subheader: "Vendor Panel",
+          items: [
+            {
+              title: t(tokens.nav.productManagement),
+              path: paths.productManagement.index,
+              icon: (
+                  <SvgIcon fontSize="small">
+                    <Inventory/>
+                  </SvgIcon>
+              )
+            }
+          ]
         }
       ]
     }
