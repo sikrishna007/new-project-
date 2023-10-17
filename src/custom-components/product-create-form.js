@@ -333,7 +333,6 @@ export const ProductCreateForm = (props) => {
     const handleGetCat =async (input)=>{
         let path = endpoints.category.index.index;
         let result = await search(input,path);
-        console.log(result)
         setCategories(result.hits);
     }
 
