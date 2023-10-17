@@ -44,7 +44,7 @@ export const CustomerListSearch = (props) => {
 
     async function getRoleListAdd() {
         let location = window.location.href.split("/")[4];
-        let data = await getList("/roles")
+        let data = await getList("/roles?&sortOn=name&sortOrder=asc")
         let roles = data.data
         let defaultRole = {
             id: 1,
@@ -101,7 +101,7 @@ export const CustomerListSearch = (props) => {
                         label="Role"
                         name="Role"
                         onChange={onChangeRole}
-                        value={role === false ? "Retail Customer" : role === true ? "Business Customer" : role}
+                        value={role === false ? {id:33,name:"Retail Customer"} : role === true ? "Business Customer" : role}
                         select
                         SelectProps={{native: true}}
                     >

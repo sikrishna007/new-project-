@@ -27,7 +27,7 @@ const Page = () => {
 
     return (
         <>
-            <Seo title="Settings: Categories List"/>
+            <Seo title="Product Management: Products List"/>
             <Box
                 component="main"
                 sx={{
@@ -137,7 +137,8 @@ const Page = () => {
                                 hasMore={customersStore.hasMore}
                                 getCustomers={customersStore.handleCustomersGet}
                                 sortOn={customersStore.sortOn}
-                                onChangeSort={customersStore.onChangeSort}
+                                sortOrder={customersStore.sortOrder}
+                                handleSort={customersStore.handleSort}
                                 count={customersStore.customersCount}
                                 items={customersStore.customers}
                                 onDeselectAll={customersSelection.handleDeselectAll}

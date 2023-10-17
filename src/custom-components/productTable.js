@@ -24,12 +24,24 @@ import {ToggleOffOutlined, ToggleOnOutlined} from "@mui/icons-material";
 import * as React from "react";
 import {useCallback, useEffect, useState} from "react";
 import {endpoints} from "../endpoints";
-import {TableContainer} from "@mui/material";
+import {TableContainer, TableSortLabel} from "@mui/material";
 import CommonDialog from "./CommonDialog";
 import Cookies from "js-cookie";
 import Tooltip from "@mui/material/Tooltip";
 import {setState} from "@aws-amplify/auth/lib/OAuth/oauthStorage";
 import {patchMethod} from "@/utils/util";
+import {visuallyHidden} from "@mui/utils";
+const getTableHeaders = () => {
+    return [
+            {key:"name",label:"PRODUCT"},
+            {key:"offeringSubCategories.offeringCategories.name",label:"CATEGORY"},
+            {key:"inStock",label:"STOCK"},
+            {key:"unitPrice",label:"PRICE"},
+            {key:"vendor",label:"VENDOR"},
+            {key:"createdAt",label:"Created"},
+            {key:"updatedAt",label:"Updated"},
+        ];
+};
 
 export const ProductTable = (props) => {
     // const router = useRouter()
@@ -78,8 +90,9 @@ export const ProductTable = (props) => {
         items = [],
         onDeselectAll,
         onDeselectOne,
-        onPageChange = () => {
-        },
+        sortOn,
+        handleSort,
+        sortOrder,
         onRowsPerPageChange,
         onSelectAll,
         onSelectOne,
@@ -89,6 +102,7 @@ export const ProductTable = (props) => {
         hasMore,
     } = props;
 
+    const tableHeaders = getTableHeaders();
     const selectedSome = selected.length > 0 && selected.length < items.length;
     const selectedAll = items.length > 0 && selected.length === items.length;
     const enableBulkActions = selected.length > 0;
@@ -201,15 +215,22 @@ export const ProductTable = (props) => {
                                 />
                             </TableCell>
                             <TableCell></TableCell>
-                            <TableCell sx={{textAlign: "left"}}>PRODUCT</TableCell>
-                            <TableCell sx={{textAlign: "left"}}>CATEGORY</TableCell>
-                            <TableCell sx={{textAlign: "center"}}>STOCK</TableCell>
-                            <TableCell sx={{textAlign: "left"}} width="7%">PRICE</TableCell>
-                            <TableCell sx={{textAlign: "left"}}>Vendor</TableCell>
-                            {/*<TableCell sx={{textAlign: "left"}} width="10%">Created By</TableCell>*/}
-                            <TableCell sx={{textAlign: "left"}}>Created</TableCell>
-                            {/*<TableCell sx={{textAlign: "left"}} width="10%">Updated By</TableCell>*/}
-                            <TableCell sx={{textAlign: "left"}}>Updated</TableCell>
+                            {tableHeaders.map((header, index) => (
+                                <TableCell key={index} sx={{ textAlign: "left" }}>
+                                    <TableSortLabel
+                                        active={sortOn === header.key}
+                                        direction={sortOn === header.key ? sortOrder : 'asc'}
+                                        onClick={() => handleSort(header.key)}
+                                    >
+                                        {header.label}
+                                        {sortOn ===  header.key ? (
+                                            <Box component="span" sx={visuallyHidden}>
+                                                {sortOrder === 'desc' ? 'sorted descending' : 'sorted ascending'}
+                                            </Box>
+                                        ) : null}
+                                    </TableSortLabel>
+                                </TableCell>
+                            ))}
                             <TableCell sx={{textAlign: "left"}}>STATUS</TableCell>
                             <TableCell sx={{textAlign: "center", right: 0}} width="15%">Actions</TableCell>
                         </TableRow>

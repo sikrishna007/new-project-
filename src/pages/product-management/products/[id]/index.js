@@ -23,14 +23,15 @@ import {useRouter} from "next/router";
 import {endpoints} from "src/endpoints";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import ArrowRightSharpIcon from "@mui/icons-material/ArrowRightSharp";
+import Cookies from "js-cookie";
 
 const Page = ({product, vendor}) => {
+    console.log(product)
     const router = useRouter();
-    // console.log(product);
-    // console.log(vendor);
+    let role=Cookies.get("role")
     return (
         <>
-            <Seo title="Dashboard: Order Details"/>
+            <Seo title="Dashboard: Product Details"/>
             <Box
                 component="main"
                 sx={{
@@ -66,7 +67,7 @@ const Page = ({product, vendor}) => {
                                 </Link>
                                 <Typography variant="h4">{product?.name}</Typography>
                             </div>
-                            {product?.isActive ? (
+                            {role === "VENDOR" ? "": product?.isActive ? (
                                 <Button
                                     onClick={() =>
                                         router.push(paths.productManagement.products.edit + product.id)
@@ -147,8 +148,8 @@ const Page = ({product, vendor}) => {
                                     </Grid>
                                     <Grid xs={12} md={4}>
                                         <PropertyListItem
-                                            label="HSN Code"
-                                            value={product.hsnSacCode}
+                                            label="HSN/SAC Code"
+                                            value={product.hsnSacCode?.code}
                                         />
                                     </Grid>
                                     <Grid xs={12} md={4}>
@@ -252,19 +253,19 @@ const Page = ({product, vendor}) => {
                                     <Grid xs={12} md={3}>
                                         <PropertyListItem
                                             label="SGST"
-                                            value={product.sgst + "%"}
+                                            value={product.hsnSacCode?.sgstPercentage + "%"}
                                         />
                                     </Grid>
                                     <Grid xs={12} md={3}>
                                         <PropertyListItem
                                             label="CGST"
-                                            value={product.cgst + "%"}
+                                            value={product.hsnSacCode?.cgstPercentage + "%"}
                                         />
                                     </Grid>
                                     <Grid xs={12} md={3}>
                                         <PropertyListItem
                                             label="IGST"
-                                            value={product.igst + "%"}
+                                            value={product.hsnSacCode?.igstPercentage + "%"}
                                         />
                                     </Grid>
                                     <Grid xs={12} md={3}></Grid>

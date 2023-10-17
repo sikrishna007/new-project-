@@ -81,7 +81,7 @@ const Page = ({vendor}) => {
                                 </Link>}
                                 <Typography variant="h4">User Information</Typography>
                             </div>
-                            <Stack direction="row" spacing={2} >
+                            {role === "VENDOR" ? "":<Stack direction="row" spacing={2} >
                                 {vendor?.isVerified ? (
                                         <SeverityPill color="success"><VerifiedIcon/> VERIFIED</SeverityPill>) :
                                     (vendor?.isRejected ? (<SeverityPill
@@ -122,7 +122,7 @@ const Page = ({vendor}) => {
                                         Edit
                                     </Button>
                                 )}
-                            </Stack>
+                            </Stack>}
 
                         </div>
                         <div style={{marginLeft: '2.3%', marginTop: '0.5%'}}>

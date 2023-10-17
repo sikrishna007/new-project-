@@ -27,7 +27,6 @@ import CommonDialog from "@/custom-components/CommonDialog";
 
 export const ProductEditForm = (props) => {
     const {product, vendor} = props;
-    console.log(product)
     const router = useRouter();
     const [files, setFiles] = useState([]);
     const [hsnSacCodes, setHsnSacCodes] = useState([]);
@@ -104,7 +103,6 @@ export const ProductEditForm = (props) => {
         const newArray = selectedEvent.map((obj) => ({id: obj.id}));
         formik.values.eventCategories = newArray
         formik.values.tags = tags
-        console.log(formik.errors)
         if (Object.keys(formik.errors).length > 0) {
             toast.error("Please fill in all the required fields", {
                 position: "top-right",
@@ -137,9 +135,7 @@ export const ProductEditForm = (props) => {
                         vendorPrice: formik.values.vendorShare,
                         unitPrice: (parseFloat(formik.values.organizationShare || 0)) + (parseFloat(formik.values.vendorShare || 0)),
                         discountPrice: formik.values.costPrice,
-                        sgst: formik.values.sgst,
-                        cgst: formik.values.cgst,
-                        igst: formik.values.igst,
+                        hsnSacCode: {id:formik.values.hsnSacCode.id},
                         tags: formik.values.tags,
                         inStock: formik.values.inStock,
                         eventCategories: formik.values.eventCategories,
@@ -182,9 +178,9 @@ export const ProductEditForm = (props) => {
             name: product?.name || "",
             vendor: product?.vendor || "",
             tags: product?.tags || "",
-            cgst: product?.cgst || "",
-            sgst: product?.sgst || "",
-            igst: product.igst || "",
+            cgst: product?.hsnSacCode.cgstPercentage || "",
+            sgst: product?.hsnSacCode.sgstPercentage || "",
+            igst: product?.hsnSacCode.igstPercentage || "",
             hsnSacCode: product?.hsnSacCode || "",
             vendorShare: product?.vendorPrice || "",
             organizationShare: (product?.unitPrice - product?.vendorPrice) || "",
@@ -286,7 +282,7 @@ export const ProductEditForm = (props) => {
         if (selectedHsnCode) {
             formik.setValues({
                 ...formik.values,
-                hsnSacCode: selectedHsnCode.code,
+                hsnSacCode: selectedHsnCode,
                 cgst: selectedHsnCode.cgstPercentage,
                 sgst: selectedHsnCode.sgstPercentage,
                 igst: selectedHsnCode.igstPercentage,
@@ -298,7 +294,7 @@ export const ProductEditForm = (props) => {
         if (selectedSacCode) {
             formik.setValues({
                 ...formik.values,
-                hsnSacCode: selectedSacCode.code,
+                hsnSacCode: selectedSacCode,
                 cgst: selectedSacCode.cgstPercentage,
                 sgst: selectedSacCode.sgstPercentage,
                 igst: selectedSacCode.igstPercentage,
@@ -353,7 +349,7 @@ export const ProductEditForm = (props) => {
 
 
     const handleRadioChange = (event) => {
-        const selectedValue = event.target.value === 'true';
+        const selectedValue = event.target.value ;
         setIsGoods(selectedValue);
         setShowHSNDropdown(selectedValue); // Show HSN dropdown for "Goods"
         setShowSACDropdown(!selectedValue); // Show SAC dropdown for "Service"
@@ -388,12 +384,12 @@ export const ProductEditForm = (props) => {
                                         row
                                     >
                                         <FormControlLabel
-                                            value="true"
+                                            value={true}
                                             control={<Radio/>}
                                             label="Goods"
                                         />
                                         <FormControlLabel
-                                            value="false"
+                                            value={false}
                                             control={<Radio/>}
                                             label="Service"
                                         />
@@ -402,12 +398,12 @@ export const ProductEditForm = (props) => {
 
                                 {showHSNDropdown && (
                                     <Autocomplete
-                                        options={hsnSacCodes.filter((option) => option.isHsn)}
+                                        options={hsnSacCodes}
                                         getOptionLabel={(option) => option.code}
+                                        value={formik.values.hsnSacCode}
                                         renderInput={(params) => (
                                             <TextField {...params} label="Select HSN Codes"/>
                                         )}
-                                        value={formik.values.hsnSacCode !="undefined" ? formik.values.hsnSacCode : ""}
                                         onChange={(event, value) => {
                                             setSelectedHsnCode(value);
                                         }}
@@ -416,12 +412,12 @@ export const ProductEditForm = (props) => {
 
                                 {showSACDropdown && (
                                     <Autocomplete
-                                        options={hsnSacCodes.filter((option) => !option.isHsn)}
+                                        options={hsnSacCodes}
                                         getOptionLabel={(option) => option.code}
+                                        value={formik.values.hsnSacCode}
                                         renderInput={(params) => (
                                             <TextField {...params} label="Select SAC Codes"/>
                                         )}
-                                        value={formik.values.hsnSacCode}
                                         onChange={(event, value) => {
                                             setSelectedSacCode(value);
                                         }}

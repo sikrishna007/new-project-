@@ -335,7 +335,7 @@ export const CustomerTable = (props) => {
                                                 </SvgIcon>
                                             </IconButton>
                                         </Tooltip>
-                                        {customer.user?.isActive ? (
+                                        {customer?.isActive ? (
                                             <Tooltip title="Deactivate">
                                                 <IconButton
                                                     sx={{color: "#0b8059"}}
