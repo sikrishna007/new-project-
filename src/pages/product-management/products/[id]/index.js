@@ -26,7 +26,6 @@ import ArrowRightSharpIcon from "@mui/icons-material/ArrowRightSharp";
 import Cookies from "js-cookie";
 
 const Page = ({product, vendor}) => {
-    console.log(product)
     const router = useRouter();
     let role=Cookies.get("role")
     return (
