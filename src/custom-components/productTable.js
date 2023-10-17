@@ -310,7 +310,7 @@ export const ProductTable = (props) => {
                                                     }
                                                     variant="subtitle2"
                                                 >
-                                                    {product?.name && product.name.charAt(0).toUpperCase() + product.name.slice(1)}
+                                                    {product?.name}
 
                                                 </Link>
                                             </div>
@@ -330,9 +330,7 @@ export const ProductTable = (props) => {
                                         </Typography>
                                     </TableCell>
                                     <TableCell sx={{textAlign: "left"}}>
-                                        <Typography variant="subtitle2">
                                             ₹ {product?.unitPrice}
-                                        </Typography>
                                     </TableCell>
                                     {role === "VENDOR"?"":<TableCell sx={{textAlign: "left"}}>
                                         <Typography variant="subtitle2">
@@ -340,7 +338,6 @@ export const ProductTable = (props) => {
                                         </Typography>
                                     </TableCell>}
                                     <TableCell sx={{textAlign: "left"}}>
-                                        <Typography variant="subtitle2">
                                             {new Date(product?.createdAt).toLocaleDateString(undefined, {
                                                 day: "2-digit",
                                                 month: "short",
@@ -348,13 +345,11 @@ export const ProductTable = (props) => {
                                                 hour: "2-digit",
                                                 minute: "2-digit"
                                             })}
-                                        </Typography>
                                     </TableCell>
                                     {/*<Typography variant="subtitle2">*/}
                                     {/*    {product?.updatedBy}*/}
                                     {/*</Typography>*/}
                                     <TableCell sx={{textAlign: "left"}}>
-                                        <Typography variant="subtitle2">
                                             {new Date(product?.updatedAt).toLocaleDateString(undefined, {
                                                 day: "2-digit",
                                                 month: "short",
@@ -362,7 +357,6 @@ export const ProductTable = (props) => {
                                                 hour: "2-digit",
                                                 minute: "2-digit"
                                             })}
-                                        </Typography>
                                     </TableCell>
                                     <TableCell sx={{textAlign: "left"}}>
                                         {product?.isActive ? (

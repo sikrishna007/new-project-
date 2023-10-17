@@ -33,6 +33,7 @@ const ItemAdd = ({title, pathUrl}) => {
     const [categories, setCategories] = useState([]);
     const [createDialogOpen, setCreateDialogOpen] = useState(false);
     const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
+    const [descriptionCharCount, setDescriptionCharCount] = useState(0);
     const handleCreateDialogOpen = () => {
         setCreateDialogOpen(true);
     };
@@ -118,7 +119,9 @@ const ItemAdd = ({title, pathUrl}) => {
                         },
                     }
                 );
-
+                if (response.status === 400) {
+                    return toast.error(pathName + " is already exists", {autoClose: 10000});
+                }
                 toast.success(`${title} Created Successfully`, {autoClose: 10000});
                 router.push(pathUrl)
             } catch (err) {
@@ -210,7 +213,10 @@ const ItemAdd = ({title, pathUrl}) => {
                                                         <Autocomplete
                                                             options={categories}
                                                             name="categoryName"
+<<<<<<< 309cad120c935dba56d2a2a0ac3d6cdc8a70aa65
                                                             onInputChange={(event, newInputValue) => handleGetCat(newInputValue)}
+=======
+>>>>>>> 7506ae54ee45df52074a4ac87ba89e7113a32228
                                                             getOptionLabel={(option) => option.name}
                                                             renderInput={(params) => (
                                                                 <TextField {...params} label="Select Product Category"/>
@@ -254,10 +260,10 @@ const ItemAdd = ({title, pathUrl}) => {
                                         <Grid container spacing={3}>
                                             <Grid xs={12} md={4}>
                                                 <Stack spacing={1}>
-                                                    <Typography variant="h6" sx={{display: "flex"}}>
-                                                        Upload Thumbnail Image <Typography
-                                                        sx={{color: "red"}}>*</Typography>
-                                                    </Typography>
+                                                    {/*<Typography variant="h6" sx={{display: "flex"}}>*/}
+                                                    {/*    Upload Thumbnail Image <Typography*/}
+                                                    {/*    sx={{color: "red"}}>*</Typography>*/}
+                                                    {/*</Typography>*/}
                                                 </Stack>
                                             </Grid>
                                             <Grid xs={12} md={8}>
@@ -273,25 +279,40 @@ const ItemAdd = ({title, pathUrl}) => {
                                                 {/*/>*/}
                                                 <Grid mt={5} xs={12} md={8}>
                                                     {location === "add" && (
-
-                                                        <TextField
-                                                            error={
-                                                                !!(formik.touched.longDescription && formik.errors.longDescription)
-                                                            }
-                                                            fullWidth
-                                                            helperText={
-                                                                formik.touched.longDescription && formik.errors.longDescription
-                                                            }
-                                                            label="Description"
-                                                            name="longDescription"
-                                                            multiline
-                                                            rows={6}
-                                                            onBlur={formik.handleBlur}
-                                                            onChange={formik.handleChange}
-                                                            value={formik.values.longDescription}
-                                                        />
-
+                                                        <>
+                                                            <TextField
+                                                                error={
+                                                                    !!(formik.touched.longDescription && formik.errors.longDescription)
+                                                                }
+                                                                fullWidth
+                                                                helperText={
+                                                                    formik.touched.longDescription && formik.errors.longDescription
+                                                                }
+                                                                label="Description"
+                                                                name="longDescription"
+                                                                multiline
+                                                                rows={6}
+                                                                onBlur={formik.handleBlur}
+                                                                // onChange={formik.handleChange}
+                                                                onChange={(e) => {
+                                                                    formik.handleChange(e);
+                                                                    setDescriptionCharCount(e.target.value.length); // Update character count
+                                                                }}
+                                                                value={formik.values.longDescription}
+                                                                inputProps={{
+                                                                    maxLength: 1000
+                                                                }}
+                                                            />
+                                                            <Typography variant="body2" color="textSecondary" sx={{
+                                                                display: "flex",
+                                                                justifyContent: "flex-end", // Shift the character count to the right
+                                                                marginTop: 1, // Add some top margin for spacing
+                                                            }}>
+                                                                {descriptionCharCount} / 1000
+                                                            </Typography>
+                                                        </>
                                                     )}
+
                                                 </Grid>
                                             </Grid>
                                         </Grid>
@@ -314,6 +335,7 @@ const ItemAdd = ({title, pathUrl}) => {
                                     </Button>
                                 </Stack>
                                 <CommonDialog
+                                    title={"Yes"}
                                     onConfirm={() => {
                                         formik.handleSubmit();
                                         handleCreateDialogClose();
@@ -323,6 +345,7 @@ const ItemAdd = ({title, pathUrl}) => {
                                     description={"Are you sure you want to create ?"}
                                 />
                                 <CommonDialog
+                                    title={"Yes"}
                                     onConfirm={() => {
                                         router.push(pathUrl)
                                         handleCancelDialogClose();
@@ -337,7 +360,8 @@ const ItemAdd = ({title, pathUrl}) => {
                 </Container>
             </Box>
         </>
-    );
+    )
+        ;
 };
 
 

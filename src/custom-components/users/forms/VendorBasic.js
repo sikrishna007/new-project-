@@ -1,10 +1,11 @@
-import {useCallback} from "react";
+import {useCallback, useState} from "react";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardHeader from "@mui/material/CardHeader";
 import Grid from "@mui/material/Unstable_Grid2";
 import TextField from "@mui/material/TextField";
 import {DesktopDatePicker} from "@mui/x-date-pickers/DesktopDatePicker";
+import Typography from "@mui/material/Typography";
 
 export const VendorBasic = (props) => {
     let {customer, formik, ...other} = props;
@@ -17,6 +18,9 @@ export const VendorBasic = (props) => {
         },
         [formik]
     );
+
+    const [phoneNumberCount, setPhoneNumberCount] = useState(0)
+    const [whatsappNumberCount, setWhatsappNumberCount] = useState(0)
     return (
         <Card>
             <CardHeader title="Personal Information"/>
@@ -105,9 +109,24 @@ export const VendorBasic = (props) => {
                             }
                             name="phoneNumber"
                             onBlur={formik.handleBlur}
-                            onChange={formik.handleChange}
+                            onChange={(e) => {
+                                formik.handleChange(e);
+                                setPhoneNumberCount(e.target.value.length)
+                            }}
                             value={formik.values.phoneNumber}
+                            inputProps={{
+                                maxLength: 10
+                            }}
                         />
+                        <Typography variant="body2" color="textSecondary"
+                                    sx={{
+                                        display:"flex",
+                                        justifyContent:"flex-end",
+                                        marginTop:1
+                                    }}
+                        >
+                            {phoneNumberCount}/10
+                        </Typography>
                     </Grid>
                     <Grid xs={12} md={6}>
                         <TextField
@@ -124,9 +143,24 @@ export const VendorBasic = (props) => {
                             label="WhatsApp Number"
                             name="whatsappNumber"
                             onBlur={formik.handleBlur}
-                            onChange={formik.handleChange}
+                            onChange={(e) => {
+                                formik.handleChange(e);
+                                setWhatsappNumberCount(e.target.value.length)
+                            }}
                             value={formik.values.whatsappNumber}
+                            inputProps={{
+                                maxLength: 10
+                            }}
                         />
+                        <Typography variant="body2" color="textSecondary"
+                                    sx={{
+                                        display:"flex",
+                                        justifyContent:"flex-end",
+                                        marginTop:1
+                                    }}
+                        >
+                            {whatsappNumberCount}/10
+                        </Typography>
                     </Grid>
 
                     <Grid xs={12} md={6}>
