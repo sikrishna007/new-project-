@@ -6,8 +6,6 @@ import CitySearch from "@/custom-components/city-search";
 
 export const VendorAddress = (props) => {
     let {submit,handleGetAddress,setCity,text, customer, formik, ...other} = props;
-
-
     return (
 
         <Grid container spacing={3}>

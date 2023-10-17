@@ -173,7 +173,6 @@ export const getSubmitHandler = (router, method = "POST") => {
                 }
             );
             if (!response.ok) {
-                console.log("ok")
                 throw new Error(response);
             }
             const data = await response.json();

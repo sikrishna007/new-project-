@@ -1,5 +1,5 @@
 import * as React from "react";
-import {useCallback, useState} from "react";
+import {useCallback, useEffect, useState} from "react";
 import toast from "react-hot-toast";
 import * as Yup from "yup";
 import {useFormik} from "formik";
@@ -94,19 +94,40 @@ export const ProductCreateForm = (props) => {
         setAvailableEventCategories([...availableEventCategories, event]);
     };
 
+    const Productsave=()=>{
+        if (Object.keys(formik.errors).length > 0) {
+            toast.error("Please fill in all the required fields", {
+                position: "top-right",
+                style: {
+                    backgroundColor: "#D65745",
+                },
+                icon: <ToastError/>,
+            });
+        }
+        else if(formik.values.name === "" ||formik.values.vendor === ""){
+            toast.error("Please fill in all the required fields", {
+                position: "top-right",
+                style: {
+                    backgroundColor: "#D65745",
+                },
+                icon: <ToastError/>,
+            });
+        }
 
-    const submitProduct = async (formik, helpers) => {
-        // if (Object.keys(formik.errors).length > 0) {
-        //   toast.error("Please fill in all the required fields", {
-        //     position: "top-right",
-        //     style: {
-        //       backgroundColor: "#D65745",
-        //     },
-        //     icon: <ToastError />,
-        //     autoClose: 5000, // 5000 milliseconds (5 seconds)
-        //   });
-        // }
-        // console.log(formik.errors);
+        formik.handleSubmit();
+
+    }
+    const submitProduct = async () => {
+        if (Object.keys(formik.errors).length > 0) {
+           return toast.error("Please fill in all the required fields", {
+            position: "top-right",
+            style: {
+              backgroundColor: "#D65745",
+            },
+            icon: <ToastError />,
+            autoClose: 5000, // 5000 milliseconds (5 seconds)
+          });
+        }
         const newArray = selectedEvent.map((obj) => ({id: obj.id}));
         try {
             let token = Cookies.get("accessToken")
@@ -131,7 +152,7 @@ export const ProductCreateForm = (props) => {
                         vendorPrice: formik.values.vendorShare,
                         unitPrice: (parseFloat(formik.values.organizationShare || 0)) + (parseFloat(formik.values.vendorShare || 0)),
                         discountPrice: formik.values.costPrice,
-                        hsnSacCode: {id:formik.values.hsnSacCode.id},
+                        hsnSacCode: {id:formik.values.hsnSacCode},
                         unitOfMeasurement: {
                             id: "1"
                         },
@@ -150,7 +171,6 @@ export const ProductCreateForm = (props) => {
                 throw new Error(response);
             }
             const data = response.json();
-            // console.log(data);
             toast.success("Product created Successfully", {autoClose: 10000});
             router.push(paths.productManagement.products.index);
         } catch (err) {
@@ -195,11 +215,20 @@ export const ProductCreateForm = (props) => {
         },
         validationSchema: Yup.object({
             vendor: Yup.string().required("Vendor Name is required"),
-            categoryName: Yup.string().required(),
+            categoryName: Yup.string().required("Category  is required"),
+            hsnSacCode:Yup.string().required("Code  is required"),
+            subCategoryName: Yup.string().required("Sub Category  is required"),
             description: Yup.string().max(5000),
+<<<<<<< 309cad120c935dba56d2a2a0ac3d6cdc8a70aa65
+            name: Yup.string().max(45).required("product title is required"),
+            costPrice: Yup.number().required("Cost price is required"),
+            organizationShare:Yup.number().required("Organization Share is required"),
+            vendorShare:Yup.number().required("Vendor Share is required"),
+=======
             images: Yup.array(),
             name: Yup.string().max(45).required(),
             costPrice: Yup.number(),
+>>>>>>> 7506ae54ee45df52074a4ac87ba89e7113a32228
             sku: Yup.string().max(255),
         }),
         onSubmit: submitProduct
@@ -264,7 +293,7 @@ export const ProductCreateForm = (props) => {
         if (selectedHsnCode) {
             formik.setValues({
                 ...formik.values,
-                hsnSacCode: selectedHsnCode,
+                hsnSacCode: selectedHsnCode.id,
                 cgst: selectedHsnCode.cgstPercentage,
                 sgst: selectedHsnCode.sgstPercentage,
                 igst: selectedHsnCode.igstPercentage,
@@ -275,7 +304,7 @@ export const ProductCreateForm = (props) => {
         if (selectedSacCode) {
             formik.setValues({
                 ...formik.values,
-                hsnSacCode: selectedSacCode,
+                hsnSacCode: selectedSacCode.id,
                 cgst: selectedSacCode.cgstPercentage,
                 sgst: selectedSacCode.sgstPercentage,
                 igst: selectedSacCode.igstPercentage,
@@ -310,8 +339,12 @@ export const ProductCreateForm = (props) => {
     const [cat, setCat] = useState('')
     const handleGetCat = async (input) => {
         let path = endpoints.category.index.index;
+<<<<<<< 309cad120c935dba56d2a2a0ac3d6cdc8a70aa65
+        let result = await search(input,path);
+=======
         let result = await search(input, path);
         console.log(result)
+>>>>>>> 7506ae54ee45df52074a4ac87ba89e7113a32228
         setCategories(result.hits);
     }
 
@@ -330,7 +363,9 @@ export const ProductCreateForm = (props) => {
         const {data: hsnSacCodesData} = await hsnSacCodes.json();
         setHsnSacCodes(hsnSacCodesData);
     }
-
+    useEffect(() => {
+        handleGetCat("")
+    }, []);
     const handleRadioChange = (event) => {
         const selectedValue = event.target.value;
         getHsnSacCodes(selectedValue)
@@ -352,15 +387,25 @@ export const ProductCreateForm = (props) => {
                             <Grid xs={12} md={8}>
                                 <Stack spacing={3}>
                                     <Autocomplete
+                                        error={formik.touched.vendor && Boolean(formik.errors.vendor)}
+                                        helperText={formik.touched.vendor && formik.errors.vendor}
                                         options={vendors}
-                                        getOptionLabel={(option) => option.user.firstName}
+                                        getOptionLabel={(option) => option.user.firstName + " " + option.user.lastName}
                                         renderInput={(params) => (
-                                            <TextField {...params} label="Select vendor"/>
+                                            <TextField
+                                                {...params}
+                                                label="Select vendor"
+                                                variant="outlined" // Add this line for outlined style
+                                                error={formik.touched.vendor && Boolean(formik.errors.vendor)} // Repeat the error prop here
+                                                helperText={formik.touched.vendor && formik.errors.vendor} // Repeat the helperText prop here
+                                            />
                                         )}
-                                        onChange={(vendor, value) => {
-                                            formik.values.vendor = value?.id
+                                        onChange={(event, value) => {
+                                            formik.setFieldValue('vendor', value ? value.id : '');
                                         }}
+                                        value={vendors.find(vendor => vendor.id === formik.values.vendor) || null}
                                     />
+
                                 </Stack>
                             </Grid>
                         </Grid>
@@ -394,12 +439,21 @@ export const ProductCreateForm = (props) => {
                                         options={hsnSacCodes}
                                         getOptionLabel={(option) => option.code}
                                         renderInput={(params) => (
-                                            <TextField {...params} label="Select Hsn Codes"/>
+                                            <TextField
+                                                {...params}
+                                                label="Select HSN Code"
+                                                variant="outlined"
+                                                error={formik.touched.hsnSacCode && Boolean(formik.errors.hsnSacCode)}
+                                                helperText={formik.touched.hsnSacCode && formik.errors.hsnSacCode}
+                                            />
                                         )}
                                         onChange={(event, value) => {
+                                            formik.setFieldValue('hsnSacCode', value ? value.id : ''); // Update Formik value
                                             setSelectedHsnCode(value);
                                         }}
+                                        value={hsnSacCodes.find((option) => option.id === formik.values.hsnSacCode) || null}
                                     />
+
                                 )}
 
                                 {showSACDropdown && (
@@ -407,11 +461,18 @@ export const ProductCreateForm = (props) => {
                                         options={hsnSacCodes}
                                         getOptionLabel={(option) => option.code}
                                         renderInput={(params) => (
-                                            <TextField {...params} label="Select SAC Codes"/>
+                                            <TextField
+                                                {...params}
+                                                label="Select SAC Code"
+                                                variant="outlined"
+                                                error={formik.touched.hsnSacCode && Boolean(formik.errors.hsnSacCode)}
+                                                helperText={formik.touched.hsnSacCode && formik.errors.hsnSacCode}
+                                            />
                                         )}
                                         onChange={(event, value) => {
                                             setSelectedSacCode(value);
                                         }}
+                                        value={hsnSacCodes.find((option) => option === formik.values.hsnSacCode) || null}
                                     />
                                 )}
                             </Grid>
@@ -434,25 +495,33 @@ export const ProductCreateForm = (props) => {
                                         onInputChange={(event, newInputValue) => handleGetCat(newInputValue)}
                                         getOptionLabel={(option) => option.name}
                                         renderInput={(params) => (
-                                            <TextField {...params} label="Select Product Category"/>
+                                            <TextField
+                                                {...params}
+                                                label="Select Product Category"
+                                                error={formik.touched.categoryName && Boolean(formik.errors.categoryName)}
+                                                helperText={formik.touched.categoryName && formik.errors.categoryName}
+                                            />
                                         )}
                                         onChange={(category, value) => {
                                             getSubCat(value?.id)
                                             formik.values.categoryName = value?.id;
                                         }}
                                     />
-
-                                    <Autocomplete
-                                        options={subCategories}
-                                        getOptionLabel={(option) => option.name}
-                                        renderInput={(params) => (
-                                            <TextField {...params} label="Select Product Sub-Category"/>
-                                        )}
-                                        onChange={(subCategory, value) => {
-                                            formik.values.subCategoryName = value?.id;
-                                            // console.log(formik.values.subCategoryName)
-                                        }}
-                                    />
+                                        <Autocomplete
+                                            options={subCategories}
+                                            getOptionLabel={(option) => option.name}
+                                            renderInput={(params) => (
+                                                <TextField
+                                                    {...params}
+                                                    label="Select Product Sub-Category"
+                                                    error={formik.touched.subCategoryName && Boolean(formik.errors.subCategoryName)}
+                                                    helperText={formik.touched.subCategoryName && formik.errors.subCategoryName}
+                                                />
+                                            )}
+                                            onChange={(event, value) => {
+                                                formik.setFieldValue('subCategoryName', value ? value.id : ''); // Updated to use setFieldValue
+                                            }}
+                                        />
                                 </Stack>
                             </Grid>
                         </Grid>
@@ -591,10 +660,10 @@ export const ProductCreateForm = (props) => {
                     <CardContent>
                         <Grid container spacing={3}>
                             <Grid xs={12} md={4}>
-                                <Typography variant="h6" sx={{display: "flex"}}>Event Category</Typography>
+                                <Typography variant="h6" sx={{display: "flex"}}>Event Category </Typography>
                             </Grid>
                             <Grid xs={12} md={8}>
-                                <Autocomplete
+                                <Stack spacing={3}><Autocomplete
                                     // options={eventCategories}
                                     options={availableEventCategories}
                                     getOptionLabel={(option) => option.name}
@@ -607,24 +676,24 @@ export const ProductCreateForm = (props) => {
                                         }
                                     }}
                                 />
-                                <Stack
-                                    alignItems="center"
-                                    direction="row"
-                                    flexWrap="wrap"
-                                    spacing={1}
-                                >
-                                    <div>
-                                        {selectedEvent.map((event) => (
-                                            <Chip
-                                                key={event.id}
-                                                label={event.name}
-                                                onDelete={() => {
-                                                    handleEventDelete(event);
-                                                }}
-                                            />
-                                        ))}
-                                    </div>
-                                </Stack>
+                                    <Stack
+                                        alignItems="center"
+                                        direction="row"
+                                        flexWrap="wrap"
+                                        spacing={1}
+                                    >
+                                        <div>
+                                            {selectedEvent.map((event) => (
+                                                <Chip
+                                                    key={event.id}
+                                                    label={event.name}
+                                                    onDelete={() => {
+                                                        handleEventDelete(event);
+                                                    }}
+                                                />
+                                            ))}
+                                        </div>
+                                    </Stack></Stack>
                             </Grid>
                         </Grid>
                     </CardContent>
@@ -804,6 +873,31 @@ export const ProductCreateForm = (props) => {
                     </CardContent>
                 </Card>
 
+<<<<<<< 309cad120c935dba56d2a2a0ac3d6cdc8a70aa65
+                <Card>
+                    <CardContent>
+                        <Grid container spacing={3}>
+                            <Grid xs={12} md={4}>
+                                <Stack spacing={1}>
+                                    <Typography variant="h6" sx={{display: "flex"}}>Product Images <Typography
+                                        sx={{color: "red"}}>*</Typography></Typography>
+                                </Stack>
+                            </Grid>
+                            <Grid xs={12} md={8}>
+                                {/*<FileDropzone*/}
+                                {/*    accept={{"image/*": []}}*/}
+                                {/*    caption="(SVG, JPG, PNG, or gif maximum 900x400)"*/}
+                                {/*    files={files}*/}
+                                {/*    onDrop={handleFilesDrop}*/}
+                                {/*    onRemove={handleFileRemove}*/}
+                                {/*    onRemoveAll={handleFilesRemoveAll}*/}
+                                {/*    disabled*/}
+                                {/*/>*/}
+                            </Grid>
+                        </Grid>
+                    </CardContent>
+                </Card>
+=======
                 {/*<Card>*/}
                 {/*    <CardContent>*/}
                 {/*        <Grid container spacing={3}>*/}
@@ -827,6 +921,7 @@ export const ProductCreateForm = (props) => {
                 {/*        </Grid>*/}
                 {/*    </CardContent>*/}
                 {/*</Card>*/}
+>>>>>>> 7506ae54ee45df52074a4ac87ba89e7113a32228
                 <Stack
                     alignItems="center"
                     direction="row"
@@ -844,7 +939,7 @@ export const ProductCreateForm = (props) => {
                 <CommonDialog
                     title={"Create"}
                     onConfirm={() => {
-                        submitProduct(formik);
+                        Productsave();
                         handleCreateDialogClose();
                     }}
                     onClose={handleCreateDialogClose}

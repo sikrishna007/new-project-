@@ -54,7 +54,7 @@ const Page = () => {
 
     return (
         <>
-            <Seo title={`Product Category: ${category.name}`} />
+            <Seo title={`Product Category:`} />
             <Box
                 component="main"
                 sx={{
@@ -88,7 +88,7 @@ const Page = () => {
                                         <ArrowLeftIcon />
                                     </SvgIcon>
                                 </Link>
-                                <Typography variant="h4">{category.name}</Typography>
+                                <Typography variant="h4">Category Information</Typography>
                             </div>
                             {category?.isActive? (
                                 <Button
@@ -156,8 +156,13 @@ const Page = () => {
                                 <Grid container spacing={3}>
                                     <Grid xs={12} md={6}>
                                         <PropertyListItem
+<<<<<<< 309cad120c935dba56d2a2a0ac3d6cdc8a70aa65
+                                            label="Category Name"
+                                            value={category?.name && category.name.charAt(0).toUpperCase() + category.name.slice(1)}
+=======
                                             label="Product Category"
                                             value={category?.name}
+>>>>>>> 7506ae54ee45df52074a4ac87ba89e7113a32228
                                         />
 
                                     </Grid>

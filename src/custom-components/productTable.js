@@ -32,15 +32,28 @@ import {setState} from "@aws-amplify/auth/lib/OAuth/oauthStorage";
 import {patchMethod} from "@/utils/util";
 import {visuallyHidden} from "@mui/utils";
 const getTableHeaders = () => {
-    return [
-            {key:"name",label:"PRODUCT"},
-            {key:"offeringSubCategories.offeringCategories.name",label:"CATEGORY"},
-            {key:"inStock",label:"STOCK"},
-            {key:"unitPrice",label:"PRICE"},
-            {key:"vendor",label:"VENDOR"},
-            {key:"createdAt",label:"Created"},
-            {key:"updatedAt",label:"Updated"},
+    let role = Cookies.get("role");
+    if(role!== "VENDOR") {
+        return [
+            {key: "name", label: "PRODUCT"},
+            {key: "offeringSubCategories.offeringCategories.name", label: "CATEGORY"},
+            {key: "inStock", label: "STOCK"},
+            {key: "unitPrice", label: "PRICE"},
+            {key: "vendor", label: "VENDOR"},
+            {key: "createdAt", label: "Created"},
+            {key: "updatedAt", label: "Updated"},
         ];
+    }
+    else{
+        return [
+            {key: "name", label: "PRODUCT"},
+            {key: "offeringSubCategories.offeringCategories.name", label: "CATEGORY"},
+            {key: "inStock", label: "STOCK"},
+            {key: "unitPrice", label: "PRICE"},
+            {key: "createdAt", label: "Created"},
+            {key: "updatedAt", label: "Updated"},
+        ];
+    }
 };
 
 export const ProductTable = (props) => {
@@ -74,7 +87,8 @@ export const ProductTable = (props) => {
     };
 
     useEffect(() => {
-        fetchVendors();
+        if(role!=="VENDOR"){
+        fetchVendors();}
     }, []); // Fetch vendors when the component mounts
 
     // Function to get vendor name by vendor ID
@@ -106,7 +120,6 @@ export const ProductTable = (props) => {
     const selectedSome = selected.length > 0 && selected.length < items.length;
     const selectedAll = items.length > 0 && selected.length === items.length;
     const enableBulkActions = selected.length > 0;
-
     const [activateOpenAll, setActivateOpenAll] = React.useState(false);
     const [deactivateOpenAll, setDeactivateOpenAll] = React.useState(false);
 
@@ -190,7 +203,6 @@ export const ProductTable = (props) => {
                         Deactivate
                     </Button>
                     <CommonDialog  onConfirm={() => {
-                        // console.log("deactivate")
                         setDeactivateOpenAll(false)
                         selected.forEach((item) => activate_deactivate(item, "false"));
                     }} onClose={handleAllDeactivateClose} open={deactivateOpenAll}
@@ -320,9 +332,11 @@ export const ProductTable = (props) => {
                                     <TableCell sx={{textAlign: "left"}}>
                                             ₹ {product?.unitPrice}
                                     </TableCell>
-                                    <TableCell sx={{textAlign: "left"}}>
+                                    {role === "VENDOR"?"":<TableCell sx={{textAlign: "left"}}>
+                                        <Typography variant="subtitle2">
                                             {getVendorNameById(product?.vendor)}
-                                    </TableCell>
+                                        </Typography>
+                                    </TableCell>}
                                     <TableCell sx={{textAlign: "left"}}>
                                             {new Date(product?.createdAt).toLocaleDateString(undefined, {
                                                 day: "2-digit",

@@ -167,8 +167,8 @@ export const VendorBasic = (props) => {
                         <DesktopDatePicker
                             label="Date Of Birth"
                             name="dateOfBirth"
-                            defaultValue={null}
-                            format="yyyy-MM-dd"
+                            defaultValue={formik.values.dateOfBirth ? new Date(formik.values.dateOfBirth) : null}
+                            format="dd-MM-yyyy"
                             sx={{width: "100%"}}
                             // value={startDate}
                             onChange={handleStartDateChange}

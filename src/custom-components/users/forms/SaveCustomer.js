@@ -25,7 +25,6 @@ export const CreateCustomer = (props) => {
     };
 
     const customerSave=()=>{
-        console.log(formik)
         if (Object.keys(formik.errors).length > 0) {
             toast.error("Please fill in all the required fields", {
                 position: "top-right",
@@ -105,7 +104,6 @@ export const EditCustomer = (props) => {
     };
 
     const customerSave=()=>{
-        console.log(formik)
         if (Object.keys(formik.errors).length > 0) {
             toast.error("Please fill in all the required fields", {
                 position: "top-right",

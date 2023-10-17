@@ -42,7 +42,6 @@ const Page = ({vendor}) => {
         name:''
     })
     const verify_reject = async (id, temp) => {
-       console.log("ok")
     };
 
     return (

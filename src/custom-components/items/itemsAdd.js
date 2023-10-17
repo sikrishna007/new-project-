@@ -5,7 +5,7 @@ import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import * as React from "react";
-import {useCallback, useState} from "react";
+import {useCallback, useEffect, useState} from "react";
 import {useFormik} from "formik";
 import * as Yup from "yup";
 import {RouterLink} from "src/components/router-link";
@@ -24,6 +24,7 @@ import ArrowLeftIcon from "@untitled-ui/icons-react/build/esm/ArrowLeft";
 import CommonDialog from "@/custom-components/CommonDialog";
 import Autocomplete from "@mui/material/Autocomplete";
 import {endpoints} from "@/endpoints";
+import {search} from "@/utils/util";
 
 
 const ItemAdd = ({title, pathUrl}) => {
@@ -149,24 +150,13 @@ const ItemAdd = ({title, pathUrl}) => {
         setFiles([]);
     }, []);
 
-    const getCategories = async () => {
-        try {
-            let token = Cookies.get("accessToken");
-            const categories = await fetch(
-                process.env.NEXT_PUBLIC_BASE_URL + endpoints.category.index,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
-            const {data: categoryData} = await categories.json();
-            setCategories(categoryData);
-        } catch (err) {
-        }
-    };
-    React.useEffect(() => {
-        getCategories();
+    const handleGetCat =async (input)=>{
+        let path = endpoints.category.index.index;
+        let result = await search(input,path);
+        setCategories(result.hits);
+    }
+    useEffect(() => {
+        handleGetCat("")
     }, []);
 
     return (
@@ -223,12 +213,16 @@ const ItemAdd = ({title, pathUrl}) => {
                                                         <Autocomplete
                                                             options={categories}
                                                             name="categoryName"
+<<<<<<< 309cad120c935dba56d2a2a0ac3d6cdc8a70aa65
+                                                            onInputChange={(event, newInputValue) => handleGetCat(newInputValue)}
+=======
+>>>>>>> 7506ae54ee45df52074a4ac87ba89e7113a32228
                                                             getOptionLabel={(option) => option.name}
                                                             renderInput={(params) => (
                                                                 <TextField {...params} label="Select Product Category"/>
                                                             )}
-                                                            onChange={(vendor, value) => {
-                                                                formik.values.categoryName = value?.id
+                                                            onChange={(category, value) => {
+                                                                formik.values.categoryName = value?.id;
                                                             }}
                                                         />
                                                     </Stack>

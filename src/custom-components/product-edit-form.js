@@ -99,7 +99,7 @@ export const ProductEditForm = (props) => {
         setAvailableEventCategories([...availableEventCategories, event]);
     };
 
-    const vaidation = (formik) => {
+    const vaidation = () => {
         const newArray = selectedEvent.map((obj) => ({id: obj.id}));
         formik.values.eventCategories = newArray
         formik.values.tags = tags
@@ -111,9 +111,19 @@ export const ProductEditForm = (props) => {
                 },
                 icon: <ToastError/>,
             });
-        } else {
-            submitProduct(formik)
         }
+        else if(formik.values.name === "" ||formik.values.vendor === ""){
+            toast.error("Please fill in all the required fields", {
+                position: "top-right",
+                style: {
+                    backgroundColor: "#D65745",
+                },
+                icon: <ToastError/>,
+            });
+        }
+
+        formik.handleSubmit();
+
     }
     const submitProduct = async (formik, helpers) => {
 
@@ -195,13 +205,16 @@ export const ProductEditForm = (props) => {
             inStock: product?.inStock,
         },
         validationSchema: Yup.object({
-            categoryName: Yup.object().required(),
-            subCategoryName: Yup.object().required(),
+            vendor: Yup.string().required("Vendor Name is required"),
+            categoryName: Yup.string().required("Category  is required"),
+            hsnSacCode:Yup.string().required("Code  is required"),
+            subCategoryName: Yup.string().required("Sub Category  is required"),
             description: Yup.string().max(5000),
-            images: Yup.array(),
-            name: Yup.string().max(45).required(),
-            vendorShare: Yup.number().required(),
-            organizationShare: Yup.number().required(),
+            name: Yup.string().max(45).required("product title is required"),
+            costPrice: Yup.number().required("Cost price is required"),
+            organizationShare:Yup.number().required("Organization Share is required"),
+            vendorShare:Yup.number().required("Vendor Share is required"),
+            sku: Yup.string().max(255),
         }),
         onSubmit: submitProduct
     });
@@ -603,11 +616,10 @@ export const ProductEditForm = (props) => {
                     <CardContent>
                         <Grid container spacing={3}>
                             <Grid xs={12} md={4}>
-                                <Typography variant="h6" sx={{display: "flex"}}>Event Category <Typography
-                                    sx={{color: "red"}}>*</Typography></Typography>
+                                <Typography variant="h6" sx={{display: "flex"}}>Event Category </Typography>
                             </Grid>
                             <Grid xs={12} md={8}>
-                                <Autocomplete
+                                <Stack spacing={3}><Autocomplete
                                     // options={eventCategories}
                                     options={availableEventCategories}
                                     getOptionLabel={(option) => option.name}
@@ -620,25 +632,24 @@ export const ProductEditForm = (props) => {
                                         }
                                     }}
                                 />
-                                <Stack
-                                    alignItems="center"
-                                    direction="row"
-                                    flexWrap="wrap"
-                                    spacing={2}
-                                    sx={{marginTop: "3%"}}
-                                >
-                                    <div>
-                                        {selectedEvent.map((event) => (
-                                            <Chip
-                                                key={event.id}
-                                                label={event.name}
-                                                onDelete={() => {
-                                                    handleEventDelete(event);
-                                                }}
-                                            />
-                                        ))}
-                                    </div>
-                                </Stack>
+                                    <Stack
+                                        alignItems="center"
+                                        direction="row"
+                                        flexWrap="wrap"
+                                        spacing={1}
+                                    >
+                                        <div>
+                                            {selectedEvent.map((event) => (
+                                                <Chip
+                                                    key={event.id}
+                                                    label={event.name}
+                                                    onDelete={() => {
+                                                        handleEventDelete(event);
+                                                    }}
+                                                />
+                                            ))}
+                                        </div>
+                                    </Stack></Stack>
                             </Grid>
                         </Grid>
                     </CardContent>

@@ -26,7 +26,6 @@ import ArrowRightSharpIcon from "@mui/icons-material/ArrowRightSharp";
 import Cookies from "js-cookie";
 
 const Page = ({product, vendor}) => {
-    console.log(product)
     const router = useRouter();
     let role=Cookies.get("role")
     return (
@@ -65,7 +64,7 @@ const Page = ({product, vendor}) => {
                                         <ArrowLeftIcon/>
                                     </SvgIcon>
                                 </Link>
-                                <Typography variant="h4">{product?.name}</Typography>
+                                <Typography variant="h4">Product Information</Typography>
                             </div>
                             {role === "VENDOR" ? "": product?.isActive ? (
                                 <Button
@@ -135,6 +134,11 @@ const Page = ({product, vendor}) => {
                             <CardHeader title="Product Details"/>
                             <PropertyList>
                                 <Grid container spacing={3}>
+                                    <Grid xs={12} md={4}>
+                                        <PropertyListItem label="Product Name"
+                                                          value={product.name}
+                                        />
+                                    </Grid>
                                     <Grid xs={12} md={4}>
                                         <PropertyListItem label="Vendor Name"
                                                           value={vendor.user.firstName + ' ' + vendor.user.lastName}
