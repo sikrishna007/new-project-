@@ -263,7 +263,7 @@ export const CustomerTable = (props) => {
                                     { location!=='employees' ?
                                     customer.name != null
                                         ? <TableCell sx={{textAlign: "left"}}>
-                                            {customer?.name && customer.name.charAt(0).toUpperCase() + customer.name.slice(1)}
+                                            {customer?.name}
                                         </TableCell>
                                         :
                                         <TableCell sx={{textAlign: "left"}}>

@@ -157,7 +157,7 @@ const Page = () => {
                                     <Grid xs={12} md={6}>
                                         <PropertyListItem
                                             label="Product Category"
-                                            value={category?.name && category.name.charAt(0).toUpperCase() + category.name.slice(1)}
+                                            value={category?.name}
                                         />
 
                                     </Grid>

@@ -389,7 +389,7 @@ const Page = ({vendor}) => {
                                                         fontWeight: "400",
                                                         lineHeight: "22px"
                                                     }}>
-                                            {vendor?.name && vendor.name.charAt(0).toUpperCase() + vendor.name.slice(1)}
+                                            {vendor?.name}
                                         </Typography>
 
                                     </Grid><Grid xs={12} md={8}>
