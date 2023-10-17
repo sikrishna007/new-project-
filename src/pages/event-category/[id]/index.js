@@ -64,7 +64,7 @@ const Page = ({category}) => {
                                         <ArrowLeftIcon/>
                                     </SvgIcon>
                                 </Link>
-                                <Typography variant="h4">{category.name}</Typography>
+                                <Typography variant="h4">Event Category Information</Typography>
                             </div>
                             {category?.isActive ? (
                                 <Button
@@ -138,18 +138,13 @@ const Page = ({category}) => {
                                 <Grid container spacing={3}>
                                     <Grid xs={12} md={6}>
                                         <PropertyListItem
-                                            label="Event Category"
+                                            label="Event Category Name"
                                             value={category?.name && category.name.charAt(0).toUpperCase() + category.name.slice(1)}
                                         />
                                         <PropertyListItem
                                             label="Description"
-                                            // value={category.long_description}
+                                            value={category.longDescription}
                                         >
-                                            <p
-                                                dangerouslySetInnerHTML={{
-                                                    __html: category.longDescription,
-                                                }}
-                                            />
                                         </PropertyListItem>
                                     </Grid>
 
