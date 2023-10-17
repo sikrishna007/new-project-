@@ -31,6 +31,7 @@ const ItemEdit = ({title, pathUrl, category}) => {
     const [categories, setCategories] = useState([]);
     const [createDialogOpen, setCreateDialogOpen] = useState(false);
     const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
+    const [descriptionCharCount, setDesctriptionCharCount]  = useState(0);
     const handleCreateDialogOpen = () => {
         setCreateDialogOpen(true);
     };
@@ -262,26 +263,26 @@ const ItemEdit = ({title, pathUrl, category}) => {
                                         <Grid container spacing={3}>
                                             <Grid xs={12} md={4}>
                                                 <Stack spacing={1}>
-                                                    <Typography variant="h6" sx={{display: "flex"}}>
-                                                        Upload Thumbnail Image <Typography
-                                                        sx={{color: "red"}}>*</Typography>
-                                                    </Typography>
+                                                    {/*<Typography variant="h6" sx={{display: "flex"}}>*/}
+                                                    {/*    Upload Thumbnail Image <Typography*/}
+                                                    {/*    sx={{color: "red"}}>*</Typography>*/}
+                                                    {/*</Typography>*/}
                                                 </Stack>
                                             </Grid>
                                             <Grid xs={12} md={8}>
-                                                <FileDropzone
-                                                    maxFiles={1}
-                                                    accept={{"image/*": []}}
-                                                    caption="(SVG, JPG, PNG, or gif maximum 900x400)"
-                                                    files={files}
-                                                    onDrop={handleFilesDrop}
-                                                    onRemove={handleFileRemove}
-                                                    onRemoveAll={handleFilesRemoveAll}
-                                                    disabled
-                                                />
+                                                {/*<FileDropzone*/}
+                                                {/*    maxFiles={1}*/}
+                                                {/*    accept={{"image/*": []}}*/}
+                                                {/*    caption="(SVG, JPG, PNG, or gif maximum 900x400)"*/}
+                                                {/*    files={files}*/}
+                                                {/*    onDrop={handleFilesDrop}*/}
+                                                {/*    onRemove={handleFileRemove}*/}
+                                                {/*    onRemoveAll={handleFilesRemoveAll}*/}
+                                                {/*    disabled*/}
+                                                {/*/>*/}
                                                 <Grid mt={5} xs={12} md={8}>
                                                     {location === "edit" && (
-
+                                                        <>
                                                         <TextField
                                                             error={
                                                                 !!(formik.touched.longDescription && formik.errors.longDescription)
@@ -295,11 +296,28 @@ const ItemEdit = ({title, pathUrl, category}) => {
                                                             multiline
                                                             rows={6}
                                                             onBlur={formik.handleBlur}
-                                                            onChange={formik.handleChange}
+                                                            onChange={(e) => {
+                                                                formik.handleChange(e);
+                                                                setDesctriptionCharCount(e.target.value.length);
+                                                            }}
                                                             value={formik.values.longDescription}
+                                                            inputProps={{
+                                                                maxLength: 1000
+                                                            }}
                                                         />
+                                                            <Typography variant="body2" color="textSecondary"
+                                                                        sx={{
+                                                                            display: "flex",
+                                                                            justifyContent: "flex-end",
+                                                                            marginTop: 1
+                                                                        }}
 
+                                                            >
+                                                                {descriptionCharCount}/1000
+                                                            </Typography>
+                                                        </>
                                                     )}
+
                                                 </Grid>
                                             </Grid>
                                         </Grid>
@@ -322,6 +340,7 @@ const ItemEdit = ({title, pathUrl, category}) => {
                                     </Button>
                                 </Stack>
                                 <CommonDialog
+                                    title={"Yes"}
                                     onConfirm={() => {
                                         formik.handleSubmit();
                                         handleCreateDialogClose();
@@ -331,6 +350,7 @@ const ItemEdit = ({title, pathUrl, category}) => {
                                     description={"Are you sure you want to create ?"}
                                 />
                                 <CommonDialog
+                                    title={"Yes"}
                                     onConfirm={() => {
                                         router.push(pathUrl)
                                         handleCancelDialogClose();
