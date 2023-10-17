@@ -21,7 +21,6 @@ export const handleGetAddress = (lat,log) => {
                     addressLine2: components.find(comp => comp.types.includes('sublocality_level_3'))?.long_name,
                     pincode : components.find(comp => comp.types.includes('postal_code'))?.long_name
                 }
-                console.log(newAddress)
                return newAddress;
             })
     } else {
