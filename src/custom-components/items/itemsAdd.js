@@ -150,7 +150,6 @@ const ItemAdd = ({title, pathUrl}) => {
     const handleGetCat =async (input)=>{
         let path = endpoints.category.index.index;
         let result = await search(input,path);
-        console.log(result)
         setCategories(result.hits);
     }
     useEffect(() => {
