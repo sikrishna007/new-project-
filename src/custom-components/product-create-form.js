@@ -45,6 +45,7 @@ export const ProductCreateForm = (props) => {
     const [tags, setTags] = useState([]);
     const [createDialogOpen, setCreateDialogOpen] = useState(false);
     const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
+    const [descriptionCharCount, setDescriptionCharCount] = useState(0);
     const handleCreateDialogOpen = () => {
         setCreateDialogOpen(true);
     };
@@ -197,7 +198,7 @@ export const ProductCreateForm = (props) => {
             categoryName: Yup.string().required(),
             description: Yup.string().max(5000),
             images: Yup.array(),
-            name: Yup.string().max(45).required().matches(/^[A-Za-z0-9 ]+$/, 'Product name should only contain alphabets'),
+            name: Yup.string().max(45).required(),
             costPrice: Yup.number(),
             sku: Yup.string().max(255),
         }),
@@ -288,7 +289,7 @@ export const ProductCreateForm = (props) => {
         // console.log(id);
 
         const subCategories = await fetch(
-            process.env.NEXT_PUBLIC_BASE_URL + endpoints.category.index + "/" + id  + endpoints.subCategory.index,
+            process.env.NEXT_PUBLIC_BASE_URL + endpoints.category.index + "/" + id + endpoints.subCategory.index,
             {
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -306,10 +307,10 @@ export const ProductCreateForm = (props) => {
     const [showHSNDropdown, setShowHSNDropdown] = useState(true);
     const [showSACDropdown, setShowSACDropdown] = useState(false);
 
-    const [cat,setCat]= useState('')
-    const handleGetCat =async (input)=>{
+    const [cat, setCat] = useState('')
+    const handleGetCat = async (input) => {
         let path = endpoints.category.index.index;
-        let result = await search(input,path);
+        let result = await search(input, path);
         console.log(result)
         setCategories(result.hits);
     }
@@ -480,16 +481,33 @@ export const ProductCreateForm = (props) => {
                                         multiline
                                         rows={10}
                                         onBlur={formik.handleBlur}
-                                        onChange={formik.handleChange}
-                                        value={formik.values.description}
+
                                         fullWidth
                                         error={!!(
-                                            formik.touched.description &&formik.errors.description
+                                            formik.touched.description && formik.errors.description
                                         )}
                                         helperText={
                                             formik.touched.description && formik.errors.description
                                         }
+                                        onChange={(e) => {
+                                            formik.handleChange(e);
+                                            setDescriptionCharCount(e.target.value.length);
+                                        }}
+                                        value={formik.values.longDescription}
+                                        inputProps={{
+                                            maxLength: 1000
+                                        }}
                                     />
+                                    <Typography variant="body2" color="textSecondary"
+                                                sx={{
+                                                    display: "flex",
+                                                    justifyContent: "flex-end",
+                                                    marginTop: 1
+                                                }}
+
+                                    >
+                                        {descriptionCharCount}/1000
+                                    </Typography>
                                 </Stack>
                             </Grid>
 
@@ -786,29 +804,29 @@ export const ProductCreateForm = (props) => {
                     </CardContent>
                 </Card>
 
-                <Card>
-                    <CardContent>
-                        <Grid container spacing={3}>
-                            <Grid xs={12} md={4}>
-                                <Stack spacing={1}>
-                                    <Typography variant="h6" sx={{display: "flex"}}>Product Images <Typography
-                                        sx={{color: "red"}}>*</Typography></Typography>
-                                </Stack>
-                            </Grid>
-                            <Grid xs={12} md={8}>
-                                <FileDropzone
-                                    accept={{"image/*": []}}
-                                    caption="(SVG, JPG, PNG, or gif maximum 900x400)"
-                                    files={files}
-                                    onDrop={handleFilesDrop}
-                                    onRemove={handleFileRemove}
-                                    onRemoveAll={handleFilesRemoveAll}
-                                    disabled
-                                />
-                            </Grid>
-                        </Grid>
-                    </CardContent>
-                </Card>
+                {/*<Card>*/}
+                {/*    <CardContent>*/}
+                {/*        <Grid container spacing={3}>*/}
+                {/*            <Grid xs={12} md={4}>*/}
+                {/*                <Stack spacing={1}>*/}
+                {/*                    <Typography variant="h6" sx={{display: "flex"}}>Product Images <Typography*/}
+                {/*                        sx={{color: "red"}}>*</Typography></Typography>*/}
+                {/*                </Stack>*/}
+                {/*            </Grid>*/}
+                {/*            <Grid xs={12} md={8}>*/}
+                {/*                <FileDropzone*/}
+                {/*                    accept={{"image/*": []}}*/}
+                {/*                    caption="(SVG, JPG, PNG, or gif maximum 900x400)"*/}
+                {/*                    files={files}*/}
+                {/*                    onDrop={handleFilesDrop}*/}
+                {/*                    onRemove={handleFileRemove}*/}
+                {/*                    onRemoveAll={handleFilesRemoveAll}*/}
+                {/*                    disabled*/}
+                {/*                />*/}
+                {/*            </Grid>*/}
+                {/*        </Grid>*/}
+                {/*    </CardContent>*/}
+                {/*</Card>*/}
                 <Stack
                     alignItems="center"
                     direction="row"

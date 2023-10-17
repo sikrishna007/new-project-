@@ -231,7 +231,7 @@ export const ItemsTable = (props) => {
                                                     component={RouterLink}
                                                     href={`${location}/${eventCategory.id}`}
                                                 >
-                                                    {eventCategory.name && eventCategory.name.charAt(0).toUpperCase() + eventCategory.name.slice(1)}
+                                                    {eventCategory.name}
                                                 </Link>
                                             </div>
                                         </Tooltip>

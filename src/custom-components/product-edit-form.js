@@ -39,6 +39,7 @@ export const ProductEditForm = (props) => {
     const [tags, setTags] = useState([...product?.tags]);
     const [createDialogOpen, setCreateDialogOpen] = useState(false);
     const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
+    const [descriptionCharCount, setDescriptionCharCount] = useState(0);
     const handleCreateDialogOpen = () => {
         setCreateDialogOpen(true);
     };
@@ -198,13 +199,12 @@ export const ProductEditForm = (props) => {
             subCategoryName: Yup.object().required(),
             description: Yup.string().max(5000),
             images: Yup.array(),
-            name: Yup.string().max(45).required().matches(/^[A-Za-z ]+$/, 'Product name should only contain alphabets'),
+            name: Yup.string().max(45).required(),
             vendorShare: Yup.number().required(),
             organizationShare: Yup.number().required(),
         }),
         onSubmit: submitProduct
     });
-
 
     const handleFilesDrop = useCallback((newFiles) => {
         setFiles((prevFiles) => {
@@ -402,7 +402,7 @@ export const ProductEditForm = (props) => {
                                         getOptionLabel={(option) => option.code}
                                         value={formik.values.hsnSacCode}
                                         renderInput={(params) => (
-                                            <TextField {...params} label="Select Hsn Codes"/>
+                                            <TextField {...params} label="Select HSN Codes"/>
                                         )}
                                         onChange={(event, value) => {
                                             setSelectedHsnCode(value);
@@ -449,7 +449,6 @@ export const ProductEditForm = (props) => {
                                             getSubCat(value?.id)
                                             formik.values.categoryName = value;
                                             formik.setFieldValue("subCategoryName", []);
-                                            console.log(formik.values)
 
                                         }}
                                     />
@@ -494,8 +493,7 @@ export const ProductEditForm = (props) => {
                                         multiline
                                         rows={10}
                                         onBlur={formik.handleBlur}
-                                        onChange={formik.handleChange}
-                                        value={formik.values.description}
+
                                         fullWidth
                                         error={!!(
                                             formik.touched.description &&formik.errors.description
@@ -503,7 +501,25 @@ export const ProductEditForm = (props) => {
                                         helperText={
                                             formik.touched.description && formik.errors.description
                                         }
+                                        onChange={(e) => {
+                                            formik.handleChange(e);
+                                            setDescriptionCharCount(e.target.value.length);
+                                        }}
+                                        value={formik.values.longDescription}
+                                        inputProps={{
+                                            maxLength: 1000
+                                        }}
                                     />
+                                    <Typography variant="body2" color="textSecondary"
+                                                sx={{
+                                                    display: "flex",
+                                                    justifyContent: "flex-end",
+                                                    marginTop: 1
+                                                }}
+
+                                    >
+                                        {descriptionCharCount}/1000
+                                    </Typography>
                                 </Stack>
                             </Grid>
 
@@ -801,28 +817,28 @@ export const ProductEditForm = (props) => {
                     </CardContent>
                 </Card>
 
-                <Card>
-                    <CardContent>
-                        <Grid container spacing={3}>
-                            <Grid xs={12} md={4}>
-                                <Stack spacing={1}>
-                                    <Typography variant="h6" sx={{display: "flex"}}>Product Images <Typography
-                                        sx={{color: "red"}}>*</Typography></Typography>
-                                </Stack>
-                            </Grid>
-                            <Grid xs={12} md={8}>
-                                {/*<FileDropzone*/}
-                                {/*    accept={{"image/*": []}}*/}
-                                {/*    caption="(SVG, JPG, PNG, or gif maximum 900x400)"*/}
-                                {/*    files={files}*/}
-                                {/*    onDrop={handleFilesDrop}*/}
-                                {/*    onRemove={handleFileRemove}*/}
-                                {/*    onRemoveAll={handleFilesRemoveAll}*/}
+                {/*<Card>*/}
+                {/*    <CardContent>*/}
+                {/*        <Grid container spacing={3}>*/}
+                {/*            <Grid xs={12} md={4}>*/}
+                {/*                <Stack spacing={1}>*/}
+                {/*                    <Typography variant="h6" sx={{display: "flex"}}>Product Images <Typography*/}
+                {/*                        sx={{color: "red"}}>*</Typography></Typography>*/}
+                {/*                </Stack>*/}
+                {/*            </Grid>*/}
+                {/*            <Grid xs={12} md={8}>*/}
+                {/*                /!*<FileDropzone*!/*/}
+                {/*                /!*    accept={{"image/*": []}}*!/*/}
+                {/*                /!*    caption="(SVG, JPG, PNG, or gif maximum 900x400)"*!/*/}
+                {/*                /!*    files={files}*!/*/}
+                {/*                /!*    onDrop={handleFilesDrop}*!/*/}
+                {/*                /!*    onRemove={handleFileRemove}*!/*/}
+                {/*                /!*    onRemoveAll={handleFilesRemoveAll}*!/*/}
                                 {/*/>*/}
-                            </Grid>
-                        </Grid>
-                    </CardContent>
-                </Card>
+                {/*            </Grid>*/}
+                {/*        </Grid>*/}
+                {/*    </CardContent>*/}
+                {/*</Card>*/}
                 <Stack
                     alignItems="center"
                     direction="row"

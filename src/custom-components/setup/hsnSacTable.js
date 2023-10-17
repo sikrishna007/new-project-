@@ -57,7 +57,7 @@ export const HsnSacTable = (props) => {
             };
             const response = await fetch(
                 process.env.NEXT_PUBLIC_BASE_URL +
-                endpoints.hsnSac.index +
+                endpoints.hsnSac.index + `?isActive=true` +
                 "/" +
                 id,
                 requestOptions
@@ -116,7 +116,7 @@ export const HsnSacTable = (props) => {
     };
 
     const [commonDialogData,setCommonDialogData] = React.useState({
-        hsnSacIsActive :false,
+        hsnSacIsActive :true,
         hsnSacId : '',
         dialogIsOpen: false,
         hsnSacName:''
@@ -153,28 +153,28 @@ export const HsnSacTable = (props) => {
                             }
                         }}
                     />
-                    <Button
-                        onClick={handleAllActivateClickOpen}
-                        color="inherit"
-                        size="small"
-                    >
-                        Activate
-                    </Button>
-                    <CommonDialog title="Activate" onConfirm={() => {
-                        selected.forEach((item) => activate_deactivate(item, "true"));
-                    }} onClose={handleAllActivateClose} open={activateOpenAll}
-                                  description="Are you sure! Do you want to Activate?"/>
+                    {/*<Button*/}
+                    {/*    onClick={handleAllActivateClickOpen}*/}
+                    {/*    color="inherit"*/}
+                    {/*    size="small"*/}
+                    {/*>*/}
+                    {/*    Activate*/}
+                    {/*</Button>*/}
+                    {/*<CommonDialog title="Activate" onConfirm={() => {*/}
+                    {/*    selected.forEach((item) => activate_deactivate(item, "true"));*/}
+                    {/*}} onClose={handleAllActivateClose} open={activateOpenAll}*/}
+                    {/*              description="Are you sure! Do you want to Activate?"/>*/}
                     <Button
                         onClick={handleAllDeactivateClickOpen}
                         color="inherit"
                         size="small"
                     >
-                        Deactivate
+                        Delete
                     </Button>
-                    <CommonDialog title="Deactivate" onConfirm={() => {
+                    <CommonDialog onConfirm={() => {
                         selected.forEach((item) => activate_deactivate(item, "false"));
                     }} onClose={handleAllDeactivateClose} open={deactivateOpenAll}
-                                  description="Are you sure! Do you want to Deactivate?"/>
+                                  description="Are you sure! Do you want to Delete?"/>
                 </Stack>
             )}
             <TableContainer sx={{maxHeight: 530}}>
@@ -318,7 +318,6 @@ export const HsnSacTable = (props) => {
                         })}
                     </TableBody>
                     <CommonDialog
-                        title={commonDialogData.hsnSacIsActive ? "Deactivate" : "Activate"} // Dialog title
                         onConfirm={() => {
                             if (commonDialogData.hsnSacIsActive) {
                                 // Deactivate logic
