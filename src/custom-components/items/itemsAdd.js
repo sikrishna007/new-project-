@@ -213,10 +213,7 @@ const ItemAdd = ({title, pathUrl}) => {
                                                         <Autocomplete
                                                             options={categories}
                                                             name="categoryName"
-<<<<<<< 309cad120c935dba56d2a2a0ac3d6cdc8a70aa65
                                                             onInputChange={(event, newInputValue) => handleGetCat(newInputValue)}
-=======
->>>>>>> 7506ae54ee45df52074a4ac87ba89e7113a32228
                                                             getOptionLabel={(option) => option.name}
                                                             renderInput={(params) => (
                                                                 <TextField {...params} label="Select Product Category"/>
@@ -260,23 +257,23 @@ const ItemAdd = ({title, pathUrl}) => {
                                         <Grid container spacing={3}>
                                             <Grid xs={12} md={4}>
                                                 <Stack spacing={1}>
-                                                    {/*<Typography variant="h6" sx={{display: "flex"}}>*/}
-                                                    {/*    Upload Thumbnail Image <Typography*/}
-                                                    {/*    sx={{color: "red"}}>*</Typography>*/}
-                                                    {/*</Typography>*/}
+                                                    <Typography variant="h6" sx={{display: "flex"}}>
+                                                        Upload Thumbnail Image <Typography
+                                                        sx={{color: "red"}}>*</Typography>
+                                                    </Typography>
                                                 </Stack>
                                             </Grid>
                                             <Grid xs={12} md={8}>
-                                                {/*<FileDropzone*/}
-                                                {/*    maxFiles={1}*/}
-                                                {/*    accept={{"image/*": []}}*/}
-                                                {/*    caption="(SVG, JPG, PNG, or gif maximum 900x400)"*/}
-                                                {/*    files={files}*/}
-                                                {/*    onDrop={handleFilesDrop}*/}
-                                                {/*    onRemove={handleFileRemove}*/}
-                                                {/*    onRemoveAll={handleFilesRemoveAll}*/}
-                                                {/*    disabled*/}
-                                                {/*/>*/}
+                                                <FileDropzone
+                                                    maxFiles={1}
+                                                    accept={{"image/*": []}}
+                                                    caption="(SVG, JPG, PNG, or gif maximum 900x400)"
+                                                    files={files}
+                                                    onDrop={handleFilesDrop}
+                                                    onRemove={handleFileRemove}
+                                                    onRemoveAll={handleFilesRemoveAll}
+                                                    disabled
+                                                />
                                                 <Grid mt={5} xs={12} md={8}>
                                                     {location === "add" && (
                                                         <>
@@ -293,7 +290,6 @@ const ItemAdd = ({title, pathUrl}) => {
                                                                 multiline
                                                                 rows={6}
                                                                 onBlur={formik.handleBlur}
-                                                                // onChange={formik.handleChange}
                                                                 onChange={(e) => {
                                                                     formik.handleChange(e);
                                                                     setDescriptionCharCount(e.target.value.length); // Update character count

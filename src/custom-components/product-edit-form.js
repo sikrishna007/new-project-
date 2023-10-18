@@ -339,6 +339,9 @@ export const ProductEditForm = (props) => {
         fetchAvailableEventCategories();
     }, []);
 
+    React.useEffect(() => {
+        setDescriptionCharCount(formik.values.description.length)
+    },[])
     const getSubCat = async (id) => {
 
         let token = Cookies.get("accessToken");
@@ -518,7 +521,7 @@ export const ProductEditForm = (props) => {
                                             formik.handleChange(e);
                                             setDescriptionCharCount(e.target.value.length);
                                         }}
-                                        value={formik.values.longDescription}
+                                        value={formik.values.description}
                                         inputProps={{
                                             maxLength: 1000
                                         }}
@@ -828,28 +831,28 @@ export const ProductEditForm = (props) => {
                     </CardContent>
                 </Card>
 
-                {/*<Card>*/}
-                {/*    <CardContent>*/}
-                {/*        <Grid container spacing={3}>*/}
-                {/*            <Grid xs={12} md={4}>*/}
-                {/*                <Stack spacing={1}>*/}
-                {/*                    <Typography variant="h6" sx={{display: "flex"}}>Product Images <Typography*/}
-                {/*                        sx={{color: "red"}}>*</Typography></Typography>*/}
-                {/*                </Stack>*/}
-                {/*            </Grid>*/}
-                {/*            <Grid xs={12} md={8}>*/}
-                {/*                /!*<FileDropzone*!/*/}
-                {/*                /!*    accept={{"image/*": []}}*!/*/}
-                {/*                /!*    caption="(SVG, JPG, PNG, or gif maximum 900x400)"*!/*/}
-                {/*                /!*    files={files}*!/*/}
-                {/*                /!*    onDrop={handleFilesDrop}*!/*/}
-                {/*                /!*    onRemove={handleFileRemove}*!/*/}
-                {/*                /!*    onRemoveAll={handleFilesRemoveAll}*!/*/}
-                                {/*/>*/}
-                {/*            </Grid>*/}
-                {/*        </Grid>*/}
-                {/*    </CardContent>*/}
-                {/*</Card>*/}
+                <Card>
+                    <CardContent>
+                        <Grid container spacing={3}>
+                            <Grid xs={12} md={4}>
+                                <Stack spacing={1}>
+                                    <Typography variant="h6" sx={{display: "flex"}}>Product Images <Typography
+                                        sx={{color: "red"}}>*</Typography></Typography>
+                                </Stack>
+                            </Grid>
+                            <Grid xs={12} md={8}>
+                                <FileDropzone
+                                    accept={{"image/*": []}}
+                                    caption="(SVG, JPG, PNG, or gif maximum 900x400)"
+                                    files={files}
+                                    onDrop={handleFilesDrop}
+                                    onRemove={handleFileRemove}
+                                    onRemoveAll={handleFilesRemoveAll}
+                                />
+                            </Grid>
+                        </Grid>
+                    </CardContent>
+                </Card>
                 <Stack
                     alignItems="center"
                     direction="row"
@@ -860,7 +863,7 @@ export const ProductEditForm = (props) => {
                             color="error" size="small" variant="outlined">
                         Discard
                     </Button>
-                    <Button onClick={handleCreateDialogOpen} variant="contained">
+                    <Button onClick={handleCreateDialogOpen} variant="contained" disabled={!hasChanges}>
                         Save Changes
                     </Button>
                 </Stack>

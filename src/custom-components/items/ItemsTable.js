@@ -227,7 +227,6 @@ export const ItemsTable = (props) => {
                                             <div style={{textAlign: "left"}}>
                                                 <Link
                                                     color="inherit"
-                                                    variant="subtitle2"
                                                     component={RouterLink}
                                                     href={`${location}/${eventCategory.id}`}
                                                 >
