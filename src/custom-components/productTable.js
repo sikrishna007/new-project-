@@ -308,7 +308,6 @@ export const ProductTable = (props) => {
                                                     href={
                                                         paths.productManagement.products.index + "/" + product.id
                                                     }
-                                                    variant="subtitle2"
                                                 >
                                                     {product?.name}
 

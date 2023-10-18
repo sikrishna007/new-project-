@@ -250,7 +250,6 @@ export const CustomerTable = (props) => {
                                                     color="inherit"
                                                     component={RouterLink}
                                                     href={`/users/${location}/${customer.id}`}
-                                                    variant="subtitle2"
                                                 >
                                                     {customer.user?.firstName} {" "}
                                                     {customer.user?.lastName}
