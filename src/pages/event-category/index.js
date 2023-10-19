@@ -12,6 +12,7 @@ import {paths} from "src/paths";
 import {ItemsTable} from "@/custom-components/items/ItemsTable";
 import {ItemSearch} from "@/custom-components/items/item-search";
 import {useItemsIds, useItemsStore} from "@/utils/item-filters";
+import RoleBasedView from "@/contexts/roleAut/RoleBasedView";
 
 const Page = () => {
     let location = window.location.href.split("/")[3];
@@ -84,6 +85,7 @@ const Page = () => {
                                 {/*</Stack>*/}
                             </Stack>
                             <Stack alignItems="center" direction="row" spacing={3}>
+                                <RoleBasedView permissions={["ADMIN"]}>
                                 <Button
                                     onClick={() => router.push(paths.eventCategory.add)}
                                     // startIcon={
@@ -95,6 +97,7 @@ const Page = () => {
                                 >
                                     Create New
                                 </Button>
+                                </RoleBasedView>
                             </Stack>
                         </Stack>
                         <Card>

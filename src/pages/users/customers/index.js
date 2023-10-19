@@ -14,6 +14,7 @@ import {RouterLink} from "src/components/router-link";
 import {paths} from "src/paths";
 import {CustomerListSearch} from "@/custom-components/users/customer-list-search";
 import {useCustomersIds, useCustomersStore} from "@/utils/userDataFilters";
+import RoleBasedView from "@/contexts/roleAut/RoleBasedView";
 
 
 const Page = () => {
@@ -57,6 +58,7 @@ const Page = () => {
                                 {/*</Breadcrumbs>*/}
                             </Stack>
                             <Stack alignitems="center" direction="row" spacing={3}>
+                                <RoleBasedView permissions={["ADMIN","SALES MANGER"]}>
                                 <Link
                                     component={RouterLink}
                                     href={paths.userManagement.customers.index + "/add"}
@@ -72,6 +74,7 @@ const Page = () => {
                                         Create New
                                     </Button>
                                 </Link>
+                                </RoleBasedView>
                             </Stack>
                         </Stack>
                         <Card>

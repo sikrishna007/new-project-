@@ -23,6 +23,7 @@ import {endpoints} from "@/endpoints";
 import {Layout as DashboardLayout} from "src/layouts/admin-dashboard";
 import {RouterLink} from "@/components/router-link";
 import {paths} from 'src/paths';
+import RoleBasedView from "@/contexts/roleAut/RoleBasedView";
 
 const Page = () => {
     const router = useRouter();
@@ -90,6 +91,7 @@ const Page = () => {
                                 </Link>
                                 <Typography variant="h4">Category Information</Typography>
                             </div>
+                            <RoleBasedView permissions={["ADMIN"]}>
                             {category?.isActive? (
                                 <Button
                                     onClick={() =>
@@ -119,7 +121,7 @@ const Page = () => {
                                     Edit
                                 </Button>
                             )}
-
+                            </RoleBasedView>
                         </div>
                         <div style={{marginLeft: '2.3%', marginTop: '0.5%'}}>
                             <Breadcrumbs separator={<ArrowRightSharpIcon style={{marginLeft: '-40%'}}/>} sx={{color:"#4338CA"}}>

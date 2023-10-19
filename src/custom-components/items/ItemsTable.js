@@ -24,6 +24,8 @@ import {ToggleOffOutlined, ToggleOnOutlined} from "@mui/icons-material";
 import ArrowRightIcon from "@untitled-ui/icons-react/build/esm/ArrowRight";
 import TablePagination from "@mui/material/TablePagination";
 import {visuallyHidden} from "@mui/utils";
+import RoleBasedGuard from "@/contexts/roleAut/RequireAuth";
+import RoleBasedView from "@/contexts/roleAut/RoleBasedView";
 
 const getTableHeaders = () => {
     let location = window.location.href.split("/")[4];
@@ -199,7 +201,7 @@ export const ItemsTable = (props) => {
                                 </TableCell>
                             ))}
                             <TableCell sx={{textAlign: "left"}}>Status</TableCell>
-                            <TableCell sx={{textAlign: "center", right: 0}} width="15%">Actions</TableCell>
+                            <TableCell sx={{textAlign: "center", right: 0}} width="15%">Action</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -276,6 +278,7 @@ export const ItemsTable = (props) => {
                                             backgroundColor: "#F5f5f5",
                                         },
                                     }}>
+                                        <RoleBasedView permissions={["ADMIN"]}>
                                         <Tooltip title="Edit">
                                             <IconButton
                                                 component={RouterLink}
@@ -325,6 +328,7 @@ export const ItemsTable = (props) => {
                                                 </IconButton>
                                             </Tooltip>
                                         )}
+                                        </RoleBasedView>
 
                                         <Tooltip title="View">
                                             <IconButton

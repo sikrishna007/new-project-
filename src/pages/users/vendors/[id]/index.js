@@ -26,6 +26,7 @@ import ArrowRightSharpIcon from "@mui/icons-material/ArrowRightSharp";
 import React from "react";
 import {SeverityPill} from "@/components/severity-pill";
 import Cookies from "js-cookie";
+import RoleBasedView from "@/contexts/roleAut/RoleBasedView";
 
 
 const Page = ({vendor}) => {
@@ -81,14 +82,15 @@ const Page = ({vendor}) => {
                                 </Link>}
                                 <Typography variant="h4">User Information</Typography>
                             </div>
-                            {role === "VENDOR" ? "":<Stack direction="row" spacing={2} >
+                        <Stack direction="row" spacing={2} >
                                 {vendor?.isVerified ? (
                                         <SeverityPill color="success"><VerifiedIcon/> VERIFIED</SeverityPill>) :
                                     (vendor?.isRejected ? (<SeverityPill
                                         color="error"><Block/> REJECTED</SeverityPill>) : (
                                         <SeverityPill
                                             color="warning"><Pending/> PENDING</SeverityPill>))}
-                                {vendor?.isActive ? (
+                            <RoleBasedView permissions={["ADMIN","VENDOR MANAGER","SALES MANGER"]}>
+                            {vendor?.isActive ? (
                                     <Button
                                         onClick={() =>
                                             router.push(paths.userManagement.vendors.edit + vendor.id)
@@ -122,7 +124,8 @@ const Page = ({vendor}) => {
                                         Edit
                                     </Button>
                                 )}
-                            </Stack>}
+                            </RoleBasedView>
+                            </Stack>
 
                         </div>
                         <div style={{marginLeft: '2.3%', marginTop: '0.5%'}}>

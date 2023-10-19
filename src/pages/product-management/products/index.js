@@ -16,6 +16,7 @@ import {paths} from "@/paths";
 import Button from "@mui/material/Button";
 import {Link} from "@mui/material";
 import Cookies from "js-cookie";
+import RoleBasedView from "@/contexts/roleAut/RoleBasedView";
 
 
 const Page = () => {
@@ -98,9 +99,7 @@ const Page = () => {
                                 direction="row"
                                 spacing={3}
                             >
-                                {role ==="VENDOR" ?"":
-
-
+                                <RoleBasedView permissions={["ADMIN","VENDOR MANAGER"]}>
                                     <Link
                                     component={RouterLink}
                                     href={paths.productManagement.products.index + "/add"}
@@ -110,7 +109,8 @@ const Page = () => {
                                     >
                                         Create New
                                     </Button>
-                                </Link>}
+                                </Link>
+                                </RoleBasedView>
                             </Stack>
                         </Stack>
 

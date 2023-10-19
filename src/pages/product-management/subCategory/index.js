@@ -14,6 +14,7 @@ import {useItemsIds, useItemsStore} from "@/utils/item-filters";
 import {useSelection} from "@/hooks/use-selection";
 import {ItemSearch} from "@/custom-components/items/item-search";
 import {ItemsTable} from "@/custom-components/items/ItemsTable";
+import RoleBasedView from "@/contexts/roleAut/RoleBasedView";
 
 
 const Page = () => {
@@ -94,6 +95,7 @@ const Page = () => {
                                 direction="row"
                                 spacing={3}
                             >
+                                <RoleBasedView permissions={["ADMIN"]}>
                                 <Link
                                     component={RouterLink}
                                     href={paths.productManagement.subCategory.index + "/add"}
@@ -109,6 +111,7 @@ const Page = () => {
                                         Create New
                                     </Button>
                                 </Link>
+                                </RoleBasedView>
                             </Stack>
                         </Stack>
 

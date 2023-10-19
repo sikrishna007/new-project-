@@ -31,6 +31,7 @@ import Cookies from "js-cookie";
 import {patchMethod} from "@/utils/util";
 import {status} from "nprogress";
 import {visuallyHidden} from "@mui/utils";
+import RoleBasedView from "@/contexts/roleAut/RoleBasedView";
 
 const getTableHeaders = () => {
     let location = window.location.href.split("/")[4];
@@ -323,6 +324,7 @@ export const CustomerTable = (props) => {
                                             },
                                         }}
                                     >
+                                        <RoleBasedView permissions={ location ==="vendors"?["ADMIN","VENDOR MANAGER","SALES MANGER"]:location ==="customers"?["ADMIN","SALES MANGER"]:["ADMIN"]}>
                                         <Tooltip title="Edit">
                                             <IconButton
                                                 disabled={!customer?.isActive}
@@ -372,7 +374,7 @@ export const CustomerTable = (props) => {
                                                 </IconButton>
                                             </Tooltip>
                                         )}
-
+                                        </RoleBasedView>
                                         <Tooltip title="View">
                                             <IconButton
                                                 component={RouterLink}

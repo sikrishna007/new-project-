@@ -31,6 +31,7 @@ import Tooltip from "@mui/material/Tooltip";
 import {setState} from "@aws-amplify/auth/lib/OAuth/oauthStorage";
 import {patchMethod} from "@/utils/util";
 import {visuallyHidden} from "@mui/utils";
+import RoleBasedView from "@/contexts/roleAut/RoleBasedView";
 const getTableHeaders = () => {
     let role = Cookies.get("role");
     if(role!== "VENDOR") {
@@ -244,7 +245,7 @@ export const ProductTable = (props) => {
                                 </TableCell>
                             ))}
                             <TableCell sx={{textAlign: "left"}}>STATUS</TableCell>
-                            <TableCell sx={{textAlign: "center", right: 0}} width="15%">Actions</TableCell>
+                            <TableCell sx={{textAlign: "center", right: 0}} width="15%">Action</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -374,7 +375,8 @@ export const ProductTable = (props) => {
                                             backgroundColor: "#F5f5f5",
                                         },
                                     }}>
-                                        {role ==="VENDOR" ?"":<Tooltip title="Edit">
+                                        <RoleBasedView permissions={["ADMIN","VENDOR MANAGER"]}>
+                                        <Tooltip title="Edit">
                                             <IconButton
                                                 disabled={!product?.isActive}
                                                 component={RouterLink}
@@ -384,7 +386,7 @@ export const ProductTable = (props) => {
                                                     <Edit02Icon/>
                                                 </SvgIcon>
                                             </IconButton>
-                                        </Tooltip>}
+                                        </Tooltip>
                                         {product?.isActive ? (
                                             <Tooltip title="Deactivate">
                                                 <IconButton
@@ -422,7 +424,7 @@ export const ProductTable = (props) => {
                                                     </SvgIcon>
                                                 </IconButton>
                                             </Tooltip>
-                                        )}
+                                        )}</RoleBasedView>
                                         <Tooltip title="View">
                                             <IconButton
                                                 component={RouterLink}

@@ -26,6 +26,7 @@ import React, {useState} from "react";
 import ArrowRightSharpIcon from "@mui/icons-material/ArrowRightSharp";
 import {SeverityPill} from "@/components/severity-pill";
 import VerifiedIcon from "@mui/icons-material/Verified";
+import RoleBasedView from "@/contexts/roleAut/RoleBasedView";
 
 
 const Page = ({customer}) => {
@@ -78,6 +79,7 @@ const Page = ({customer}) => {
                                         color="error"><Block/> REJECTED</SeverityPill>) : (
                                         <SeverityPill
                                             color="warning"><Pending/> PENDING</SeverityPill>))):""}
+                                <RoleBasedView permissions={["ADMIN","SALES MANGER"]}>
                                 {customer?.isActive ? (
                                     <Button
                                         onClick={() =>
@@ -112,6 +114,7 @@ const Page = ({customer}) => {
                                         Edit
                                     </Button>
                                 )}
+                                </RoleBasedView>
                             </Stack>
 
                         </div>

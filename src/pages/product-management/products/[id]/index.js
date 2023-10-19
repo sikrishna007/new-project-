@@ -24,6 +24,7 @@ import {endpoints} from "src/endpoints";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import ArrowRightSharpIcon from "@mui/icons-material/ArrowRightSharp";
 import Cookies from "js-cookie";
+import RoleBasedView from "@/contexts/roleAut/RoleBasedView";
 
 const Page = ({product, vendor}) => {
     const router = useRouter();
@@ -66,7 +67,8 @@ const Page = ({product, vendor}) => {
                                 </Link>
                                 <Typography variant="h4">Product Information</Typography>
                             </div>
-                            {role === "VENDOR" ? "": product?.isActive ? (
+                            <RoleBasedView permissions={["ADMIN","VENDOR MANAGER"]}>
+                             product?.isActive ? (
                                 <Button
                                     onClick={() =>
                                         router.push(paths.productManagement.products.edit + product.id)
@@ -99,7 +101,8 @@ const Page = ({product, vendor}) => {
                                 >
                                     Edit
                                 </Button>
-                            )}
+                            )
+                            </RoleBasedView>
                         </div>
                         <div style={{marginLeft: '2.3%', marginTop: '0.5%'}}>
                             <Breadcrumbs separator={<ArrowRightSharpIcon style={{marginLeft: '-40%'}}/>}
