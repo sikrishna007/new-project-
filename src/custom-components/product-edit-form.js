@@ -1,6 +1,6 @@
 import {useRouter} from "next/navigation";
 import * as React from "react";
-import {useCallback, useState} from "react";
+import {useCallback, useEffect, useState} from "react";
 import toast from "react-hot-toast";
 import Cookies from "js-cookie";
 import {useFormik} from "formik";
@@ -24,22 +24,143 @@ import {ToastError} from "@/icons/ToastError";
 import {endpoints} from "@/endpoints";
 import {paths} from "@/paths";
 import CommonDialog from "@/custom-components/CommonDialog";
+import {search} from "@/utils/util";
 
 export const ProductEditForm = (props) => {
+
     const {product, vendor} = props;
+    const vaidation = () => {
+
+        const newArray = selectedEvent.map((obj) => ({id: obj.id}));
+        formik.setFieldValue("eventCategories",newArray)
+        formik.setFieldValue("tags",tags)
+        if (Object.keys(formik.errors).length > 0) {
+            console.log(formik,"===>if")
+            toast.error("Please fill in all the required fields", {
+                position: "top-right",
+                style: {
+                    backgroundColor: "#D65745",
+                },
+                icon: <ToastError/>,
+            });
+        }
+        else if(formik.values.name === "" ||formik.values.vendor === ""){
+            console.log(formik,"===>else")
+
+            toast.error("Please fill in all the required fields", {
+                position: "top-right",
+                style: {
+                    backgroundColor: "#D65745",
+                },
+                icon: <ToastError/>,
+            });
+        }
+
+        formik.handleSubmit();
+
+    }
+    const submitProduct = async (values,helper) => {
+        try {
+            let token = Cookies.get("accessToken")
+            const response = await fetch(
+                process.env.NEXT_PUBLIC_BASE_URL + endpoints.product.index + "/" + product?.id,
+                {
+                    method: "PATCH",
+                    body: JSON.stringify({
+                        // name: formik.values.name,
+                        name: formik.values.name
+                            .toLowerCase()
+                            .split(' ')
+                            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                            .join(' '),
+                        vendor: formik.values.vendor,
+                        isGoods: formik.values.isGoods,
+                        offeringSubCategories: {
+                            id: formik.values.subCategoryName.id
+                        },
+                        longDescription: formik.values.longDescription,
+                        shortDescription: "active",
+                        vendorPrice: formik.values.vendorShare,
+                        unitPrice: (parseFloat(formik.values.organizationShare || 0)) + (parseFloat(formik.values.vendorShare || 0)),
+                        discountPrice: formik.values.costPrice,
+                        hsnSacCode: {id:formik.values.hsnSacCode.id},
+                        unitOfMeasurement: {
+                            id: "1"
+                        },
+                        tags: formik.values.tags,
+                        inStock: formik.values.inStock,
+                        eventCategories: formik.values.eventCategories,
+                    }),
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json",
+                    },
+                }
+            );
+            if (!response.ok) {
+                throw new Error(response);
+            }
+            const data = response.json();
+            toast.success("Product created Successfully", {autoClose: 10000});
+            router.push(paths.productManagement.products.index);
+        } catch (err) {
+            // console.error(err);
+            toast.error("Please fill in all the required fields", {
+                position: "top-right",
+                style: {
+                    backgroundColor: "#D65745",
+                },
+                icon: <ToastError/>,
+            });
+        }
+    }
+
+
+    const formik = useFormik({
+        initialValues: {
+            categoryName: product.offeringSubCategories?.offeringCategories || "",
+            subCategoryName: product.offeringSubCategories || "",
+            description: product?.longDescription || "",
+            eventCategories: [],
+            name: product?.name || "",
+            vendor: product?.vendor || "",
+            tags: product?.tags || "",
+            cgst: product.hsnSacCode?.cgstPercentage || "",
+            sgst: product.hsnSacCode?.sgstPercentage || "",
+            igst: product.hsnSacCode?.igstPercentage || "",
+            hsnSacCode: product?.hsnSacCode|| "",
+            vendorShare: product?.vendorPrice || "",
+            organizationShare: (product?.unitPrice - product?.vendorPrice) || "",
+            costPrice: product?.discountPrice || "",
+            sku: "",
+            submit: null,
+            isGoods: product.isGoods,
+            unitOfMeasurement: product.unitOfMeasurement || "",
+            inStock: product?.inStock,
+        },
+        validationSchema: Yup.object({
+            categoryName: Yup.object().required("Category  is required"),
+            hsnSacCode:Yup.object().required("Code  is required"),
+            subCategoryName: Yup.object().required("Sub Category  is required"),
+            description: Yup.string().max(5000),
+            name: Yup.string().max(45).required("product title is required"),
+            costPrice: Yup.number().required("Cost price is required"),
+            organizationShare:Yup.number().required("Organization Share is required"),
+            vendorShare:Yup.number().required("Vendor Share is required"),
+        }),
+        onSubmit: submitProduct
+    });
     const router = useRouter();
-    const [files, setFiles] = useState([]);
     const [hsnSacCodes, setHsnSacCodes] = useState([]);
     const [categories, setCategories] = useState([]);
     const [subCategories, setSubCategories] = useState([]);
-    const [eventCategories, setEventCategories] = useState([]);
     const [selectedEvent, setSelectedEvent] = useState([...product?.eventCategories]);
     const [availableEventCategories, setAvailableEventCategories] = useState([]);
     const [tag, setTag] = useState('');
+    const [isGoods,setIsGoods]=useState(product?.isGoods)
     const [tags, setTags] = useState([...product?.tags]);
     const [createDialogOpen, setCreateDialogOpen] = useState(false);
     const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
-    const [descriptionCharCount, setDescriptionCharCount] = useState(0);
     const handleCreateDialogOpen = () => {
         setCreateDialogOpen(true);
     };
@@ -64,11 +185,6 @@ export const ProductEditForm = (props) => {
         });
     }, []);
 
-    // const handleEventAdd = useCallback((tag) => {
-    //     setSelectedEvent((prevState) => {
-    //         return [...prevState, tag];
-    //     });
-    // }, []);
 
     const handleTagDelete = useCallback((tag) => {
         setTags((prevState) => {
@@ -99,277 +215,61 @@ export const ProductEditForm = (props) => {
         setAvailableEventCategories([...availableEventCategories, event]);
     };
 
-    const vaidation = () => {
-        const newArray = selectedEvent.map((obj) => ({id: obj.id}));
-        formik.values.eventCategories = newArray
-        formik.values.tags = tags
-        if (Object.keys(formik.errors).length > 0) {
-            toast.error("Please fill in all the required fields", {
-                position: "top-right",
-                style: {
-                    backgroundColor: "#D65745",
-                },
-                icon: <ToastError/>,
-            });
-        }
-        else if(formik.values.name === "" ||formik.values.vendor === ""){
-            toast.error("Please fill in all the required fields", {
-                position: "top-right",
-                style: {
-                    backgroundColor: "#D65745",
-                },
-                icon: <ToastError/>,
-            });
-        }
-
-        formik.handleSubmit();
-
+    const handleGetCat =async (input)=>{
+        let path = endpoints.category.index.index;
+        let result = await search(input,path);
+        setCategories(result.hits);
     }
-    const submitProduct = async (formik, helpers) => {
-
-        try {
-            let token = Cookies.get("accessToken")
-            const response = await fetch(
-                process.env.NEXT_PUBLIC_BASE_URL + endpoints.product.index + "/" + product?.id,
-                {
-                    method: "PATCH",
-                    body: JSON.stringify({
-                        name: formik.values.name
-                            .toLowerCase()
-                            .split(' ')
-                            .map(word=>word.charAt(0).toUpperCase() + word.slice(1))
-                            .join(' '),
-                        isGoods: formik.values.isGoods,
-                        offeringSubCategories: formik.values.subCategoryName,
-                        longDescription: formik.values.description,
-                        vendorPrice: formik.values.vendorShare,
-                        unitPrice: (parseFloat(formik.values.organizationShare || 0)) + (parseFloat(formik.values.vendorShare || 0)),
-                        discountPrice: formik.values.costPrice,
-                        hsnSacCode: {id:formik.values.hsnSacCode.id},
-                        tags: formik.values.tags,
-                        inStock: formik.values.inStock,
-                        eventCategories: formik.values.eventCategories,
-                        unitOfMeasurement: formik.unitOfMeasurement
-                    }),
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        "Content-Type": "application/json",
-                    },
-                }
-            );
-            if (!response.ok) {
-                throw new Error(response);
-            }
-            const data = response.json();
-            toast.success("Product created Successfully", {autoClose: 10000});
-            router.push(paths.productManagement.products.index);
-        } catch (err) {
-            // console.error(err);
-            toast.error("Please fill in all the required fields", {
-                position: "top-right",
-                style: {
-                    backgroundColor: "#D65745",
-                },
-                icon: <ToastError/>,
-            });
-        }
-    }
-
-
-    const formik = useFormik({
-        initialValues: {
-            barcode: "",
-            vendorPrice: "",
-            categoryName: product.offeringSubCategories?.offeringCategories || "",
-            subCategoryName: product.offeringSubCategories || "",
-            description: product?.longDescription || "",
-            eventCategories: [],
-            images: [],
-            name: product?.name || "",
-            vendor: product?.vendor || "",
-            tags: product?.tags || "",
-            cgst: product?.hsnSacCode.cgstPercentage || "",
-            sgst: product?.hsnSacCode.sgstPercentage || "",
-            igst: product?.hsnSacCode.igstPercentage || "",
-            hsnSacCode: product?.hsnSacCode || "",
-            vendorShare: product?.vendorPrice || "",
-            organizationShare: (product?.unitPrice - product?.vendorPrice) || "",
-            newPrice: "",
-            costPrice: product?.discountPrice || "",
-            sku: "",
-            submit: null,
-            isGoods: product.isGoods,
-            unitOfMeasurement: product.unitOfMeasurement || "",
-            unitPrice: "",
-            discountPrice: "",
-            inStock: product?.inStock,
-        },
-        validationSchema: Yup.object({
-            vendor: Yup.string().required("Vendor Name is required"),
-            categoryName: Yup.string().required("Category  is required"),
-            hsnSacCode:Yup.string().required("Code  is required"),
-            subCategoryName: Yup.string().required("Sub Category  is required"),
-            description: Yup.string().max(5000),
-            name: Yup.string().max(45).required("product title is required"),
-            costPrice: Yup.number().required("Cost price is required"),
-            organizationShare:Yup.number().required("Organization Share is required"),
-            vendorShare:Yup.number().required("Vendor Share is required"),
-            sku: Yup.string().max(255),
-        }),
-        onSubmit: submitProduct
-    });
-
-    const handleFilesDrop = useCallback((newFiles) => {
-        setFiles((prevFiles) => {
-            return [...prevFiles, ...newFiles];
-        });
-    }, []);
-
-    const handleFileRemove = useCallback((file) => {
-        setFiles((prevFiles) => {
-            return prevFiles.filter((_file) => _file.path !== file.path);
-        });
-    }, []);
-
-    const handleFilesRemoveAll = useCallback(() => {
-        setFiles([]);
-    }, []);
-
-    const getVendors = async () => {
-        try {
-            let token = Cookies.get("accessToken");
-
-
-            const hsnSacCodes = await fetch(
-                process.env.NEXT_PUBLIC_BASE_URL +
-                endpoints.hsnSac.index +
-                `?pageNo=0&pageSize=50&isActive=true&sortOn=createdBy&sortOrder=desc`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
-            const {data: hsnSacCodesData} = await hsnSacCodes.json();
-            setHsnSacCodes(hsnSacCodesData);
-
-
-            const eventCategories = await fetch(
-                process.env.NEXT_PUBLIC_BASE_URL + endpoints.eventCategories.index +
-                `?pageNo=0&pageSize=50&isActive=true&sortOn=createdBy&sortOrder=desc`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
-            const {data: eventCategoriesData} = await eventCategories.json();
-            setEventCategories(eventCategoriesData);
-
-
-            const categories = await fetch(
-                process.env.NEXT_PUBLIC_BASE_URL + endpoints.category.index +
-                `?pageNo=0&pageSize=50&isActive=true&sortOn=createdBy&sortOrder=desc`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
-            const {data: categoryData} = await categories.json();
-            setCategories(categoryData);
-        } catch (err) {
-            console.error(err);
-        }
-    };
 
     const [selectedHsnCode, setSelectedHsnCode] = useState(null);
     const [selectedSacCode, setSelectedSacCode] = useState(null);
-    const [changeInCategory, setChangeInCategory] = useState(null);
 
-    const [code, setCode] = useState({
-        id: 1,
-        code: formik.values.hsnSacCode,
-    })
     React.useEffect(() => {
+
+
         if (selectedHsnCode) {
             formik.setValues({
                 ...formik.values,
-                hsnSacCode: selectedHsnCode,
+                hsnSacCode: selectedHsnCode.id,
                 cgst: selectedHsnCode.cgstPercentage,
                 sgst: selectedHsnCode.sgstPercentage,
                 igst: selectedHsnCode.igstPercentage,
             });
-
-        } else {
-            getVendors();
         }
         if (selectedSacCode) {
             formik.setValues({
                 ...formik.values,
-                hsnSacCode: selectedSacCode,
+                hsnSacCode: selectedSacCode.id,
                 cgst: selectedSacCode.cgstPercentage,
                 sgst: selectedSacCode.sgstPercentage,
                 igst: selectedSacCode.igstPercentage,
             });
         }
-    }, [selectedHsnCode, selectedSacCode, changeInCategory]);
+    }, [selectedHsnCode, selectedSacCode]);
 
-    React.useEffect(() => {
-        // Fetch and set availableEventCategories initially
-        const fetchAvailableEventCategories = async () => {
-            try {
-                let token = Cookies.get("accessToken");
-                const eventCategoriesResponse = await fetch(
-                    process.env.NEXT_PUBLIC_BASE_URL + endpoints.eventCategories.index +
-                    `?pageNo=0&pageSize=50&isActive=true&sortOn=createdBy&sortOrder=desc`,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
-                    }
-                );
-                const {data: eventCategoriesData} = await eventCategoriesResponse.json();
-                setAvailableEventCategories(eventCategoriesData);
-            } catch (err) {
-                console.error(err);
-            }
-        };
 
-        fetchAvailableEventCategories();
-    }, []);
-
-    React.useEffect(() => {
-        setDescriptionCharCount(formik.values.description.length)
-    },[])
-    const getSubCat = async (id) => {
-
+    const getHsnSacCodes = async (isHsn)=>{
         let token = Cookies.get("accessToken");
-        // console.log(id);
-
-        const subCategories = await fetch(
-            process.env.NEXT_PUBLIC_BASE_URL + endpoints.category.index + "/" + id + "/" + endpoints.subCategory.index,
+        const hsnSacCodes = await fetch(
+            process.env.NEXT_PUBLIC_BASE_URL +
+            endpoints.hsnSac.index +
+            `?pageNo=0&pageSize=100&isHsn=${isHsn}&isActive=true&sortOn=createdBy&sortOrder=desc`,
             {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
             }
         );
-        const {data: subCategoryData} = await subCategories.json();
-        setSubCategories(subCategoryData);
+        const {data: hsnSacCodesData} = await hsnSacCodes.json();
+        setHsnSacCodes(hsnSacCodesData);
+    }
+    const handleRadioChange =(event)=>{
+        let value = event.target.value === "true"
+        setIsGoods(value )
+        formik.setFieldValue('hsnSacCode', ''); // Update Formik value
+        getHsnSacCodes(value)
     }
 
-    const [isGoods, setIsGoods] = useState(formik.values.isGoods); // State to track the selected radio option
-    const [showHSNDropdown, setShowHSNDropdown] = useState(isGoods);
-    const [showSACDropdown, setShowSACDropdown] = useState(!isGoods);
-
-
-    const handleRadioChange = (event) => {
-        const selectedValue = event.target.value ;
-        setIsGoods(selectedValue);
-        setShowHSNDropdown(selectedValue); // Show HSN dropdown for "Goods"
-        setShowSACDropdown(!selectedValue); // Show SAC dropdown for "Service"
-    };
 
     return (
         <form>
@@ -383,7 +283,7 @@ export const ProductEditForm = (props) => {
                             </Grid>
                             <Grid xs={12} md={8}>
                                 <Stack sx={{ border: '1px solid #ccc',padding: '15px',borderRadius:"5px" }} spacing={3}>
-                                    <Typography variant="h6">{vendor.user?.firstName} </Typography>
+                                    <Typography variant="title">{vendor.user?.firstName} </Typography>
                                 </Stack>
                             </Grid>
                         </Grid>
@@ -396,7 +296,7 @@ export const ProductEditForm = (props) => {
                                 <FormControl component="fieldset">
                                     <RadioGroup
                                         onChange={handleRadioChange}
-                                        value={String(isGoods)} // Convert the boolean to a string for RadioGroup value
+                                        value={isGoods} // Convert the boolean to a string for RadioGroup value
                                         row
                                     >
                                         <FormControlLabel
@@ -411,34 +311,25 @@ export const ProductEditForm = (props) => {
                                         />
                                     </RadioGroup>
                                 </FormControl>
+                                <Autocomplete
+                                    options={hsnSacCodes}
+                                    getOptionLabel={(option) => option.code}
+                                    renderInput={(params) => (
+                                        <TextField
+                                            {...params}
+                                            label={isGoods ?"Select HSN Code":"Select SAC Code"}
+                                            variant="outlined"
+                                            error={formik.touched.hsnSacCode && Boolean(formik.errors.hsnSacCode)}
+                                            helperText={formik.touched.hsnSacCode && formik.errors.hsnSacCode}
+                                        />
+                                    )}
+                                    onChange={(event, value) => {
+                                        formik.setFieldValue('hsnSacCode', value ? value.id : ''); // Update Formik value
+                                        setSelectedHsnCode(value);
+                                    }}
+                                    value={formik.values.hsnSacCode || null}
+                                />
 
-                                {showHSNDropdown && (
-                                    <Autocomplete
-                                        options={hsnSacCodes}
-                                        getOptionLabel={(option) => option.code}
-                                        value={formik.values.hsnSacCode}
-                                        renderInput={(params) => (
-                                            <TextField {...params} label="Select HSN Codes"/>
-                                        )}
-                                        onChange={(event, value) => {
-                                            setSelectedHsnCode(value);
-                                        }}
-                                    />
-                                )}
-
-                                {showSACDropdown && (
-                                    <Autocomplete
-                                        options={hsnSacCodes}
-                                        getOptionLabel={(option) => option.code}
-                                        value={formik.values.hsnSacCode}
-                                        renderInput={(params) => (
-                                            <TextField {...params} label="Select SAC Codes"/>
-                                        )}
-                                        onChange={(event, value) => {
-                                            setSelectedSacCode(value);
-                                        }}
-                                    />
-                                )}
                             </Grid>
                         </Grid>
                     </CardContent>
@@ -456,32 +347,67 @@ export const ProductEditForm = (props) => {
                                     <Autocomplete
                                         options={categories}
                                         name="categoryName"
+                                        onInputChange={(event, newInputValue) => handleGetCat(newInputValue)}
                                         getOptionLabel={(option) => option.name}
                                         renderInput={(params) => (
-                                            <TextField {...params} label="Select Product Category"/>
+                                            <TextField
+                                                {...params}
+                                                label="Select Product Category"
+                                                error={formik.touched.categoryName && Boolean(formik.errors.categoryName)}
+                                                helperText={formik.touched.categoryName && formik.errors.categoryName}
+                                            />
                                         )}
-                                        value={formik.values.categoryName !="undefined" ? formik.values.categoryName : ""}  // Set the default value here
+                                        value={formik.values.categoryName !="undefined" ? formik.values.categoryName : ""}
                                         onChange={(category, value) => {
                                             getSubCat(value?.id)
-                                            formik.values.categoryName = value;
-                                            formik.setFieldValue("subCategoryName", []);
-
+                                            formik.values.categoryName = value?.id;
                                         }}
                                     />
+                                    {/*<Autocomplete*/}
+                                    {/*    options={categories}*/}
+                                    {/*    name="categoryName"*/}
+                                    {/*    getOptionLabel={(option) => option.name}*/}
+                                    {/*    renderInput={(params) => (*/}
+                                    {/*        <TextField {...params} label="Select Product Category"/>*/}
+                                    {/*    )}*/}
+                                    {/*    value={formik.values.categoryName !="undefined" ? formik.values.categoryName : ""}  // Set the default value here*/}
+                                    {/*    onChange={(category, value) => {*/}
+                                    {/*        getSubCat(value?.id)*/}
+                                    {/*        formik.values.categoryName = value;*/}
+                                    {/*        formik.setFieldValue("subCategoryName", []);*/}
+
+                                    {/*    }}*/}
+                                    {/*/>*/}
 
                                     <Autocomplete
                                         options={subCategories}
                                         getOptionLabel={(option) => option.name}
                                         renderInput={(params) => (
-                                            <TextField {...params} label="Select Product Sub-Category"/>
+                                            <TextField
+                                                {...params}
+                                                label="Select Product Sub-Category"
+                                                error={formik.touched.subCategoryName && Boolean(formik.errors.subCategoryName)}
+                                                helperText={formik.touched.subCategoryName && formik.errors.subCategoryName}
+                                            />
                                         )}
                                         value={formik.values.subCategoryName  !="undefined" ? formik.values.subCategoryName : ""}
-                                        onChange={(subCategory, value) => {
-                                            formik.setFieldValue("subCategoryName", value);
-
-
+                                        onChange={(event, value) => {
+                                            formik.setFieldValue('subCategoryName', value ? value.id : {}); // Updated to use setFieldValue
                                         }}
                                     />
+                                    {/*<Autocomplete*/}
+                                    {/*    options={subCategories}*/}
+                                    {/*    getOptionLabel={(option) => option.name}*/}
+                                    {/*    renderInput={(params) => (*/}
+                                    {/*        <TextField {...params} label="Select Product Sub-Category"/>*/}
+                                    {/*    )}*/}
+                                    {/*    value={formik.values.subCategoryName  !="undefined" ? formik.values.subCategoryName : ""}*/}
+                                    {/*    onChange={(subCategory, value) => {*/}
+                                    {/*        formik.setFieldValue("subCategoryName", value);*/}
+
+
+                                    {/*    }}*/}
+                                    {/*/>*/}
                                 </Stack>
                             </Grid>
                         </Grid>
@@ -509,7 +435,8 @@ export const ProductEditForm = (props) => {
                                         multiline
                                         rows={10}
                                         onBlur={formik.handleBlur}
-
+                                        onChange={formik.handleChange}
+                                        value={formik.values.description}
                                         fullWidth
                                         error={!!(
                                             formik.touched.description &&formik.errors.description
@@ -517,25 +444,7 @@ export const ProductEditForm = (props) => {
                                         helperText={
                                             formik.touched.description && formik.errors.description
                                         }
-                                        onChange={(e) => {
-                                            formik.handleChange(e);
-                                            setDescriptionCharCount(e.target.value.length);
-                                        }}
-                                        value={formik.values.description}
-                                        inputProps={{
-                                            maxLength: 1000
-                                        }}
                                     />
-                                    <Typography variant="body2" color="textSecondary"
-                                                sx={{
-                                                    display: "flex",
-                                                    justifyContent: "flex-end",
-                                                    marginTop: 1
-                                                }}
-
-                                    >
-                                        {descriptionCharCount}/1000
-                                    </Typography>
                                 </Stack>
                             </Grid>
 
@@ -698,12 +607,12 @@ export const ProductEditForm = (props) => {
                                             value={formik.values.organizationShare}
                                             onChange={formik.handleChange}
                                             InputProps={{
-                                            startAdornment: (
-                                                <InputAdornment position="start">
-                                                    ₹
-                                                </InputAdornment>
-                                            ),
-                                        }}
+                                                startAdornment: (
+                                                    <InputAdornment position="start">
+                                                        ₹
+                                                    </InputAdornment>
+                                                ),
+                                            }}
                                         />
                                     </Stack>
                                 </Grid>

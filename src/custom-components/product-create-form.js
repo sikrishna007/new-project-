@@ -45,7 +45,6 @@ export const ProductCreateForm = (props) => {
     const [tags, setTags] = useState([]);
     const [createDialogOpen, setCreateDialogOpen] = useState(false);
     const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
-    const [descriptionCharCount, setDescriptionCharCount] = useState(0);
     const handleCreateDialogOpen = () => {
         setCreateDialogOpen(true);
     };
@@ -119,14 +118,14 @@ export const ProductCreateForm = (props) => {
     }
     const submitProduct = async () => {
         if (Object.keys(formik.errors).length > 0) {
-           return toast.error("Please fill in all the required fields", {
-            position: "top-right",
-            style: {
-              backgroundColor: "#D65745",
-            },
-            icon: <ToastError />,
-            autoClose: 5000, // 5000 milliseconds (5 seconds)
-          });
+            return toast.error("Please fill in all the required fields", {
+                position: "top-right",
+                style: {
+                    backgroundColor: "#D65745",
+                },
+                icon: <ToastError />,
+                autoClose: 5000, // 5000 milliseconds (5 seconds)
+            });
         }
         const newArray = selectedEvent.map((obj) => ({id: obj.id}));
         try {
@@ -144,15 +143,13 @@ export const ProductCreateForm = (props) => {
                             .join(' '),
                         vendor: formik.values.vendor,
                         isGoods: formik.values.isGoods,
-                        offeringSubCategories: {
-                            id: formik.values.subCategoryName
-                        },
+                        offeringSubCategories: {id:formik.values.subCategoryName.id},
                         longDescription: formik.values.longDescription,
                         shortDescription: "active",
                         vendorPrice: formik.values.vendorShare,
                         unitPrice: (parseFloat(formik.values.organizationShare || 0)) + (parseFloat(formik.values.vendorShare || 0)),
                         discountPrice: formik.values.costPrice,
-                        hsnSacCode: {id:formik.values.hsnSacCode},
+                        hsnSacCode: {id:formik.values.hsnSacCode.id},
                         unitOfMeasurement: {
                             id: "1"
                         },
@@ -215,16 +212,14 @@ export const ProductCreateForm = (props) => {
         },
         validationSchema: Yup.object({
             vendor: Yup.string().required("Vendor Name is required"),
-            categoryName: Yup.string().required("Category  is required"),
-            hsnSacCode:Yup.string().required("Code  is required"),
-            subCategoryName: Yup.string().required("Sub Category  is required"),
+            categoryName: Yup.object().required("Category  is required"),
+            hsnSacCode:Yup.object().required("Code  is required"),
+            subCategoryName: Yup.object().required("Sub Category  is required"),
             description: Yup.string().max(5000),
             name: Yup.string().max(45).required("product title is required"),
             costPrice: Yup.number().required("Cost price is required"),
             organizationShare:Yup.number().required("Organization Share is required"),
             vendorShare:Yup.number().required("Vendor Share is required"),
-            images: Yup.array(),
-            sku: Yup.string().max(255),
         }),
         onSubmit: submitProduct
     });
@@ -288,7 +283,7 @@ export const ProductCreateForm = (props) => {
         if (selectedHsnCode) {
             formik.setValues({
                 ...formik.values,
-                hsnSacCode: selectedHsnCode.id,
+                hsnSacCode: selectedHsnCode,
                 cgst: selectedHsnCode.cgstPercentage,
                 sgst: selectedHsnCode.sgstPercentage,
                 igst: selectedHsnCode.igstPercentage,
@@ -299,7 +294,7 @@ export const ProductCreateForm = (props) => {
         if (selectedSacCode) {
             formik.setValues({
                 ...formik.values,
-                hsnSacCode: selectedSacCode.id,
+                hsnSacCode: selectedSacCode,
                 cgst: selectedSacCode.cgstPercentage,
                 sgst: selectedSacCode.sgstPercentage,
                 igst: selectedSacCode.igstPercentage,
@@ -313,7 +308,7 @@ export const ProductCreateForm = (props) => {
         // console.log(id);
 
         const subCategories = await fetch(
-            process.env.NEXT_PUBLIC_BASE_URL + endpoints.category.index + "/" + id + endpoints.subCategory.index,
+            process.env.NEXT_PUBLIC_BASE_URL + endpoints.category.index + "/" + id  + endpoints.subCategory.index,
             {
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -331,10 +326,10 @@ export const ProductCreateForm = (props) => {
     const [showHSNDropdown, setShowHSNDropdown] = useState(true);
     const [showSACDropdown, setShowSACDropdown] = useState(false);
 
-    const [cat, setCat] = useState('')
-    const handleGetCat = async (input) => {
+    const [cat,setCat]= useState('')
+    const handleGetCat =async (input)=>{
         let path = endpoints.category.index.index;
-        let result = await search(input, path);
+        let result = await search(input,path);
         setCategories(result.hits);
     }
 
@@ -357,7 +352,7 @@ export const ProductCreateForm = (props) => {
         handleGetCat("")
     }, []);
     const handleRadioChange = (event) => {
-        const selectedValue = event.target.value;
+        const selectedValue = event.target.value === "true";
         getHsnSacCodes(selectedValue)
         setIsGoods(selectedValue);
         setShowHSNDropdown(selectedValue); // Show HSN dropdown for "Goods"
@@ -494,24 +489,24 @@ export const ProductCreateForm = (props) => {
                                         )}
                                         onChange={(category, value) => {
                                             getSubCat(value?.id)
-                                            formik.values.categoryName = value?.id;
+                                            formik.values.categoryName = value;
                                         }}
                                     />
-                                        <Autocomplete
-                                            options={subCategories}
-                                            getOptionLabel={(option) => option.name}
-                                            renderInput={(params) => (
-                                                <TextField
-                                                    {...params}
-                                                    label="Select Product Sub-Category"
-                                                    error={formik.touched.subCategoryName && Boolean(formik.errors.subCategoryName)}
-                                                    helperText={formik.touched.subCategoryName && formik.errors.subCategoryName}
-                                                />
-                                            )}
-                                            onChange={(event, value) => {
-                                                formik.setFieldValue('subCategoryName', value ? value.id : ''); // Updated to use setFieldValue
-                                            }}
-                                        />
+                                    <Autocomplete
+                                        options={subCategories}
+                                        getOptionLabel={(option) => option.name}
+                                        renderInput={(params) => (
+                                            <TextField
+                                                {...params}
+                                                label="Select Product Sub-Category"
+                                                error={formik.touched.subCategoryName && Boolean(formik.errors.subCategoryName)}
+                                                helperText={formik.touched.subCategoryName && formik.errors.subCategoryName}
+                                            />
+                                        )}
+                                        onChange={(event, value) => {
+                                            formik.setFieldValue('subCategoryName', value ? value : ''); // Updated to use setFieldValue
+                                        }}
+                                    />
                                 </Stack>
                             </Grid>
                         </Grid>
@@ -540,33 +535,16 @@ export const ProductCreateForm = (props) => {
                                         multiline
                                         rows={10}
                                         onBlur={formik.handleBlur}
-
+                                        onChange={formik.handleChange}
+                                        value={formik.values.description}
                                         fullWidth
                                         error={!!(
-                                            formik.touched.description && formik.errors.description
+                                            formik.touched.description &&formik.errors.description
                                         )}
                                         helperText={
                                             formik.touched.description && formik.errors.description
                                         }
-                                        onChange={(e) => {
-                                            formik.handleChange(e);
-                                            setDescriptionCharCount(e.target.value.length);
-                                        }}
-                                        value={formik.values.longDescription}
-                                        inputProps={{
-                                            maxLength: 1000
-                                        }}
                                     />
-                                    <Typography variant="body2" color="textSecondary"
-                                                sx={{
-                                                    display: "flex",
-                                                    justifyContent: "flex-end",
-                                                    marginTop: 1
-                                                }}
-
-                                    >
-                                        {descriptionCharCount}/1000
-                                    </Typography>
                                 </Stack>
                             </Grid>
 
