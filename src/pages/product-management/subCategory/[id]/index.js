@@ -22,6 +22,7 @@ import {useRouter} from "next/router";
 import React from "react";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import ArrowRightSharpIcon from "@mui/icons-material/ArrowRightSharp";
+import RoleBasedView from "@/contexts/roleAut/RoleBasedView";
 
 const Page = ({subCategory}) => {
     const router = useRouter();
@@ -65,6 +66,7 @@ const Page = ({subCategory}) => {
                                 </Link>
                                 <Typography variant="h4">Sub Category Information</Typography>
                             </div>
+                            <RoleBasedView permissions={["ADMIN"]}>
                             {subCategory?.isActive ? (
                                 <Button
                                     onClick={() =>
@@ -99,6 +101,7 @@ const Page = ({subCategory}) => {
                                     Edit
                                 </Button>
                             )}
+                            </RoleBasedView>
                         </div>
                         <div style={{marginLeft: '2.4%', marginTop: '0.5%'}}>
                             <Breadcrumbs separator={<ArrowRightSharpIcon style={{marginLeft: '-40%'}}/>}

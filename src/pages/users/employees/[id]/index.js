@@ -25,6 +25,7 @@ import {BreadcrumbsSeparator} from "../../../../components/breadcrumbs-separator
 import Divider from "@mui/material/Divider";
 import ArrowRightSharpIcon from "@mui/icons-material/ArrowRightSharp";
 import React from "react";
+import RoleBasedView from "@/contexts/roleAut/RoleBasedView";
 
 const statusOptions = ["Canceled", "Complete", "Rejected"];
 
@@ -73,6 +74,7 @@ const Page = ({employee}) => {
                                     </Link>
                                     <Typography variant="h4">User Information</Typography>
                                 </div>
+                                <RoleBasedView permissions={["ADMIN"]}>
                                 {employee?.isActive ? (
                                     <Button
                                         onClick={() =>
@@ -107,7 +109,7 @@ const Page = ({employee}) => {
                                         Edit
                                     </Button>
                                 )}
-
+                                </RoleBasedView>
                             </div>
                             <div style={{marginLeft: '2.5%', marginTop: '0.5%'}}>
                                 <Breadcrumbs separator={<ArrowRightSharpIcon style={{marginLeft: '-40%'}}/>}

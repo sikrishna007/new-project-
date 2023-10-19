@@ -14,6 +14,7 @@ import {useRouter} from "next/router";
 import {CustomerTable} from "@/custom-components/users/CustomerTable";
 import {CustomerListSearch} from "@/custom-components/users/customer-list-search";
 import {useCustomersIds, useCustomersStore} from "@/utils/userDataFilters";
+import RoleBasedView from "@/contexts/roleAut/RoleBasedView";
 
 const Page = () => {
     let location = window.location.href.split("/")[4];
@@ -90,6 +91,8 @@ const Page = () => {
                             </Stack>
 
                             <Stack alignitems="center" direction="row" spacing={3}>
+                                <RoleBasedView permissions={ ["ADMIN"]}>
+
                                 <Link
                                     component={RouterLink}
                                     href={paths.userManagement.employees.index + "/add"}
@@ -105,6 +108,7 @@ const Page = () => {
                                         Create New
                                     </Button>
                                 </Link>
+                                </RoleBasedView>
                             </Stack>
                         </Stack>
                         <Card>

@@ -24,6 +24,7 @@ import React, {useEffect, useState} from "react";
 import Cookies from "js-cookie";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import ArrowRightSharpIcon from '@mui/icons-material/ArrowRightSharp';
+import RoleBasedView from "@/contexts/roleAut/RoleBasedView";
 
 const Page = ({category}) => {
     const router = useRouter();
@@ -66,6 +67,7 @@ const Page = ({category}) => {
                                 </Link>
                                 <Typography variant="h4">Event Category Information</Typography>
                             </div>
+                            <RoleBasedView permissions={["ADMIN"]}>
                             {category?.isActive ? (
                                 <Button
                                     onClick={() =>
@@ -100,6 +102,7 @@ const Page = ({category}) => {
                                     Edit
                                 </Button>
                             )}
+                            </RoleBasedView>
                         </div>
                         <div style={{marginLeft: '2.3%', marginTop: '0.5%'}}>
                             <Breadcrumbs separator={<ArrowRightSharpIcon style={{marginLeft: '-40%'}}/>}

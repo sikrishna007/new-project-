@@ -16,6 +16,7 @@ import {Layout as DashboardLayout} from "src/layouts/admin-dashboard";
 import {ItemsTable} from "@/custom-components/items/ItemsTable";
 import {ItemSearch} from "@/custom-components/items/item-search";
 import {useItemsIds, useItemsStore} from "@/utils/item-filters";
+import RoleBasedView from "@/contexts/roleAut/RoleBasedView";
 
 
 const Page = () => {
@@ -42,6 +43,7 @@ const Page = () => {
                                 <Typography variant="h4">Product Categories</Typography>
                             </Stack>
                             <Stack alignItems="center" direction="row" spacing={3}>
+                                <RoleBasedView permissions={["ADMIN"]}>
                                 <Link
                                     component={RouterLink}
                                     href={paths.productManagement.category.index + "/add"}
@@ -52,6 +54,7 @@ const Page = () => {
                                         Create New
                                     </Button>
                                 </Link>
+                                </RoleBasedView>
                             </Stack>
                         </Stack>
                         <Card>

@@ -236,6 +236,27 @@ export const useSections = () => {
                   },
                 ],
               },
+              {
+                title: t(tokens.nav.userManagement),
+                path: paths.userManagement.index,
+                icon: (
+                    <SvgIcon fontSize="small">
+                      <Users03Icon/>
+                    </SvgIcon>
+                ),
+                items: [
+                  {
+                    title: t(tokens.nav.vendors),
+                    path: paths.userManagement.vendors.index,
+                    icon: (
+                        <SvgIcon fontSize="small">
+                          <Users03Icon/>
+                        </SvgIcon>
+                    ),
+                  },
+                ],
+              },
+
             ]
           }
         ];
