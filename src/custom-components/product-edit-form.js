@@ -750,14 +750,14 @@ export const ProductEditForm = (props) => {
                                 </Stack>
                             </Grid>
                             <Grid xs={12} md={8}>
-                                {/*<FileDropzone*/}
-                                {/*    accept={{"image/*": []}}*/}
-                                {/*    caption="(SVG, JPG, PNG, or gif maximum 900x400)"*/}
-                                {/*    files={files}*/}
-                                {/*    onDrop={handleFilesDrop}*/}
-                                {/*    onRemove={handleFileRemove}*/}
-                                {/*    onRemoveAll={handleFilesRemoveAll}*/}
-                                {/*/>*/}
+                                <FileDropzone
+                                    accept={{"image/*": []}}
+                                    caption="(SVG, JPG, PNG, or gif maximum 900x400)"
+                                    files={files}
+                                    onDrop={handleFilesDrop}
+                                    onRemove={handleFileRemove}
+                                    onRemoveAll={handleFilesRemoveAll}
+                                />
                             </Grid>
                         </Grid>
                     </CardContent>
@@ -772,7 +772,7 @@ export const ProductEditForm = (props) => {
                             color="error" size="small" variant="outlined">
                         Discard
                     </Button>
-                    <Button onClick={handleCreateDialogOpen} variant="contained">
+                    <Button onClick={handleCreateDialogOpen} variant="contained" disabled={!hasChanges}>
                         Save Changes
                     </Button>
                 </Stack>

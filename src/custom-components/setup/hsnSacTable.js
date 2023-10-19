@@ -14,16 +14,15 @@ import TableCell from "@mui/material/TableCell";
 import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
-import Typography from "@mui/material/Typography";
 import {RouterLink} from "src/components/router-link";
 import {DeleteOutlined,} from "@mui/icons-material";
 import * as React from "react";
 import {useState} from "react";
 import {TableContainer} from "@mui/material";
 import CommonDialog from "../CommonDialog";
-import Cookies from "js-cookie";
 import Tooltip from "@mui/material/Tooltip";
 import {endpoints} from "@/endpoints";
+import {patchMethod} from "@/utils/util";
 
 export const HsnSacTable = (props) => {
     const {
@@ -44,46 +43,21 @@ export const HsnSacTable = (props) => {
 
 
     const activate_deactivate = async (id, temp) => {
-        try {
-            let jsonString = JSON.stringify({isActive: temp});
-            let token = Cookies.get("accessToken");
-            const requestOptions = {
-                method: "PATCH", // Or 'PUT', 'GET', etc. depending on the type of request you want to make
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    "Content-Type": "application/json", // Set the Content-Type to indicate that the request body is in JSON format
-                },
-                body: jsonString, // Replace this with the data you want to send in the request body
-            };
-            const response = await fetch(
-                process.env.NEXT_PUBLIC_BASE_URL +
-                endpoints.hsnSac.index + `?isActive=true` +
-                "/" +
-                id,
-                requestOptions
-            );
-            if (!response.ok) {
-                throw new Error(response);
-            }
-            const json = await response.json();
-            setStatus(json.status);
-            props.getCustomers(page, rowsPerPage, props.isActive);
-        } catch (error) {
-            console.error("Error sending data:", error);
-        }
+        const path = endpoints.hsnSac.index
+        const json = await patchMethod(id, temp, path)
+        props.getCustomers(page, rowsPerPage, props.isActive);
     };
 
     const selectedSome = selected.length > 0 && selected.length < items.length;
     const selectedAll = items.length > 0 && selected.length === items.length;
     const enableBulkActions = selected.length > 0;
 
-    const [activateOpenAll, setActivateOpenAll] = React.useState(false);
     const [deactivateOpenAll, setDeactivateOpenAll] = React.useState(false);
 
     const [showFullContent, setShowFullContent] = useState([]);
     const toggleContent = (id) => {
         setShowFullContent((prevShowFullContent) => {
-            const updatedShowFullContent = { ...prevShowFullContent };
+            const updatedShowFullContent = {...prevShowFullContent};
 
             // Reset all other rows to false
             for (const key in updatedShowFullContent) {
@@ -99,14 +73,6 @@ export const HsnSacTable = (props) => {
         });
     };
 
-    const handleAllActivateClickOpen = () => {
-        setActivateOpenAll(true);
-    };
-
-    const handleAllActivateClose = () => {
-        setActivateOpenAll(false);
-    };
-
     const handleAllDeactivateClickOpen = () => {
         setDeactivateOpenAll(true);
     };
@@ -115,11 +81,11 @@ export const HsnSacTable = (props) => {
         setDeactivateOpenAll(false);
     };
 
-    const [commonDialogData,setCommonDialogData] = React.useState({
-        hsnSacIsActive :true,
-        hsnSacId : '',
+    const [commonDialogData, setCommonDialogData] = React.useState({
+        hsnSacIsActive: false,
+        hsnSacId: '',
         dialogIsOpen: false,
-        hsnSacName:''
+        hsnSacName: ''
     })
 
     return (
@@ -229,14 +195,13 @@ export const HsnSacTable = (props) => {
                                                     color="inherit"
                                                     component={RouterLink}
                                                     href={`/setup/${codePath}/${employee.id}`}
-                                                    variant="subtitle2"
                                                 >
                                                     {employee.code}
                                                 </Link>
                                             </div>
                                         </Tooltip>
                                     </TableCell>
-                                    <TableCell sx={{ textAlign: "left" }}>
+                                    <TableCell sx={{textAlign: "left"}}>
                                         {employee?.description && (
                                             <div>
                                                 {employee.description.length > 30 ? (
@@ -255,7 +220,7 @@ export const HsnSacTable = (props) => {
                                         )}
                                     </TableCell>
                                     <TableCell sx={{textAlign: "left"}}>
-                                        <Typography variant="subtitle2">{employee?.sgstPercentage}</Typography>
+                                        {employee?.sgstPercentage}
                                     </TableCell>
                                     <TableCell sx={{textAlign: "left"}}>
                                         {employee?.cgstPercentage}
@@ -286,7 +251,7 @@ export const HsnSacTable = (props) => {
                                         </Tooltip>
                                         <Tooltip title="Delete">
                                             <IconButton
-                                                sx={{color:"#b32318"}}
+                                                sx={{color: "#b32318"}}
                                                 onClick={() => {
                                                     setCommonDialogData({
                                                         hsnSacIsActive: employee?.isActive,
@@ -298,7 +263,7 @@ export const HsnSacTable = (props) => {
 
                                             >
                                                 <SvgIcon>
-                                                    <DeleteOutlined />
+                                                    <DeleteOutlined/>
                                                 </SvgIcon>
                                             </IconButton>
                                         </Tooltip>
@@ -333,7 +298,7 @@ export const HsnSacTable = (props) => {
                                 hsnSacId: ''
                             })
                         }}
-                        onClose={()=>{
+                        onClose={() => {
                             setCommonDialogData({
                                 hsnSacIsActive: false,
                                 dialogIsOpen: false,
@@ -342,7 +307,7 @@ export const HsnSacTable = (props) => {
                             })
                         }} // Close the dialog when canceled
                         open={commonDialogData.dialogIsOpen} // Dialog open state
-                        description={ `Are you sure you want to ${commonDialogData.hsnSacIsActive ?'Delete':'activate'} ${commonDialogData.hsnSacName} ?`}
+                        description={`Are you sure you want to ${commonDialogData.hsnSacIsActive ? 'Delete' : 'activate'} ${commonDialogData.hsnSacName} ?`}
 
                     />
                 </Table>
@@ -354,7 +319,7 @@ export const HsnSacTable = (props) => {
                 onRowsPerPageChange={onRowsPerPageChange}
                 page={page}
                 rowsPerPage={rowsPerPage}
-                rowsPerPageOptions={[5, 10, 25,50]}
+                rowsPerPageOptions={[5, 10, 25, 50]}
             />
         </Box>
     );

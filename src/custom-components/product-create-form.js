@@ -632,7 +632,6 @@ export const ProductCreateForm = (props) => {
                             </Grid>
                             <Grid xs={12} md={8}>
                                 <Stack spacing={3}><Autocomplete
-                                    // options={eventCategories}
                                     options={availableEventCategories}
                                     getOptionLabel={(option) => option.name}
                                     renderInput={(params) => (
@@ -851,15 +850,15 @@ export const ProductCreateForm = (props) => {
                                 </Stack>
                             </Grid>
                             <Grid xs={12} md={8}>
-                                {/*<FileDropzone*/}
-                                {/*    accept={{"image/*": []}}*/}
-                                {/*    caption="(SVG, JPG, PNG, or gif maximum 900x400)"*/}
-                                {/*    files={files}*/}
-                                {/*    onDrop={handleFilesDrop}*/}
-                                {/*    onRemove={handleFileRemove}*/}
-                                {/*    onRemoveAll={handleFilesRemoveAll}*/}
-                                {/*    disabled*/}
-                                {/*/>*/}
+                                <FileDropzone
+                                    accept={{"image/*": []}}
+                                    caption="(SVG, JPG, PNG, or gif maximum 900x400)"
+                                    files={files}
+                                    onDrop={handleFilesDrop}
+                                    onRemove={handleFileRemove}
+                                    onRemoveAll={handleFilesRemoveAll}
+                                    disabled
+                                />
                             </Grid>
                         </Grid>
                     </CardContent>

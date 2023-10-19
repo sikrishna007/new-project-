@@ -84,40 +84,42 @@ const ItemEdit = ({title, pathUrl, category}) => {
 
         onSubmit: async (values, helpers) => {
             try {
-                let token = Cookies.get("accessToken")
-                let pathName
-                location === "edit" ? pathName = "eventCategories" : location === "category" ? pathName = "category" : pathName = "subCategory"
-                let endpoint = endpoints[pathName].index
+                if (hasChanges) {
+                    let token = Cookies.get("accessToken")
+                    let pathName
+                    location === "edit" ? pathName = "eventCategories" : location === "category" ? pathName = "category" : pathName = "subCategory"
+                    let endpoint = endpoints[pathName].index
 
-                const requestBody = {
-                    longDescription: formik.values.longDescription,
-                    images: formik.values.images,
-                    name: formik.values.name
-                        .toLowerCase()
-                        .split(' ')
-                        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-                        .join(' '),
-                    shortDescription: "",
-                };
+                    const requestBody = {
+                        longDescription: formik.values.longDescription,
+                        images: formik.values.images,
+                        name: formik.values.name
+                            .toLowerCase()
+                            .split(' ')
+                            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                            .join(' '),
+                        shortDescription: "",
+                    };
 
-                if (location === "subCategory") {
-                    requestBody.offeringCategories = formik.values.categoryName
-                }
-
-                const response = await fetch(
-                    `${process.env.NEXT_PUBLIC_BASE_URL}${endpoint}/${category.id}`,
-                    {
-                        method: "PATCH",
-                        body: JSON.stringify(requestBody),
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                            "Content-Type": "application/json",
-                        },
+                    if (location === "subCategory") {
+                        requestBody.offeringCategories = formik.values.categoryName
                     }
-                );
 
-                toast.success(`${title} Edited Successfully`, {autoClose: 10000});
-                router.push(pathUrl)
+                    const response = await fetch(
+                        `${process.env.NEXT_PUBLIC_BASE_URL}${endpoint}/${category.id}`,
+                        {
+                            method: "PATCH",
+                            body: JSON.stringify(requestBody),
+                            headers: {
+                                Authorization: `Bearer ${token}`,
+                                "Content-Type": "application/json",
+                            },
+                        }
+                    );
+
+                    toast.success(`${title} Edited Successfully`, {autoClose: 10000});
+                    router.push(pathUrl)
+                }
             } catch (err) {
                 toast.error("Something went wrong!", {autoClose: 10000});
                 helpers.setStatus({success: false});
@@ -163,7 +165,18 @@ const ItemEdit = ({title, pathUrl, category}) => {
     };
     React.useEffect(() => {
         getCategories();
+        if (location === "edit") {
+            setDesctriptionCharCount(formik.values.longDescription.length);
+        }
     }, []);
+
+    useEffect(() => {
+        if (!(formik.values.name === category.name) || !(formik.values.longDescription ===  category.longDescription)){
+            setHasChanges(true)
+        }else{
+            setHasChanges(false)
+        }
+    },[category, formik.values])
 
 
     return (
@@ -263,23 +276,23 @@ const ItemEdit = ({title, pathUrl, category}) => {
                                         <Grid container spacing={3}>
                                             <Grid xs={12} md={4}>
                                                 <Stack spacing={1}>
-                                                    {/*<Typography variant="h6" sx={{display: "flex"}}>*/}
-                                                    {/*    Upload Thumbnail Image <Typography*/}
-                                                    {/*    sx={{color: "red"}}>*</Typography>*/}
-                                                    {/*</Typography>*/}
+                                                    <Typography variant="h6" sx={{display: "flex"}}>
+                                                        Upload Thumbnail Image <Typography
+                                                        sx={{color: "red"}}>*</Typography>
+                                                    </Typography>
                                                 </Stack>
                                             </Grid>
                                             <Grid xs={12} md={8}>
-                                                {/*<FileDropzone*/}
-                                                {/*    maxFiles={1}*/}
-                                                {/*    accept={{"image/*": []}}*/}
-                                                {/*    caption="(SVG, JPG, PNG, or gif maximum 900x400)"*/}
-                                                {/*    files={files}*/}
-                                                {/*    onDrop={handleFilesDrop}*/}
-                                                {/*    onRemove={handleFileRemove}*/}
-                                                {/*    onRemoveAll={handleFilesRemoveAll}*/}
-                                                {/*    disabled*/}
-                                                {/*/>*/}
+                                                <FileDropzone
+                                                    maxFiles={1}
+                                                    accept={{"image/*": []}}
+                                                    caption="(SVG, JPG, PNG, or gif maximum 900x400)"
+                                                    files={files}
+                                                    onDrop={handleFilesDrop}
+                                                    onRemove={handleFileRemove}
+                                                    onRemoveAll={handleFilesRemoveAll}
+                                                    disabled
+                                                />
                                                 <Grid mt={5} xs={12} md={8}>
                                                     {location === "edit" && (
                                                         <>
@@ -335,7 +348,7 @@ const ItemEdit = ({title, pathUrl, category}) => {
                                         Discard
                                     </Button>
                                     <Button onClick={handleCreateDialogOpen} variant="contained"
-                                            disabled={formik.values.name === ""}>
+                                            disabled={formik.values.name === "" || !hasChanges}>
                                         Save Changes
                                     </Button>
                                 </Stack>
