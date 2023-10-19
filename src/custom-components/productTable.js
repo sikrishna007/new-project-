@@ -269,16 +269,17 @@ export const ProductTable = (props) => {
                                     <TableCell sx={{textAlign: "left"}}>
                                         <Stack>
                                             <Box>
-                                                {product.image ? (
+                                                {product.thumbnailUrl ? (
                                                     <Box
                                                         sx={{
                                                             alignItems: "left",
                                                             backgroundColor: "neutral.50",
-                                                            backgroundImage: `url(${product.image})`,
+                                                            backgroundImage: `url(${product.thumbnailUrl})`,
                                                             backgroundPosition: "left",
                                                             backgroundSize: "cover",
                                                             borderRadius: 1,
-                                                            width: 80,
+                                                            width: 50,
+                                                            height:50,
                                                             justifyContent: "left",
                                                             overflow: "hidden",
                                                         }}

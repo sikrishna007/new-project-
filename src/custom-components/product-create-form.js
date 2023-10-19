@@ -45,7 +45,6 @@ export const ProductCreateForm = (props) => {
     const [tags, setTags] = useState([]);
     const [createDialogOpen, setCreateDialogOpen] = useState(false);
     const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
-    const [descriptionCharCount, setDescriptionCharCount] = useState(0);
     const handleCreateDialogOpen = () => {
         setCreateDialogOpen(true);
     };
@@ -119,14 +118,14 @@ export const ProductCreateForm = (props) => {
     }
     const submitProduct = async () => {
         if (Object.keys(formik.errors).length > 0) {
-           return toast.error("Please fill in all the required fields", {
-            position: "top-right",
-            style: {
-              backgroundColor: "#D65745",
-            },
-            icon: <ToastError />,
-            autoClose: 5000, // 5000 milliseconds (5 seconds)
-          });
+            return toast.error("Please fill in all the required fields", {
+                position: "top-right",
+                style: {
+                    backgroundColor: "#D65745",
+                },
+                icon: <ToastError />,
+                autoClose: 5000, // 5000 milliseconds (5 seconds)
+            });
         }
         const newArray = selectedEvent.map((obj) => ({id: obj.id}));
         try {
@@ -144,15 +143,13 @@ export const ProductCreateForm = (props) => {
                             .join(' '),
                         vendor: formik.values.vendor,
                         isGoods: formik.values.isGoods,
-                        offeringSubCategories: {
-                            id: formik.values.subCategoryName
-                        },
+                        offeringSubCategories: {id:formik.values.subCategoryName.id},
                         longDescription: formik.values.longDescription,
                         shortDescription: "active",
                         vendorPrice: formik.values.vendorShare,
                         unitPrice: (parseFloat(formik.values.organizationShare || 0)) + (parseFloat(formik.values.vendorShare || 0)),
                         discountPrice: formik.values.costPrice,
-                        hsnSacCode: {id:formik.values.hsnSacCode},
+                        hsnSacCode: {id:formik.values.hsnSacCode.id},
                         unitOfMeasurement: {
                             id: "1"
                         },
@@ -215,21 +212,14 @@ export const ProductCreateForm = (props) => {
         },
         validationSchema: Yup.object({
             vendor: Yup.string().required("Vendor Name is required"),
-            categoryName: Yup.string().required("Category  is required"),
-            hsnSacCode:Yup.string().required("Code  is required"),
-            subCategoryName: Yup.string().required("Sub Category  is required"),
+            categoryName: Yup.object().required("Category  is required"),
+            hsnSacCode:Yup.object().required("Code  is required"),
+            subCategoryName: Yup.object().required("Sub Category  is required"),
             description: Yup.string().max(5000),
-<<<<<<< 309cad120c935dba56d2a2a0ac3d6cdc8a70aa65
             name: Yup.string().max(45).required("product title is required"),
             costPrice: Yup.number().required("Cost price is required"),
             organizationShare:Yup.number().required("Organization Share is required"),
             vendorShare:Yup.number().required("Vendor Share is required"),
-=======
-            images: Yup.array(),
-            name: Yup.string().max(45).required(),
-            costPrice: Yup.number(),
->>>>>>> 7506ae54ee45df52074a4ac87ba89e7113a32228
-            sku: Yup.string().max(255),
         }),
         onSubmit: submitProduct
     });
@@ -293,7 +283,7 @@ export const ProductCreateForm = (props) => {
         if (selectedHsnCode) {
             formik.setValues({
                 ...formik.values,
-                hsnSacCode: selectedHsnCode.id,
+                hsnSacCode: selectedHsnCode,
                 cgst: selectedHsnCode.cgstPercentage,
                 sgst: selectedHsnCode.sgstPercentage,
                 igst: selectedHsnCode.igstPercentage,
@@ -304,7 +294,7 @@ export const ProductCreateForm = (props) => {
         if (selectedSacCode) {
             formik.setValues({
                 ...formik.values,
-                hsnSacCode: selectedSacCode.id,
+                hsnSacCode: selectedSacCode,
                 cgst: selectedSacCode.cgstPercentage,
                 sgst: selectedSacCode.sgstPercentage,
                 igst: selectedSacCode.igstPercentage,
@@ -318,7 +308,7 @@ export const ProductCreateForm = (props) => {
         // console.log(id);
 
         const subCategories = await fetch(
-            process.env.NEXT_PUBLIC_BASE_URL + endpoints.category.index + "/" + id + endpoints.subCategory.index,
+            process.env.NEXT_PUBLIC_BASE_URL + endpoints.category.index + "/" + id  + endpoints.subCategory.index,
             {
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -336,15 +326,10 @@ export const ProductCreateForm = (props) => {
     const [showHSNDropdown, setShowHSNDropdown] = useState(true);
     const [showSACDropdown, setShowSACDropdown] = useState(false);
 
-    const [cat, setCat] = useState('')
-    const handleGetCat = async (input) => {
+    const [cat,setCat]= useState('')
+    const handleGetCat =async (input)=>{
         let path = endpoints.category.index.index;
-<<<<<<< 309cad120c935dba56d2a2a0ac3d6cdc8a70aa65
         let result = await search(input,path);
-=======
-        let result = await search(input, path);
-        console.log(result)
->>>>>>> 7506ae54ee45df52074a4ac87ba89e7113a32228
         setCategories(result.hits);
     }
 
@@ -367,7 +352,7 @@ export const ProductCreateForm = (props) => {
         handleGetCat("")
     }, []);
     const handleRadioChange = (event) => {
-        const selectedValue = event.target.value;
+        const selectedValue = event.target.value === "true";
         getHsnSacCodes(selectedValue)
         setIsGoods(selectedValue);
         setShowHSNDropdown(selectedValue); // Show HSN dropdown for "Goods"
@@ -504,24 +489,24 @@ export const ProductCreateForm = (props) => {
                                         )}
                                         onChange={(category, value) => {
                                             getSubCat(value?.id)
-                                            formik.values.categoryName = value?.id;
+                                            formik.values.categoryName = value;
                                         }}
                                     />
-                                        <Autocomplete
-                                            options={subCategories}
-                                            getOptionLabel={(option) => option.name}
-                                            renderInput={(params) => (
-                                                <TextField
-                                                    {...params}
-                                                    label="Select Product Sub-Category"
-                                                    error={formik.touched.subCategoryName && Boolean(formik.errors.subCategoryName)}
-                                                    helperText={formik.touched.subCategoryName && formik.errors.subCategoryName}
-                                                />
-                                            )}
-                                            onChange={(event, value) => {
-                                                formik.setFieldValue('subCategoryName', value ? value.id : ''); // Updated to use setFieldValue
-                                            }}
-                                        />
+                                    <Autocomplete
+                                        options={subCategories}
+                                        getOptionLabel={(option) => option.name}
+                                        renderInput={(params) => (
+                                            <TextField
+                                                {...params}
+                                                label="Select Product Sub-Category"
+                                                error={formik.touched.subCategoryName && Boolean(formik.errors.subCategoryName)}
+                                                helperText={formik.touched.subCategoryName && formik.errors.subCategoryName}
+                                            />
+                                        )}
+                                        onChange={(event, value) => {
+                                            formik.setFieldValue('subCategoryName', value ? value : ''); // Updated to use setFieldValue
+                                        }}
+                                    />
                                 </Stack>
                             </Grid>
                         </Grid>
@@ -550,33 +535,16 @@ export const ProductCreateForm = (props) => {
                                         multiline
                                         rows={10}
                                         onBlur={formik.handleBlur}
-
+                                        onChange={formik.handleChange}
+                                        value={formik.values.description}
                                         fullWidth
                                         error={!!(
-                                            formik.touched.description && formik.errors.description
+                                            formik.touched.description &&formik.errors.description
                                         )}
                                         helperText={
                                             formik.touched.description && formik.errors.description
                                         }
-                                        onChange={(e) => {
-                                            formik.handleChange(e);
-                                            setDescriptionCharCount(e.target.value.length);
-                                        }}
-                                        value={formik.values.longDescription}
-                                        inputProps={{
-                                            maxLength: 1000
-                                        }}
                                     />
-                                    <Typography variant="body2" color="textSecondary"
-                                                sx={{
-                                                    display: "flex",
-                                                    justifyContent: "flex-end",
-                                                    marginTop: 1
-                                                }}
-
-                                    >
-                                        {descriptionCharCount}/1000
-                                    </Typography>
                                 </Stack>
                             </Grid>
 
@@ -873,7 +841,6 @@ export const ProductCreateForm = (props) => {
                     </CardContent>
                 </Card>
 
-<<<<<<< 309cad120c935dba56d2a2a0ac3d6cdc8a70aa65
                 <Card>
                     <CardContent>
                         <Grid container spacing={3}>
@@ -897,31 +864,6 @@ export const ProductCreateForm = (props) => {
                         </Grid>
                     </CardContent>
                 </Card>
-=======
-                {/*<Card>*/}
-                {/*    <CardContent>*/}
-                {/*        <Grid container spacing={3}>*/}
-                {/*            <Grid xs={12} md={4}>*/}
-                {/*                <Stack spacing={1}>*/}
-                {/*                    <Typography variant="h6" sx={{display: "flex"}}>Product Images <Typography*/}
-                {/*                        sx={{color: "red"}}>*</Typography></Typography>*/}
-                {/*                </Stack>*/}
-                {/*            </Grid>*/}
-                {/*            <Grid xs={12} md={8}>*/}
-                {/*                <FileDropzone*/}
-                {/*                    accept={{"image/*": []}}*/}
-                {/*                    caption="(SVG, JPG, PNG, or gif maximum 900x400)"*/}
-                {/*                    files={files}*/}
-                {/*                    onDrop={handleFilesDrop}*/}
-                {/*                    onRemove={handleFileRemove}*/}
-                {/*                    onRemoveAll={handleFilesRemoveAll}*/}
-                {/*                    disabled*/}
-                {/*                />*/}
-                {/*            </Grid>*/}
-                {/*        </Grid>*/}
-                {/*    </CardContent>*/}
-                {/*</Card>*/}
->>>>>>> 7506ae54ee45df52074a4ac87ba89e7113a32228
                 <Stack
                     alignItems="center"
                     direction="row"

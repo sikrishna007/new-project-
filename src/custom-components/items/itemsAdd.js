@@ -213,10 +213,7 @@ const ItemAdd = ({title, pathUrl}) => {
                                                         <Autocomplete
                                                             options={categories}
                                                             name="categoryName"
-<<<<<<< 309cad120c935dba56d2a2a0ac3d6cdc8a70aa65
                                                             onInputChange={(event, newInputValue) => handleGetCat(newInputValue)}
-=======
->>>>>>> 7506ae54ee45df52074a4ac87ba89e7113a32228
                                                             getOptionLabel={(option) => option.name}
                                                             renderInput={(params) => (
                                                                 <TextField {...params} label="Select Product Category"/>
