@@ -5,7 +5,7 @@ import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import * as React from "react";
-import {useCallback, useState} from "react";
+import {useCallback, useEffect, useState} from "react";
 import {useFormik} from "formik";
 import * as Yup from "yup";
 import {RouterLink} from "src/components/router-link";
@@ -23,6 +23,7 @@ import ArrowLeftIcon from "@untitled-ui/icons-react/build/esm/ArrowLeft";
 import CommonDialog from "@/custom-components/CommonDialog";
 import Autocomplete from "@mui/material/Autocomplete";
 import {endpoints} from "@/endpoints";
+import {search} from "@/utils/util";
 
 
 const ItemEdit = ({title, pathUrl, category}) => {
@@ -32,6 +33,7 @@ const ItemEdit = ({title, pathUrl, category}) => {
     const [createDialogOpen, setCreateDialogOpen] = useState(false);
     const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
     const [descriptionCharCount, setDesctriptionCharCount]  = useState(0);
+    const [hasChanges, setHasChanges] = useState(false);
     const handleCreateDialogOpen = () => {
         setCreateDialogOpen(true);
     };
@@ -84,7 +86,6 @@ const ItemEdit = ({title, pathUrl, category}) => {
 
         onSubmit: async (values, helpers) => {
             try {
-                if (hasChanges) {
                     let token = Cookies.get("accessToken")
                     let pathName
                     location === "edit" ? pathName = "eventCategories" : location === "category" ? pathName = "category" : pathName = "subCategory"
@@ -119,7 +120,6 @@ const ItemEdit = ({title, pathUrl, category}) => {
 
                     toast.success(`${title} Edited Successfully`, {autoClose: 10000});
                     router.push(pathUrl)
-                }
             } catch (err) {
                 toast.error("Something went wrong!", {autoClose: 10000});
                 helpers.setStatus({success: false});
@@ -147,24 +147,13 @@ const ItemEdit = ({title, pathUrl, category}) => {
         setFiles([]);
     }, []);
 
-    const getCategories = async () => {
-        try {
-            let token = Cookies.get("accessToken");
-            const categories = await fetch(
-                process.env.NEXT_PUBLIC_BASE_URL + endpoints.category.index,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
-            const {data: categoryData} = await categories.json();
-            setCategories(categoryData);
-        } catch (err) {
-        }
-    };
-    React.useEffect(() => {
-        getCategories();
+    const handleGetCat =async (input)=>{
+        let path = endpoints.category.index.index;
+        let result = await search(input,path);
+        setCategories(result.hits);
+    }
+    useEffect(() => {
+        handleGetCat("")
         if (location === "edit") {
             setDesctriptionCharCount(formik.values.longDescription.length);
         }
@@ -232,14 +221,21 @@ const ItemEdit = ({title, pathUrl, category}) => {
                                                     <Stack spacing={3}>
                                                         <Autocomplete
                                                             options={categories}
+                                                            name = "categoryName"
+                                                            onInputChange = {(event, newInputValue) => handleGetCat(newInputValue)}
                                                             getOptionLabel={(option) => option.name}
                                                             renderInput={(params) => (
-                                                                <TextField {...params} label="Select Product Category"/>
+                                                                <TextField
+                                                                    {...params}
+                                                                    label="Select Product Category"
+                                                                    error={formik.touched.categoryName && Boolean(formik.errors.categoryName)}
+                                                                    helperText={formik.touched.categoryName && formik.errors.categoryName}
+                                                                />
                                                             )}
                                                             onChange={(event, value) => {
-                                                                formik.values.categoryName = value.id
+                                                                formik.values.categoryName = value?.id
                                                             }}
-                                                            value={formik.values.categoryName}
+                                                            value={formik.values.categoryName !=="undefined" ? formik.values.categoryName : ""}
                                                         />
                                                     </Stack>
                                                 </Grid>
