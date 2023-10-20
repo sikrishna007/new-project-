@@ -25,17 +25,17 @@ import {endpoints} from "@/endpoints";
 import {paths} from "@/paths";
 import CommonDialog from "@/custom-components/CommonDialog";
 import {search} from "@/utils/util";
+import {FileDropzone} from "@/components/file-dropzone";
 
 export const ProductEditForm = (props) => {
 
     const {product, vendor} = props;
-    const vaidation = () => {
+    const validation = () => {
 
         const newArray = selectedEvent.map((obj) => ({id: obj.id}));
         formik.setFieldValue("eventCategories",newArray)
         formik.setFieldValue("tags",tags)
         if (Object.keys(formik.errors).length > 0) {
-            console.log(formik,"===>if")
             toast.error("Please fill in all the required fields", {
                 position: "top-right",
                 style: {
@@ -45,7 +45,6 @@ export const ProductEditForm = (props) => {
             });
         }
         else if(formik.values.name === "" ||formik.values.vendor === ""){
-            console.log(formik,"===>else")
 
             toast.error("Please fill in all the required fields", {
                 position: "top-right",
@@ -161,6 +160,24 @@ export const ProductEditForm = (props) => {
     const [tags, setTags] = useState([...product?.tags]);
     const [createDialogOpen, setCreateDialogOpen] = useState(false);
     const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
+
+    const getSubCat = async (id) => {
+
+        let token = Cookies.get("accessToken");
+        // console.log(id);
+
+        const subCategories = await fetch(
+            process.env.NEXT_PUBLIC_BASE_URL + endpoints.category.index + "/" + id  + endpoints.subCategory.index,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+        const {data: subCategoryData} = await subCategories.json();
+        // console.log(subCategoryData);
+        setSubCategories(subCategoryData);
+    }
     const handleCreateDialogOpen = () => {
         setCreateDialogOpen(true);
     };
@@ -224,6 +241,28 @@ export const ProductEditForm = (props) => {
     const [selectedHsnCode, setSelectedHsnCode] = useState(null);
     const [selectedSacCode, setSelectedSacCode] = useState(null);
 
+    const getVendors = async () => {
+        try {
+            let token = Cookies.get("accessToken");
+
+            const eventCategories = await fetch(
+                process.env.NEXT_PUBLIC_BASE_URL + endpoints.eventCategories.index +
+                `?pageNo=0&pageSize=50&isActive=true&sortOn=createdBy&sortOrder=desc`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+            const {data: eventCategoriesData} = await eventCategories.json();
+            setAvailableEventCategories(eventCategoriesData);
+
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
+
     React.useEffect(() => {
 
 
@@ -235,6 +274,8 @@ export const ProductEditForm = (props) => {
                 sgst: selectedHsnCode.sgstPercentage,
                 igst: selectedHsnCode.igstPercentage,
             });
+        } else {
+            getVendors();
         }
         if (selectedSacCode) {
             formik.setValues({
@@ -357,10 +398,10 @@ export const ProductEditForm = (props) => {
                                                 helperText={formik.touched.categoryName && formik.errors.categoryName}
                                             />
                                         )}
-                                        value={formik.values.categoryName !="undefined" ? formik.values.categoryName : ""}
+                                        value={ formik.values.categoryName}
                                         onChange={(category, value) => {
+                                            formik.values.categoryName = value;
                                             getSubCat(value?.id)
-                                            formik.values.categoryName = value?.id;
                                         }}
                                     />
                                     {/*<Autocomplete*/}
@@ -392,7 +433,7 @@ export const ProductEditForm = (props) => {
                                         )}
                                         value={formik.values.subCategoryName  !="undefined" ? formik.values.subCategoryName : ""}
                                         onChange={(event, value) => {
-                                            formik.setFieldValue('subCategoryName', value ? value.id : {}); // Updated to use setFieldValue
+                                            formik.setFieldValue('subCategoryName', value ? value : {}); // Updated to use setFieldValue
                                         }}
                                     />
                                     {/*<Autocomplete*/}
@@ -750,14 +791,14 @@ export const ProductEditForm = (props) => {
                                 </Stack>
                             </Grid>
                             <Grid xs={12} md={8}>
-                                <FileDropzone
-                                    accept={{"image/*": []}}
-                                    caption="(SVG, JPG, PNG, or gif maximum 900x400)"
-                                    files={files}
-                                    onDrop={handleFilesDrop}
-                                    onRemove={handleFileRemove}
-                                    onRemoveAll={handleFilesRemoveAll}
-                                />
+                                {/*<FileDropzone*/}
+                                {/*    accept={{"image/*": []}}*/}
+                                {/*    caption="(SVG, JPG, PNG, or gif maximum 900x400)"*/}
+                                {/*    // files={files}*/}
+                                {/*    // onDrop={handleFilesDrop}*/}
+                                {/*    // onRemove={handleFileRemove}*/}
+                                {/*    // onRemoveAll={handleFilesRemoveAll}*/}
+                                {/*/>*/}
                             </Grid>
                         </Grid>
                     </CardContent>
@@ -772,14 +813,14 @@ export const ProductEditForm = (props) => {
                             color="error" size="small" variant="outlined">
                         Discard
                     </Button>
-                    <Button onClick={handleCreateDialogOpen} variant="contained" disabled={!hasChanges}>
+                    <Button onClick={handleCreateDialogOpen} variant="contained" >
                         Save Changes
                     </Button>
                 </Stack>
                 <CommonDialog
                     title={"Save"}
                     onConfirm={() => {
-                        vaidation(formik);
+                        validation(formik);
                         handleCreateDialogClose();
                     }}
                     onClose={handleCreateDialogClose}
