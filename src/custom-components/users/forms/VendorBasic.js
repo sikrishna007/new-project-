@@ -1,4 +1,4 @@
-import {useCallback, useState} from "react";
+import {useCallback, useEffect, useState} from "react";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardHeader from "@mui/material/CardHeader";
@@ -7,9 +7,7 @@ import TextField from "@mui/material/TextField";
 import {DesktopDatePicker} from "@mui/x-date-pickers/DesktopDatePicker";
 import Typography from "@mui/material/Typography";
 
-export const VendorBasic = (props) => {
-    let {customer, formik, ...other} = props;
-    customer = {};
+export const VendorBasic = ({formik}) => {
     const handleStartDateChange = useCallback(
         (date) => {
             const formattedDate = date.getFullYear() + '-' + String(date.getMonth() + 1).padStart(2, '0') + '-' + String(date.getDate()).padStart(2, '0');

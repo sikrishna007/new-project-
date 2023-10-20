@@ -3,7 +3,7 @@ import CardContent from "@mui/material/CardContent";
 import Grid from "@mui/material/Unstable_Grid2";
 import Stack from "@mui/material/Stack";
 import {paths} from "src/paths";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import CommonDialog from "../../CommonDialog";
 import {RouterLink} from "@/components/router-link";
 import toast from "react-hot-toast";
@@ -91,13 +91,12 @@ export const CreateCustomer = (props) => {
     );
 };
 
-export const EditCustomer = (props) => {
-
+export const EditCustomer = ({formik, hasChanges}) => {
     const router = useRouter();
     let location = window.location.href.split("/")[4];
-    let {submit, customer, formik, ...other} = props;
     const [createDialogOpen, setCreateDialogOpen] = useState(false);
     const[create,setCreate]=useState(false)
+
     const handleCreateDialogOpen = (value) => {
         setCreate(value)
         setCreateDialogOpen(true);
@@ -127,9 +126,10 @@ export const EditCustomer = (props) => {
 
     }
     const handleCreateDialogClose = (formik) => {
-
         setCreateDialogOpen(false);
     };
+
+
     return (
         <Stack sx={{marginBottom: "3%", marginTop: "3%"}}>
             <CardContent sx={{pt: 0}}>
@@ -141,13 +141,13 @@ export const EditCustomer = (props) => {
                     sx={{marginLeft: "1%"}}
                 >
                     <Button
-                        // onClick={() => router.push(paths.userManagement.vendors.index)}
                         onClick={()=>handleCreateDialogOpen(false)}
                         color="error" size="small" variant="outlined">
                        Discard
                     </Button>
                     <Button  onClick={()=>handleCreateDialogOpen(true)}
-                             variant="contained">
+                             variant="contained"
+                             disabled={!hasChanges}>
                         Save Changes
                     </Button>
                     <CommonDialog

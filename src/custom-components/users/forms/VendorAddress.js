@@ -27,7 +27,7 @@ export const VendorAddress = (props) => {
                     name="addressLine1"
                     onBlur={formik.handleBlur}
                     onChange={formik.handleChange}
-                    value={formik.values.addressLine1}
+                    value={formik.values.addressLine1 !=="undefined" ? formik.values.addressLine1 : "ddd"}
                 />
             </Grid>
             <Grid xs={12} md={6}>
@@ -43,7 +43,7 @@ export const VendorAddress = (props) => {
                     name="addressLine2"
                     onBlur={formik.handleBlur}
                     onChange={formik.handleChange}
-                    value={formik.values.addressLine2}
+                    value={formik.values.addressLine2 !=="undefined" ? formik.values.addressLine2 : ""}
                 />
             </Grid>
             <Grid xs={12} md={6}>
@@ -75,17 +75,17 @@ export const VendorAddress = (props) => {
                     name="state"
                     onBlur={formik.handleBlur}
                     onChange={formik.handleChange}
-                    value={formik.values.state}
+                    value={formik.values.state !=="undefined" ? formik.values.state :""}
                 />
             </Grid>
             <Grid xs={12} md={6}>
                 <TextField
                     error={
-                        !!(formik.touched.addressLine2 && formik.errors.country)
+                        !!(formik.touched.country && formik.errors.country)
                     }
                     fullWidth
                     helperText={
-                        formik.touched.addressLine2 && formik.errors.country
+                        formik.touched.country && formik.errors.country
                     }
                     label={
                         <span>
@@ -96,7 +96,7 @@ export const VendorAddress = (props) => {
                     name="country"
                     onBlur={formik.handleBlur}
                     onChange={formik.handleChange}
-                    value={formik.values.country}
+                    value={formik.values.country !=="undefined" ? formik.values.country : ""}
                 />
             </Grid>
             <Grid xs={12} md={6}>
@@ -113,7 +113,7 @@ export const VendorAddress = (props) => {
                     name="pincode"
                     onBlur={formik.handleBlur}
                     onChange={formik.handleChange}
-                    value={formik.values.pincode}
+                    value={formik.values.pincode !== "undefined" ? formik.values.pincode : ""}
                 />
             </Grid>
         </Grid>
