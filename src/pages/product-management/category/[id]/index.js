@@ -1,6 +1,6 @@
 import Cookies from "js-cookie";
 import {useRouter} from "next/router";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Seo} from "@/components/seo";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
@@ -152,23 +152,29 @@ const Page = () => {
                             >
                             </Stack>
                         </div>
-                        <Card sx={{ paddingBottom: "1%" }}>
-                            <CardHeader title="Basic Details" />
+                        <Card sx={{paddingBottom: "1%"}}>
+                            <CardHeader title="Basic Details"/>
                             <PropertyList>
-                                <Grid container spacing={3}>
-                                    <Grid xs={12} md={6}>
-                                        <PropertyListItem
-                                            label="Product Category"
-                                            value={category?.name}
-                                        />
-
-                                    </Grid>
-
-                                    <Grid xs={12} md={6}>
-                                        <Card sx={{ width: "30%", margin: "0% 5%" }}>
+                                <Grid container spacing={3} sx={{padding:"2%"}}>
+                                    <Grid xs={12} md={3} >
+                                        <Card sx={{width:"150px",height:"150px"}}>
                                             <CardMedia
+                                                component="img"
+                                                image={category?.files?.filePath}
+                                                alt={category?.name}
                                             />
                                         </Card>
+                                    </Grid>
+                                    <Grid xs={12} md={6}>
+                                        <PropertyListItem
+                                            label="Event Category"
+                                            value={category?.name}
+                                        />
+                                        <PropertyListItem
+                                            label="Description"
+                                            value={category.longDescription}
+                                        >
+                                        </PropertyListItem>
                                     </Grid>
                                 </Grid>
                             </PropertyList>

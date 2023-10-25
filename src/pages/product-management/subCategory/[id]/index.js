@@ -23,6 +23,7 @@ import React from "react";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import ArrowRightSharpIcon from "@mui/icons-material/ArrowRightSharp";
 import RoleBasedView from "@/contexts/roleAut/RoleBasedView";
+import {CardMedia} from "@mui/material";
 
 const Page = ({subCategory}) => {
     const router = useRouter();
@@ -135,7 +136,16 @@ const Page = ({subCategory}) => {
                         <Card sx={{paddingBottom: "1%"}}>
                             <CardHeader title="Basic Details"/>
                             <PropertyList>
-                                <Grid container spacing={3}>
+                                    <Grid container spacing={3} sx={{padding:"2%"}}>
+                                        <Grid xs={12} md={3} >
+                                            <Card sx={{width:"200px",height:"200px"}}>
+                                            <CardMedia
+                                                component="img"
+                                                image={subCategory?.files?.filePath}
+                                                alt={subCategory?.name}
+                                            />
+                                        </Card>
+                                    </Grid>
                                     <Grid xs={12} md={6}>
                                         <PropertyListItem
                                             label="Sub Category Name"
@@ -145,26 +155,10 @@ const Page = ({subCategory}) => {
                                             label="Product Category"
                                             value={subCategory.offeringCategories?.name}
                                         />
-                                        {/*<PropertyListItem*/}
-                                        {/*    label="Description"*/}
-                                        {/*    value={subCategory.longDescription}*/}
-                                        {/*/>*/}
-                                        {/*<PropertyListItem*/}
-                                        {/*  label="Description"*/}
-                                        {/*  // value={category.long_description}*/}
-                                        {/*>*/}
-                                        {/*  <p*/}
-                                        {/*    dangerouslySetInnerHTML={{*/}
-                                        {/*      __html: subCategory.longDescription,*/}
-                                        {/*    }}*/}
-                                        {/*  />*/}
-                                        {/*</PropertyListItem>*/}
-                                    </Grid>
-
-                                    <Grid xs={12} md={6}>
-                                        <Card sx={{width: "30%", margin: "0% 5%"}}>
-
-                                        </Card>
+                                        <PropertyListItem
+                                            label="Description"
+                                            value={subCategory.longDescription}
+                                        />
                                     </Grid>
                                 </Grid>
                             </PropertyList>

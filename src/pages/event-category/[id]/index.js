@@ -138,7 +138,16 @@ const Page = ({category}) => {
                         <Card sx={{paddingBottom: "1%"}}>
                             <CardHeader title="Basic Details"/>
                             <PropertyList>
-                                <Grid container spacing={3}>
+                                <Grid container spacing={3} sx={{padding:"2%"}}>
+                                    <Grid xs={12} md={3} >
+                                        <Card >
+                                            <CardMedia
+                                                component="img"
+                                                image={category?.files?.filePath}
+                                                alt={category?.name}
+                                            />
+                                        </Card>
+                                    </Grid>
                                     <Grid xs={12} md={6}>
                                         <PropertyListItem
                                             label="Event Category"
@@ -149,13 +158,6 @@ const Page = ({category}) => {
                                             value={category.longDescription}
                                         >
                                         </PropertyListItem>
-                                    </Grid>
-
-                                    <Grid xs={12} md={6}>
-                                        <Card sx={{width: "30%", margin: "0% 5%"}}>
-                                            <CardMedia
-                                            />
-                                        </Card>
                                     </Grid>
                                 </Grid>
                             </PropertyList>
