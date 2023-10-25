@@ -24,7 +24,7 @@ import ArrowLeftIcon from "@untitled-ui/icons-react/build/esm/ArrowLeft";
 import CommonDialog from "@/custom-components/CommonDialog";
 import Autocomplete from "@mui/material/Autocomplete";
 import {endpoints} from "@/endpoints";
-import {search} from "@/utils/util";
+import {fileUpload, search} from "@/utils/util";
 
 
 const ItemAdd = ({title, pathUrl}) => {
@@ -34,6 +34,7 @@ const ItemAdd = ({title, pathUrl}) => {
     const [createDialogOpen, setCreateDialogOpen] = useState(false);
     const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
     const [descriptionCharCount, setDescriptionCharCount] = useState(0);
+    const [file ,setFile]=useState();
     const handleCreateDialogOpen = () => {
         setCreateDialogOpen(true);
     };
@@ -53,11 +54,17 @@ const ItemAdd = ({title, pathUrl}) => {
         setCancelDialogOpen(false);
     };
 
+    const onUpload = async ()=>{
+        let data = await fileUpload(files[0])
+        setFile( data)
+    }
+
+
     let location = window.location.href.split("/")[4];
     const formik = useFormik({
         initialValues: {
             longDescription: "",
-            images: [],
+            files:[],
             name: "",
             categoryName: "",
             submit: null,
@@ -94,13 +101,14 @@ const ItemAdd = ({title, pathUrl}) => {
 
                 const requestBody = {
                     longDescription: formik.values.longDescription,
-                    images: formik.values.images,
                     name: formik.values.name
                         .toLowerCase()
                         .split(' ')
                         .map(word => word.charAt(0).toUpperCase() + word.slice(1))
                         .join(' '),
-                    shortDescription: "",
+                    files:{
+                        id: file?.id
+                }
                 };
 
                 if (location === "subCategory") {
@@ -269,10 +277,11 @@ const ItemAdd = ({title, pathUrl}) => {
                                                     accept={{"image/*": []}}
                                                     caption="(SVG, JPG, PNG, or gif maximum 900x400)"
                                                     files={files}
+                                                    file={file}
+                                                    onUpload={onUpload}
                                                     onDrop={handleFilesDrop}
                                                     onRemove={handleFileRemove}
                                                     onRemoveAll={handleFilesRemoveAll}
-                                                    disabled
                                                 />
                                                 <Grid mt={5} xs={12} md={8}>
                                                     {location === "add" && (
