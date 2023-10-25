@@ -5,6 +5,28 @@ import toast from "react-hot-toast";
 
 let token = Cookies.get("accessToken");
 
+export const fileUpload = async(file)=>{
+    try {
+        const formData = new FormData();
+        formData.append('file', file);
+        const requestOptions = {
+            method: "POST",
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
+                body: formData
+        };
+        const response = await fetch(process.env.NEXT_PUBLIC_BASE_URL + "/files", requestOptions);
+        const data = await response.json();
+        return data.data[0];
+    } catch (err) {
+        console.error(err);
+    }
+
+}
+
+
+
 export const handleGetById = async (id,path) => {
       try {
         const response = await fetch(

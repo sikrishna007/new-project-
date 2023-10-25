@@ -20,7 +20,7 @@ import { FileIcon } from 'src/components/file-icon';
 import { bytesToSize } from 'src/utils/bytes-to-size';
 
 export const FileDropzone = (props) => {
-  const { caption, files = [], onRemove, onRemoveAll, onUpload, ...other } = props;
+  const { caption, files = [], onRemove, onRemoveAll,file, onUpload, ...other } = props;
   const { getRootProps, getInputProps, isDragActive } = useDropzone(other);
 
   const hasAnyFiles = files.length > 0;
@@ -129,30 +129,30 @@ export const FileDropzone = (props) => {
               );
             })}
           </List>
-          <Stack
-            alignItems="center"
-            direction="row"
-            justifyContent="flex-end"
-            spacing={2}
-            sx={{ mt: 2 }}
-          >
-            <Button
-              color="inherit"
-              onClick={onRemoveAll}
-              size="small"
-              type="button"
+            { file != null ?"":<Stack
+                alignItems="center"
+                direction="row"
+                justifyContent="flex-end"
+                spacing={2}
+                sx={{mt: 2}}
             >
-              Remove All
-            </Button>
-            <Button
-              onClick={onUpload}
-              size="small"
-              type="button"
-              variant="contained"
-            >
-              Upload
-            </Button>
-          </Stack>
+                <Button
+                    color="inherit"
+                    onClick={onRemoveAll}
+                    size="small"
+                    type="button"
+                >
+                    Remove
+                </Button>
+                <Button
+                    onClick={onUpload}
+                    size="small"
+                    type="button"
+                    variant="contained"
+                >
+                    Upload
+                </Button>
+            </Stack>}
         </Box>
       )}
     </div>
