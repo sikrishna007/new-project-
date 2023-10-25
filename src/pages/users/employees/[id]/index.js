@@ -218,21 +218,6 @@ const Page = ({employee}) => {
                                             </Typography>
                                         </Stack>
                                     </Stack>
-                                    <Divider sx={{mt: 3}}/>
-                                    <Stack sx={{pt: 2, mt: 1}} alignItems="center">
-                                        <Button sx={{
-                                            margin: "0 auto"
-                                        }}
-                                                variant="contained"
-                                                endIcon={
-                                                    <SvgIcon>
-                                                        <Edit02Icon/>
-                                                    </SvgIcon>
-                                                }
-                                        >
-                                            Update Picture
-                                        </Button>
-                                    </Stack>
                                 </CardContent>
                             </Card>
                             <Card sx={{marginLeft: "3%", width: "100%"}}>
