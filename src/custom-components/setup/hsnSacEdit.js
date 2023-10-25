@@ -156,7 +156,12 @@ const HsnSacEdit = ({CodeName, codePath, code }) => {
                                                         helperText={
                                                             formik.touched.code && formik.errors.code
                                                         }
-                                                        label={`Enter ${CodeName} Code`}
+                                                        label={
+                                                            <span>
+                                   {`Enter ${CodeName} Code`}&nbsp;
+                                                                <span style={{color: "red"}}>*</span>
+                                </span>
+                                                        }
                                                         name="code"
                                                         onBlur={formik.handleBlur}
                                                         onChange={formik.handleChange}
@@ -186,7 +191,12 @@ const HsnSacEdit = ({CodeName, codePath, code }) => {
                                                             formik.touched.sgstPercentage &&
                                                             formik.errors.sgstPercentage
                                                         }
-                                                        label="SGST"
+                                                        label={
+                                                            <span>
+                                  SGST&nbsp;
+                                                                <span style={{color: "red"}}>*</span>
+                                </span>
+                                                        }
                                                         name="sgstPercentage"
                                                         onBlur={formik.handleBlur}
                                                         onChange={formik.handleChange}
@@ -208,7 +218,12 @@ const HsnSacEdit = ({CodeName, codePath, code }) => {
                                                             formik.touched.cgstPercentage &&
                                                             formik.errors.cgstPercentage
                                                         }
-                                                        label="CGST"
+                                                        label={
+                                                            <span>
+                                  CGST&nbsp;
+                                                                <span style={{color: "red"}}>*</span>
+                                </span>
+                                                        }
                                                         name="cgstPercentage"
                                                         onBlur={formik.handleBlur}
                                                         onChange={formik.handleChange}
@@ -230,7 +245,12 @@ const HsnSacEdit = ({CodeName, codePath, code }) => {
                                                             formik.touched.igstPercentage &&
                                                             formik.errors.igstPercentage
                                                         }
-                                                        label="IGST"
+                                                        label={
+                                                            <span>
+                                  IGST&nbsp;
+                                                                <span style={{color: "red"}}>*</span>
+                                </span>
+                                                        }
                                                         name="igstPercentage"
                                                         onBlur={formik.handleBlur}
                                                         onChange={formik.handleChange}
