@@ -98,7 +98,7 @@ export const getList = async (params)=>{
 export const search = async (query,path)=>{
     try {
         const response = await fetch(
-            process.env.NEXT_PUBLIC_BASE_URL +`/offering_categories/search?search=${query}`,
+            process.env.NEXT_PUBLIC_BASE_URL +`${path}/search?search=${query}`,
             {
                 headers: {
                     Authorization: `Bearer ${token}`,

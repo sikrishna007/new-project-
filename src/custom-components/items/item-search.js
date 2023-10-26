@@ -27,6 +27,7 @@ const sortOptions = [
 export const ItemSearch = ({isStatusShow=true, ...props}) => {
     const {
         isActive,
+        searchCustomers,
         onChangeActive,
     } = props;
 
@@ -44,7 +45,6 @@ export const ItemSearch = ({isStatusShow=true, ...props}) => {
                 >
                     <OutlinedInput
                         defaultValue=""
-                        // disabled="true"
                         fullWidth
                         name="itemName"
                         placeholder="Search"
@@ -55,6 +55,7 @@ export const ItemSearch = ({isStatusShow=true, ...props}) => {
                                 </SvgIcon>
                             </InputAdornment>
                         )}
+                        onChange={(event)=>searchCustomers(event.target.value)}
                     />
                 </Box>
                 {isStatusShow && <TextField

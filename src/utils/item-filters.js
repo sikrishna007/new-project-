@@ -1,9 +1,9 @@
 import {useCallback, useEffect, useMemo, useState} from "react";
 import {endpoints} from "@/endpoints";
 import Cookies from "js-cookie";
-import {getList} from "@/utils/util";
+import {getList, search} from "@/utils/util";
 
-export const useItemsStore = ( location) => {
+export const useItemsStore = (location) => {
     const [page, setPage] = useState(0);
     const [isActive, setIsActive] = useState("");
     const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -13,13 +13,61 @@ export const useItemsStore = ( location) => {
         customers: [],
         customersCount: 5,
     });
+
+    const handleCustomerSearch = useCallback(async(query="")=>{
+        if(query===""){
+            handleCustomersGet()
+        }
+        else{
+            const getEndpoint = (location) => {
+                let endpoint;
+                let role = Cookies.get("role")
+                if (role !== "VENDOR") {
+                    switch (location) {
+
+                        case 'category':
+
+                            endpoint = `${endpoints.category.index}`;
+                            break;
+                        case 'hsn':
+                            endpoint = `${endpoints.hsnSac.index}`;
+                            break;
+                        case 'sac':
+
+                            endpoint = `${endpoints.hsnSac.index}`;
+                            break;
+                        case 'event-category':
+                            endpoint = `${endpoints.eventCategories.index}`;
+                            break;
+                        case 'subCategory':
+                            endpoint = `${endpoints.subCategory.index}`;
+                            break;
+                        default: // Assuming 'vendors' as the default case
+                            endpoint = `${endpoints.product.index}`;
+                    }
+                } else {
+                    let id = Cookies.get("id")
+                    endpoint = `/offerings/vendor/${id}`;
+                }
+                return endpoint
+            }
+            let params = getEndpoint(location);
+            let data = await search(query, params)
+            setState({
+                customers: data.data,
+            });
+        }
+
+    },[])
+
     const handleCustomersGet = useCallback(async (page = 0, limit = 10, isActive = "", sortOn = "updatedAt",sortOrder = "desc") => {
         if(sortOn ===""){sortOn="updatedAt";sortOrder="desc"}
         const getEndpoint=(location)=> {
+            console.log(location)
+
             let endpoint;
             let role = Cookies.get("role")
             if(role !== "VENDOR"){ switch (location) {
-
                 case 'category':
 
                     endpoint = `${endpoints.category.index}?pageNo=${page}&pageSize=${limit}&isActive=${isActive}&sortOn=${sortOn}&sortOrder=${sortOrder}`;
@@ -61,6 +109,9 @@ export const useItemsStore = ( location) => {
 
     }, []);
 
+
+
+
     const onChangeActive = (e, v) => {
         if (e.target.value === "Active") return setIsActive("");
         setIsActive(e.target.value);
@@ -92,6 +143,7 @@ export const useItemsStore = ( location) => {
         page,
         rowsPerPage,
         handleCustomersGet,
+        handleCustomerSearch,
         onChangeActive,
         handleSort,
         handlePageChange,

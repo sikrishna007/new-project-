@@ -61,6 +61,7 @@ const Page = () => {
                             <ItemSearch
                                 onChangeActive={customersStore.onChangeActive}
                                 isActive={customersStore.isActive}
+                                searchCustomers={customersStore.handleCustomerSearch}
                             />
                             <ItemsTable
                                 location={location}

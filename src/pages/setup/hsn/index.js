@@ -78,6 +78,7 @@ const Page = () => {
                                     onViewChange={setView}
                                     view={view}
                                     isStatusShow={false}
+                                    searchCustomers={customersStore.handleCustomerSearch}
                                 />
                             </Stack>
                         </Grid>
@@ -87,7 +88,9 @@ const Page = () => {
                                 codePath="hsn"
                                 hasMore={customersStore.hasMore}
                                 count={customersStore.customersCount}
-                                items={customersStore.customers}
+                                items={customersStore.customers.filter(customer =>{
+                                    return customer.isHsn === true
+                                })}
                                 page={customersStore.page}
                                 rowsPerPage={customersStore.rowsPerPage}
                                 selected={customersSelection.selected}
