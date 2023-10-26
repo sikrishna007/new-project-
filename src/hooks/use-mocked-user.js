@@ -57,7 +57,7 @@ export const useMockedUser = () => {
 
   return {
     id: userData?.id ,
-    avatar: userData?.avatar ,
+    avatar: userData?.user?.profilePic?.filePath ,
     name: userData?.user?.firstName ,
     email: userData?.user?.emailId ,
     role: userData?.user.role?.name

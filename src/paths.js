@@ -121,6 +121,10 @@ export const paths = {
       edit: "/users/employees/edit/",
     },
   },
+  profile: {
+    index: "/profile",
+    edit: "/profile/edit"
+  },
   unAuthorization: {
     index: "/un-authorization"
   },

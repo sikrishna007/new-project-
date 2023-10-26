@@ -79,13 +79,17 @@ export const Footer = (props) => (
                     justifyContent: "center"
                 }}
                 color="text.secondary"
-            >
-                <SvgIcon>
-                    <Copyright/>
-                </SvgIcon><Typography
+            ><Typography
                 variant="body1"
             >
                 All Rights Reserved
+            </Typography>
+                <SvgIcon>
+                    <Copyright/>
+                </SvgIcon>
+                <Typography
+                    variant="body1"
+                >
               <Link
                   color="text.secondary"
                   component={RouterLink}
