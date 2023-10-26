@@ -183,9 +183,10 @@ const Page = ({customer}) => {
                                                         height: 100,
                                                         width: 100
                                                     }}
+                                                    src={customer.user?.profilePic?.filePath}
                                                 >
                                                     <SvgIcon>
-                                                        <User01Icon/>
+                                                        <User01Icon />
                                                     </SvgIcon>
                                                 </Avatar>
                                             </Box>
