@@ -374,7 +374,7 @@ const ItemEdit = ({title, pathUrl, category}) => {
                                     }}
                                     onClose={handleCreateDialogClose}
                                     open={createDialogOpen}
-                                    description={"Are you sure you want to create ?"}
+                                    description={"Are you sure you want to Save Changes ?"}
                                 />
                                 <CommonDialog
                                     title={"Yes"}
@@ -384,7 +384,7 @@ const ItemEdit = ({title, pathUrl, category}) => {
                                     }}
                                     onClose={handleCancelDialogClose}
                                     open={cancelDialogOpen}
-                                    description={"Are you sure you want to Cancel ?"}
+                                    description={"Are you sure you want to Discard ?"}
                                 />
                             </Stack>
                         </form>

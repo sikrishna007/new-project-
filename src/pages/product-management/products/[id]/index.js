@@ -68,40 +68,40 @@ const Page = ({product, vendor}) => {
                                 <Typography variant="h4">Product Information</Typography>
                             </div>
                             <RoleBasedView permissions={["ADMIN","VENDOR MANAGER"]}>
-                             product?.isActive ? (
-                                <Button
-                                    onClick={() =>
-                                        router.push(paths.productManagement.products.edit + product.id)
-                                    }
-                                    color="inherit"
-                                    style={{backgroundColor: "#4338CA", color: "white"}}
-                                    endIcon={
-                                        <SvgIcon>
-                                            <Edit02Icon/>
-                                        </SvgIcon>
-                                    }
-                                >
-                                    Edit
-                                </Button>
-                            ) : (
-                                <Button
-                                    color="inherit"
-                                    style={{
-                                        backgroundColor: "#CACACA",
-                                        color: "white",
-                                        opacity: "1",
-                                        cursor: "not-allowed"
-                                    }}
-                                    title="Deactive records cant't edit"
-                                    endIcon={
-                                        <SvgIcon>
-                                            <Edit02Icon/>
-                                        </SvgIcon>
-                                    }
-                                >
-                                    Edit
-                                </Button>
-                            )
+                                {product?.isActive ? (
+                                    <Button
+                                        onClick={() =>
+                                            router.push(paths.productManagement.products.edit + product.id)
+                                        }
+                                        color="inherit"
+                                        style={{backgroundColor: "#4338CA", color: "white"}}
+                                        endIcon={
+                                            <SvgIcon>
+                                                <Edit02Icon/>
+                                            </SvgIcon>
+                                        }
+                                    >
+                                        Edit
+                                    </Button>
+                                ) : (
+                                    <Button
+                                        color="inherit"
+                                        style={{
+                                            backgroundColor: "#CACACA",
+                                            color: "white",
+                                            opacity: "1",
+                                            cursor: "not-allowed"
+                                        }}
+                                        title="Deactive records cant't edit"
+                                        endIcon={
+                                            <SvgIcon>
+                                                <Edit02Icon/>
+                                            </SvgIcon>
+                                        }
+                                    >
+                                        Edit
+                                    </Button>
+                                )}
                             </RoleBasedView>
                         </div>
                         <div style={{marginLeft: '2.3%', marginTop: '0.5%'}}>

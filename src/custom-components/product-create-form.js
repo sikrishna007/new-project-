@@ -328,7 +328,7 @@ export const ProductCreateForm = (props) => {
 
     const [cat,setCat]= useState('')
     const handleGetCat =async (input)=>{
-        let path = endpoints.category.index.index;
+        let path = `${endpoints.category.index}`;
         let result = await search(input,path);
         setCategories(result.data);
     }
@@ -372,15 +372,12 @@ export const ProductCreateForm = (props) => {
                             <Grid xs={12} md={8}>
                                 <Stack spacing={3}>
                                     <Autocomplete
-                                        error={formik.touched.vendor && Boolean(formik.errors.vendor)}
-                                        helperText={formik.touched.vendor && formik.errors.vendor}
                                         options={vendors}
                                         getOptionLabel={(option) => option.user.firstName + " " + option.user.lastName}
                                         renderInput={(params) => (
                                             <TextField
                                                 {...params}
                                                 label="Select vendor"
-                                                variant="outlined" // Add this line for outlined style
                                                 error={formik.touched.vendor && Boolean(formik.errors.vendor)} // Repeat the error prop here
                                                 helperText={formik.touched.vendor && formik.errors.vendor} // Repeat the helperText prop here
                                             />
@@ -427,7 +424,6 @@ export const ProductCreateForm = (props) => {
                                             <TextField
                                                 {...params}
                                                 label="Select HSN Code"
-                                                variant="outlined"
                                                 error={formik.touched.hsnSacCode && Boolean(formik.errors.hsnSacCode)}
                                                 helperText={formik.touched.hsnSacCode && formik.errors.hsnSacCode}
                                             />
@@ -449,7 +445,6 @@ export const ProductCreateForm = (props) => {
                                             <TextField
                                                 {...params}
                                                 label="Select SAC Code"
-                                                variant="outlined"
                                                 error={formik.touched.hsnSacCode && Boolean(formik.errors.hsnSacCode)}
                                                 helperText={formik.touched.hsnSacCode && formik.errors.hsnSacCode}
                                             />
@@ -649,7 +644,6 @@ export const ProductCreateForm = (props) => {
                                         flexWrap="wrap"
                                         spacing={1}
                                     >
-                                        <div>
                                             {selectedEvent.map((event) => (
                                                 <Chip
                                                     key={event.id}
@@ -659,7 +653,6 @@ export const ProductCreateForm = (props) => {
                                                     }}
                                                 />
                                             ))}
-                                        </div>
                                     </Stack></Stack>
                             </Grid>
                         </Grid>

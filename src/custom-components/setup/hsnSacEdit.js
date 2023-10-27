@@ -311,7 +311,7 @@ const HsnSacEdit = ({CodeName, codePath, code }) => {
                                     }}
                                     onClose={handleCreateDialogClose}
                                     open={createDialogOpen}
-                                    description={"Are you sure you want to Change Details ?"}
+                                    description={"Are you sure you want to Save Changes ?"}
                                 />
                                 <CommonDialog
                                     onConfirm={() => {

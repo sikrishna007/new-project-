@@ -233,7 +233,7 @@ export const ProductEditForm = (props) => {
     };
 
     const handleGetCat =async (input)=>{
-        let path = endpoints.category.index.index;
+        let path = `${endpoints.category.index}`;
         let result = await search(input,path);
         setCategories(result.data);
     }
@@ -359,7 +359,6 @@ export const ProductEditForm = (props) => {
                                         <TextField
                                             {...params}
                                             label={isGoods ?"Select HSN Code":"Select SAC Code"}
-                                            variant="outlined"
                                             error={formik.touched.hsnSacCode && Boolean(formik.errors.hsnSacCode)}
                                             helperText={formik.touched.hsnSacCode && formik.errors.hsnSacCode}
                                         />
@@ -564,7 +563,6 @@ export const ProductEditForm = (props) => {
                         </Grid>
                     </CardContent>
                 </Card>
-
                 <Card>
                     <CardContent>
                         <Grid container spacing={3}>
@@ -590,8 +588,8 @@ export const ProductEditForm = (props) => {
                                         direction="row"
                                         flexWrap="wrap"
                                         spacing={1}
+
                                     >
-                                        <div>
                                             {selectedEvent.map((event) => (
                                                 <Chip
                                                     key={event.id}
@@ -601,7 +599,6 @@ export const ProductEditForm = (props) => {
                                                     }}
                                                 />
                                             ))}
-                                        </div>
                                     </Stack></Stack>
                             </Grid>
                         </Grid>

@@ -162,7 +162,7 @@ export const EditCustomer = ({formik, hasChanges}) => {
                         }}
                         onClose={handleCreateDialogClose}
                         open={createDialogOpen}
-                        description={create ?"Are you sure you want to Save Changes ?":"Are you sure you want to go back ?"}
+                        description={create ?"Are you sure you want to Save Changes ?":"Are you sure you want to Discard ?"}
                     />
                 </Stack></Grid>
             </CardContent>
