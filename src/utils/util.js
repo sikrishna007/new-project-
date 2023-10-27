@@ -460,7 +460,7 @@ export const getSubmitHandlerEdit = (router, method = "PATCH") => {
                 panNumber:values.panNumber ===""? null:values.panNumber,
                 gstNumber:values.gstNumber === ""? null : values.gstNumber,
                 isBusinessCustomer,
-                adhaarNumber: values.adhaarNumber,
+                adhaarNumber: values.adhaarNumber === ""? null : values.adhaarNumber,
                 user: {
                     firstName: firstName.toLowerCase()
                         .split(' ')
@@ -650,8 +650,8 @@ export const getSubmitHandlerEdit = (router, method = "PATCH") => {
             // NOTE: Make API request
             const body = {
                 name,
-                panNumber,
-                gstNumber,
+                panNumber:values.panNumber ===""? null:values.panNumber,
+                gstNumber:values.gstNumber === ""? null : values.gstNumber,
                 termsAndConditions,
                 user: {
                     firstName: firstName.toLowerCase()
