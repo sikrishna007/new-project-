@@ -351,13 +351,12 @@ export const ProductCreateForm = (props) => {
     useEffect(() => {
         handleGetCat("")
     }, []);
-    const handleRadioChange = (event) => {
-        const selectedValue = event.target.value === "true";
-        getHsnSacCodes(selectedValue)
-        setIsGoods(selectedValue);
-        setShowHSNDropdown(selectedValue); // Show HSN dropdown for "Goods"
-        setShowSACDropdown(!selectedValue); // Show SAC dropdown for "Service"
-    };
+    const handleRadioChange =(event)=>{
+        let value = event.target.value === "true"
+        setIsGoods(value )
+        formik.setFieldValue('hsnSacCode', ''); // Update Formik value
+        getHsnSacCodes(value)
+    }
 
     return (
         <form>
@@ -416,45 +415,23 @@ export const ProductCreateForm = (props) => {
                                     </RadioGroup>
                                 </FormControl>
 
-                                {showHSNDropdown && (
-                                    <Autocomplete
-                                        options={hsnSacCodes}
-                                        getOptionLabel={(option) => option.code}
-                                        renderInput={(params) => (
-                                            <TextField
-                                                {...params}
-                                                label="Select HSN Code"
-                                                error={formik.touched.hsnSacCode && Boolean(formik.errors.hsnSacCode)}
-                                                helperText={formik.touched.hsnSacCode && formik.errors.hsnSacCode}
-                                            />
-                                        )}
-                                        onChange={(event, value) => {
-                                            formik.setFieldValue('hsnSacCode', value ? value.id : ''); // Update Formik value
-                                            setSelectedHsnCode(value);
-                                        }}
-                                        value={hsnSacCodes.find((option) => option.id === formik.values.hsnSacCode) || null}
-                                    />
-
-                                )}
-
-                                {showSACDropdown && (
-                                    <Autocomplete
-                                        options={hsnSacCodes}
-                                        getOptionLabel={(option) => option.code}
-                                        renderInput={(params) => (
-                                            <TextField
-                                                {...params}
-                                                label="Select SAC Code"
-                                                error={formik.touched.hsnSacCode && Boolean(formik.errors.hsnSacCode)}
-                                                helperText={formik.touched.hsnSacCode && formik.errors.hsnSacCode}
-                                            />
-                                        )}
-                                        onChange={(event, value) => {
-                                            setSelectedSacCode(value);
-                                        }}
-                                        value={hsnSacCodes.find((option) => option === formik.values.hsnSacCode) || null}
-                                    />
-                                )}
+                                <Autocomplete
+                                    options={hsnSacCodes}
+                                    getOptionLabel={(option) => option.code}
+                                    renderInput={(params) => (
+                                        <TextField
+                                            {...params}
+                                            label={isGoods ?"Select HSN Code":"Select SAC Code"}
+                                            error={formik.touched.hsnSacCode && Boolean(formik.errors.hsnSacCode)}
+                                            helperText={formik.touched.hsnSacCode && formik.errors.hsnSacCode}
+                                        />
+                                    )}
+                                    onChange={(event, value) => {
+                                        formik.setFieldValue('hsnSacCode', value ? value.id : ''); // Update Formik value
+                                        setSelectedHsnCode(value);
+                                    }}
+                                    value={formik.values.hsnSacCode || null}
+                                />
                             </Grid>
                         </Grid>
                     </CardContent>
