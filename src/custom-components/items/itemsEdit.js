@@ -97,21 +97,38 @@ const ItemEdit = ({title, pathUrl, category}) => {
                     location === "edit" ? pathName = "eventCategories" : location === "category" ? pathName = "category" : pathName = "subCategory"
                     let endpoint = endpoints[pathName].index
 
-                    const requestBody = {
-                        longDescription: formik.values.longDescription,
-                        images: formik.values.images,
-                        name: formik.values.name
+                    let requestBody ;
+
+                    if (location === "subCategory") {
+                         requestBody = {
+                            longDescription: formik.values.longDescription,
+                            images: formik.values.images,
+                            name: formik.values.name
+                                .toLowerCase()
+                                .split(' ')
+                                .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                                .join(' '),
+                            files:{
+                                id: formik.values.files.id
+                            },
+                             offeringCategories:{
+                                id:values.categoryName.id
+                             }
+                        };
+                    }
+                    else {
+                        requestBody ={
+                            longDescription: formik.values.longDescription,
+                            images: formik.values.images,
+                            name: formik.values.name
                             .toLowerCase()
                             .split(' ')
                             .map(word => word.charAt(0).toUpperCase() + word.slice(1))
                             .join(' '),
-                        files:{
+                            files:{
                             id: formik.values.files.id
                         }
-                    };
-
-                    if (location === "subCategory") {
-                        requestBody.offeringCategories = formik.values.categoryName
+                        };
                     }
 
                     const response = await fetch(
@@ -241,7 +258,7 @@ const ItemEdit = ({title, pathUrl, category}) => {
                                                                 />
                                                             )}
                                                             onChange={(event, value) => {
-                                                                formik.values.categoryName = value?.id
+                                                                formik.values.categoryName = value
                                                             }}
                                                             value={formik.values.categoryName !=="undefined" ? formik.values.categoryName : ""}
                                                         />
