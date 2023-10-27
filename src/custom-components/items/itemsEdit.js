@@ -185,7 +185,7 @@ const ItemEdit = ({title, pathUrl, category}) => {
     }, []);
 
     useEffect(() => {
-        if (!(formik.values.name === category.name) || !(formik.values.longDescription ===  category.longDescription)|| !(formik.values.files ===  category.files)){
+        if (!(formik.values.name === category.name) || !(formik.values.longDescription ===  category.longDescription)|| !(formik.values.files ===  category.files)|| !(formik.values.categoryName ===  category?.offeringCategories)){
             setHasChanges(true)
         }else{
             setHasChanges(false)
@@ -258,7 +258,8 @@ const ItemEdit = ({title, pathUrl, category}) => {
                                                                 />
                                                             )}
                                                             onChange={(event, value) => {
-                                                                formik.values.categoryName = value
+                                                                formik.setFieldValue("categoryName",value)
+                                                                formik.handleChange
                                                             }}
                                                             value={formik.values.categoryName !=="undefined" ? formik.values.categoryName : ""}
                                                         />
