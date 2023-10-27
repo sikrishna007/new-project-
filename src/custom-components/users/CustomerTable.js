@@ -324,7 +324,7 @@ export const CustomerTable = (props) => {
                                             },
                                         }}
                                     >
-                                        <RoleBasedView permissions={ location ==="vendors"?["ADMIN","VENDOR MANAGER","SALES MANGER"]:location ==="customers"?["ADMIN","SALES MANGER"]:["ADMIN"]}>
+                                        <RoleBasedView permissions={ location ==="vendors"?["ADMIN","VENDOR MANAGER","SALES MANAGER"]:location ==="customers"?["ADMIN","SALES MANAGER"]:["ADMIN"]}>
                                         <Tooltip title="Edit">
                                             <IconButton
                                                 disabled={!customer?.isActive}

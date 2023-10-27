@@ -58,7 +58,7 @@ const Page = () => {
                                 {/*</Breadcrumbs>*/}
                             </Stack>
                             <Stack alignitems="center" direction="row" spacing={3}>
-                                <RoleBasedView permissions={["ADMIN","SALES MANGER"]}>
+                                <RoleBasedView permissions={["ADMIN","SALES MANAGER"]}>
                                 <Link
                                     component={RouterLink}
                                     href={paths.userManagement.customers.index + "/add"}

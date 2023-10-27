@@ -214,6 +214,15 @@ export const useSections = () => {
                 ),
               },
               {
+                title: t(tokens.nav.eventCategory),
+                path: paths.eventCategory.index,
+                icon: (
+                    <SvgIcon fontSize="small">
+                      <CategoryOutlined/>
+                    </SvgIcon>
+                ),
+              },
+              {
                 title: t(tokens.nav.productManagement),
                 path: paths.productManagement.index,
                 icon: (
