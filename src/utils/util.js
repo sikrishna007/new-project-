@@ -150,9 +150,9 @@ export const getSubmitHandler = (router, method = "POST") => {
             // NOTE: Make API request
             const body = {
                 name,
-                panNumber,
+                panNumber:values.panNumber ===""? null:values.panNumber,
+                gstNumber:values.gstNumber === ""? null : values.gstNumber,
                 isBusinessCustomer,
-                gstNumber,
                 adhaarNumber: values.adhaarNumber,
                 user: {
                     firstName: firstName.toLowerCase()
@@ -247,8 +247,7 @@ export const getSubmitHandler = (router, method = "POST") => {
             const body = {
                 // name: firstName + " " + lastName,
                 empId,
-                gstNumber,
-                panNumber,
+                panNumber:values.panNumber ===""? null:values.panNumber,
                 adhaarNumber: values.adhaarNumber,
                 termsAndConditions,
                 user: {
@@ -348,8 +347,8 @@ export const getSubmitHandler = (router, method = "POST") => {
             // NOTE: Make API request
             const body = {
                 name,
-                panNumber,
-                gstNumber,
+                panNumber:values.panNumber ===""? null:values.panNumber,
+                gstNumber:values.gstNumber === ""? null : values.gstNumber,
                 termsAndConditions,
                 user: {
                     firstName: firstName.toLowerCase()
@@ -458,9 +457,9 @@ export const getSubmitHandlerEdit = (router, method = "PATCH") => {
             // NOTE: Make API request
             const body = {
                 name,
-                panNumber,
+                panNumber:values.panNumber ===""? null:values.panNumber,
+                gstNumber:values.gstNumber === ""? null : values.gstNumber,
                 isBusinessCustomer,
-                gstNumber,
                 adhaarNumber: values.adhaarNumber,
                 user: {
                     firstName: firstName.toLowerCase()
@@ -553,7 +552,7 @@ export const getSubmitHandlerEdit = (router, method = "PATCH") => {
             const body = {
                 // name: firstName + " " + lastName,
                 empId,
-                panNumber,
+                panNumber:values.panNumber ===""? null:values.panNumber,
                 user: {
                     firstName: firstName.toLowerCase()
                         .split(' ')
