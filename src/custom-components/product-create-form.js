@@ -330,7 +330,7 @@ export const ProductCreateForm = (props) => {
     const handleGetCat =async (input)=>{
         let path = endpoints.category.index.index;
         let result = await search(input,path);
-        setCategories(result.hits);
+        setCategories(result.data);
     }
 
     const getHsnSacCodes = async (isHsn)=>{
@@ -851,13 +851,13 @@ export const ProductCreateForm = (props) => {
                             </Grid>
                             <Grid xs={12} md={8}>
                                 <FileDropzone
+                                    maxFiles={4}
                                     accept={{"image/*": []}}
                                     caption="(SVG, JPG, PNG, or gif maximum 900x400)"
                                     files={files}
                                     onDrop={handleFilesDrop}
                                     onRemove={handleFileRemove}
                                     onRemoveAll={handleFilesRemoveAll}
-                                    disabled
                                 />
                             </Grid>
                         </Grid>

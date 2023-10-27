@@ -23,7 +23,8 @@ import ArrowLeftIcon from "@untitled-ui/icons-react/build/esm/ArrowLeft";
 import CommonDialog from "@/custom-components/CommonDialog";
 import Autocomplete from "@mui/material/Autocomplete";
 import {endpoints} from "@/endpoints";
-import {search} from "@/utils/util";
+import {fileUpload, search} from "@/utils/util";
+import {CardMedia} from "@mui/material";
 
 
 const ItemEdit = ({title, pathUrl, category}) => {
@@ -34,6 +35,7 @@ const ItemEdit = ({title, pathUrl, category}) => {
     const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
     const [descriptionCharCount, setDesctriptionCharCount]  = useState(0);
     const [hasChanges, setHasChanges] = useState(false);
+    const [file ,setFile]=useState();
     const handleCreateDialogOpen = () => {
         setCreateDialogOpen(true);
     };
@@ -51,12 +53,16 @@ const ItemEdit = ({title, pathUrl, category}) => {
 
         setCancelDialogOpen(false);
     };
-
+    const onUpload = async ()=>{
+        let data = await fileUpload(files[0])
+        formik.setFieldValue("files", data)
+        setFile( data)
+    }
     let location = window.location.href.split("/")[4];
     const formik = useFormik({
         initialValues: {
             longDescription: category.longDescription,
-            images: [],
+            files:category.files,
             name: category.name,
             categoryName: category.offeringCategories,
             submit: null,
@@ -99,7 +105,9 @@ const ItemEdit = ({title, pathUrl, category}) => {
                             .split(' ')
                             .map(word => word.charAt(0).toUpperCase() + word.slice(1))
                             .join(' '),
-                        shortDescription: "",
+                        files:{
+                            id: formik.values.files.id
+                        }
                     };
 
                     if (location === "subCategory") {
@@ -148,9 +156,9 @@ const ItemEdit = ({title, pathUrl, category}) => {
     }, []);
 
     const handleGetCat =async (input)=>{
-        let path = endpoints.category.index.index;
+        let path = `${endpoints.category.index}`;
         let result = await search(input,path);
-        setCategories(result.hits);
+        setCategories(result.data);
     }
     useEffect(() => {
         handleGetCat("")
@@ -160,7 +168,7 @@ const ItemEdit = ({title, pathUrl, category}) => {
     }, []);
 
     useEffect(() => {
-        if (!(formik.values.name === category.name) || !(formik.values.longDescription ===  category.longDescription)){
+        if (!(formik.values.name === category.name) || !(formik.values.longDescription ===  category.longDescription)|| !(formik.values.files ===  category.files)){
             setHasChanges(true)
         }else{
             setHasChanges(false)
@@ -284,11 +292,21 @@ const ItemEdit = ({title, pathUrl, category}) => {
                                                     accept={{"image/*": []}}
                                                     caption="(SVG, JPG, PNG, or gif maximum 900x400)"
                                                     files={files}
+                                                    file={file}
+                                                    onUpload={onUpload}
                                                     onDrop={handleFilesDrop}
                                                     onRemove={handleFileRemove}
                                                     onRemoveAll={handleFilesRemoveAll}
-                                                    disabled
                                                 />
+                                                <Grid mt={5} xs={12} md={8}>
+                                                    {files.length === 0 ?<Card sx={{width: "150px", height: "fitContent"}}>
+                                                        <CardMedia
+                                                            component="img"
+                                                            image={category?.files?.filePath}
+                                                            alt={category?.name}
+                                                        />
+                                                </Card>:""}
+                                                </Grid>
                                                 <Grid mt={5} xs={12} md={8}>
                                                     {location === "edit" && (
                                                         <>

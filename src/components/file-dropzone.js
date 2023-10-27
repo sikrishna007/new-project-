@@ -115,16 +115,16 @@ export const FileDropzone = (props) => {
                     primaryTypographyProps={{ variant: 'subtitle2' }}
                     secondary={bytesToSize(file.size)}
                   />
-                  <Tooltip title="Remove">
-                    <IconButton
-                      edge="end"
-                      onClick={() => onRemove?.(file)}
-                    >
-                      <SvgIcon>
-                        <XIcon />
-                      </SvgIcon>
-                    </IconButton>
-                  </Tooltip>
+                    {file != null ?"":<Tooltip title="Remove">
+                        <IconButton
+                            edge="end"
+                            onClick={() => onRemove?.(file)}
+                        >
+                            <SvgIcon>
+                                <XIcon/>
+                            </SvgIcon>
+                        </IconButton>
+                    </Tooltip>}
                 </ListItem>
               );
             })}

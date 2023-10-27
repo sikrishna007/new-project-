@@ -152,6 +152,7 @@ const ItemAdd = ({title, pathUrl}) => {
         setFiles((prevFiles) => {
             return prevFiles.filter((_file) => _file.path !== file.path);
         });
+        setFiles(null);
     }, []);
 
     const handleFilesRemoveAll = useCallback(() => {
@@ -159,9 +160,9 @@ const ItemAdd = ({title, pathUrl}) => {
     }, []);
 
     const handleGetCat =async (input)=>{
-        let path = endpoints.category.index.index;
+        let path = `${endpoints.category.index}`;
         let result = await search(input,path);
-        setCategories(result.hits);
+        setCategories(result.data);
     }
     useEffect(() => {
         handleGetCat("")

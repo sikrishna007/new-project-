@@ -235,7 +235,7 @@ export const ProductEditForm = (props) => {
     const handleGetCat =async (input)=>{
         let path = endpoints.category.index.index;
         let result = await search(input,path);
-        setCategories(result.hits);
+        setCategories(result.data);
     }
 
     const [selectedHsnCode, setSelectedHsnCode] = useState(null);
@@ -269,7 +269,7 @@ export const ProductEditForm = (props) => {
         if (selectedHsnCode) {
             formik.setValues({
                 ...formik.values,
-                hsnSacCode: selectedHsnCode.id,
+                hsnSacCode: selectedHsnCode,
                 cgst: selectedHsnCode.cgstPercentage,
                 sgst: selectedHsnCode.sgstPercentage,
                 igst: selectedHsnCode.igstPercentage,
@@ -280,7 +280,7 @@ export const ProductEditForm = (props) => {
         if (selectedSacCode) {
             formik.setValues({
                 ...formik.values,
-                hsnSacCode: selectedSacCode.id,
+                hsnSacCode: selectedSacCode,
                 cgst: selectedSacCode.cgstPercentage,
                 sgst: selectedSacCode.sgstPercentage,
                 igst: selectedSacCode.igstPercentage,
