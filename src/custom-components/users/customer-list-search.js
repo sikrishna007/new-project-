@@ -101,7 +101,7 @@ export const CustomerListSearch = (props) => {
                         label="Role"
                         name="Role"
                         onChange={onChangeRole}
-                        value={role === false ? {id:33,name:"Retail Customer"} : role === true ? "Business Customer" : role}
+                        value={role}
                         select
                         SelectProps={{native: true}}
                     >

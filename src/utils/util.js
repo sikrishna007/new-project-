@@ -429,7 +429,7 @@ export const getSubmitHandlerEdit = (router, method = "PATCH") => {
                 name,
                 panNumber,
                 gstNumber,
-                isBusinessCustomer,
+                isBusinessCustomer = role === "RETAIL CUSTOMER"? "false":"true",
                 termsAndConditions,
                 firstName,
                 lastName,
@@ -452,14 +452,11 @@ export const getSubmitHandlerEdit = (router, method = "PATCH") => {
                 instagramLink,
                 youtubeLink,
             } = values;
-            // console.log(values);
-            // props.setState(true);
-            // NOTE: Make API request
             const body = {
                 name,
                 panNumber:values.panNumber ===""? null:values.panNumber,
                 gstNumber:values.gstNumber === ""? null : values.gstNumber,
-                isBusinessCustomer,
+                isBusinessCustomer: values.role === "RETAIL CUSTOMER"? "false":"true",
                 adhaarNumber: values.adhaarNumber === ""? null : values.adhaarNumber,
                 user: {
                     firstName: firstName.toLowerCase()
