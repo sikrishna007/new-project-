@@ -123,7 +123,7 @@ export const getSubmitHandler = (router, method = "POST") => {
                 panNumber,
                 gstNumber,
                 role,
-                isBusinessCustomer = role === "Retail Customer"? "false":"true",
+                isBusinessCustomer = role === "RETAIL CUSTOMER"? "false":"true",
                 termsAndConditions,
                 firstName,
                 lastName,
