@@ -18,10 +18,13 @@ import {getList} from "@/utils/util";
 
 
      const handleCustomersGet = useCallback(async (page = 0, limit = 10, isActive = "", role = "", sortOn = "updatedAt", sortOrder = "desc") => {
+         let value=""
          if(sortOn ===""){sortOn="updatedAt";sortOrder="desc"}
+         if(role === "RETAIL CUSTOMER") {value=false}
+         if(role === "BUSINESS CUSTOMER") {value=true}
          const getEndpoint=(location)=> {
              let endpoint;
-
+             if(location === "vendor kyc" || location === "business-customer kyc"){ isActive = isActive === ""  ? "7123313635396419584": isActive}
              switch (location) {
 
                  case 'employees':
@@ -33,7 +36,13 @@ import {getList} from "@/utils/util";
                      break;
 
                  case 'customers':
-                     endpoint = `${endpoints.userManagement.customers.index}?pageNo=${page}&pageSize=${limit}&sortOn=${sortOn}&isActive=${isActive}&isBusinessCustomer=${role}&sortOrder=${sortOrder}`;
+                     endpoint = `${endpoints.userManagement.customers.index}?pageNo=${page}&pageSize=${limit}&sortOn=${sortOn}&isActive=${isActive}&isBusinessCustomer=${value}&sortOrder=${sortOrder}`;
+                     break;
+                 case 'vendor kyc':
+                     endpoint = `${endpoints.userManagement.vendors.index}?pageNo=${page}&pageSize=${limit}&sortOn=${sortOn}&status=${isActive}&sortOrder=${sortOrder}`;
+                     break;
+                 case 'business-customer kyc':
+                     endpoint = `${endpoints.userManagement.customers.index}?pageNo=${page}&pageSize=${limit}&sortOn=${sortOn}&isBusinessCustomer=true&status=${isActive}&sortOrder=${sortOrder}`;
                      break;
 
                  default: // Assuming 'vendors' as the default case
@@ -72,8 +81,6 @@ import {getList} from "@/utils/util";
         // console.log(e.target.value);
 
         if (e.target.value === "All") return setRole("");
-        if (e.target.value === "RETAIL CUSTOMER") return setRole(false);
-        if (e.target.value === "BUSINESS CUSTOMER") return setRole(true);
         setRole(e.target.value);
     };
     const handlePageChange = useCallback((event, page) => {

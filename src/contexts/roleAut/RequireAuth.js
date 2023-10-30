@@ -35,7 +35,6 @@ const Redirect = () => {
 const RoleBasedGuard = (props) => {
     const router = useRouter();
     const { children, permissions } = props;
-    console.log(router.pathname)
     // let admin = ['/','/dashboard','/product-management/products',''];
 
     let commanFields = ['/profile/[id]','/','/dashboard','/product-management/products','/product-management/products/[id]','/product-management/category','/product-management/category/[id]','/product-management/subCategory','/product-management/subCategory/[id]'];

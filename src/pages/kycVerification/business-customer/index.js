@@ -16,191 +16,23 @@ import TablePagination from "@mui/material/TablePagination";
 import Button from "@mui/material/Button";
 import {RouterLink} from "../../../components/router-link";
 import {paths} from "../../../paths";
-
-const TabPanel = (props) => {
-    const {children, value, index, ...other} = props;
-
-    return (
-        <div
-            role="tabpanel"
-            hidden={value !== index}
-            id={`tabpanel-${index}`}
-            {...other}
-        >
-            {value === index && (
-                <Box p={3}>
-                    {children}
-                </Box>
-            )}
-        </div>
-    );
-};
-
+import {useCustomersIds, useCustomersStore} from "@/utils/userDataFilters";
+import {useSelection} from "@/hooks/use-selection";
+import {useRouter} from "next/router";
+import {KycListSearch} from "@/custom-components/kyc/Kyc-list-search";
+import {KycTable} from "@/custom-components/kyc/KycTable";
 
 const Page = () => {
-    const [value, setValue] = useState(0);
-    const [vendor, setVendor] = useState([]);
-    const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(10);
-    const [count, setCount] = useState(0)
-    const [activeTab, setActiveTab] = useState(0);
 
-
-        const handleCustomerGet = useCallback(async (page = 0, limit = 10) => {
-        // console.log(page)
-        // console.log(limit);
-        try {
-            let token = Cookies.get("accessToken");
-            const response = await fetch(
-                process.env.NEXT_PUBLIC_BASE_URL +
-                endpoints.userManagement.customers.index + `?pageNo=${page}&isBusinessCustomer=true&pageSize=${limit}&isActive=true&sortOn=updatedAt&sortOrder=Desc`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
-            const data = await response.json();
-            setVendor(data.data)
-            setCount(data.totalElements)
-        } catch (err) {
-            console.error(err);
-        }
-    }, [page, rowsPerPage]);
-
-    const handleCustomerGetVerified = useCallback(async (page = 0, limit = 10) => {
-        // console.log(page)
-        // console.log(limit);
-        try {
-            let token = Cookies.get("accessToken");
-            const response = await fetch(
-                process.env.NEXT_PUBLIC_BASE_URL +
-                endpoints.userManagement.customers.index + `?pageNo=${page}&pageSize=${limit}&isBusinessCustomer=true&isActive=true&sortOn=updatedAt&sortOrder=Desc&isVerified=true`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
-            const data = await response.json();
-            setVendor(data.data)
-            setCount(data.totalElements)
-
-
-        } catch (err) {
-            console.error(err);
-        }
-    }, [page, rowsPerPage]);
-
-    const handleCustomerGetPending = useCallback(async (page = 0, limit = 10) => {
-        // console.log(page)
-        // console.log(limit);
-        try {
-            let token = Cookies.get("accessToken");
-            const response = await fetch(
-                process.env.NEXT_PUBLIC_BASE_URL +
-                endpoints.userManagement.customers.index + `?pageNo=${page}&pageSize=${limit}&isBusinessCustomer=true&isActive=true&sortOn=updatedAt&sortOrder=Desc&isVerified=false`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
-            const data = await response.json();
-            setVendor(data.data)
-            setCount(data.totalElements)
-
-
-        } catch (err) {
-            console.error(err);
-        }
-    }, [page, rowsPerPage]);
-    const handleCustomerGetRejected = useCallback(async (page = 0, limit = 10) => {
-        // console.log(page)
-        // console.log(limit);
-        try {
-            let token = Cookies.get("accessToken");
-            const response = await fetch(
-                process.env.NEXT_PUBLIC_BASE_URL +
-                endpoints.userManagement.customers.index + `?pageNo=${page}&pageSize=${limit}&isBusinessCustomer=true&sortOn=updatedAt&sortOrder=Desc&isRejected=true`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
-            const data = await response.json();
-            setVendor(data.data)
-            setCount(data.totalElements)
-
-
-        } catch (err) {
-            console.error(err);
-        }
-    }, [page, rowsPerPage]);
-    const handleTabChange = (event, newValue) => {
-        setValue(newValue);
-        setActiveTab(newValue)
-
-        // Fetch data based on the selected tab
-        switch (newValue) {
-            case 0:
-                setRowsPerPage(10);
-                setPage(0);
-                handleCustomerGet(page, rowsPerPage);
-                break;
-            case 1:
-                setRowsPerPage(10);
-                setPage(0);
-                handleCustomerGetVerified(page, rowsPerPage);
-                break;
-            case 2:
-                setRowsPerPage(10);
-                setPage(0);
-                handleCustomerGetPending(page, rowsPerPage);
-                break;
-            case 3:
-                setRowsPerPage(10);
-                setPage(0);
-                handleCustomerGetRejected(page, rowsPerPage);
-                break;
-            default:
-                break;
-        }
-    };
-
-    useEffect(
-        () => {
-            handleCustomerGet(page, rowsPerPage);
-        },
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [page, rowsPerPage]
-    );
-
-    const handlePageChange = useCallback((event, page) => {
-        // console.log(page);
-        if (value === 0) {
-            handleCustomerGet(page, rowsPerPage);
-            setPage(page);
-        }
-        if (value === 1) {
-            handleCustomerGetVerified(page, rowsPerPage);
-            setPage(page);
-        }
-        if (value === 2) {
-            handleCustomerGetPending(page, rowsPerPage);
-            setPage(page);
-        }
-        if (value === 3) {
-            handleCustomerGetRejected(page, rowsPerPage);
-            setPage(page);
-        }
-    }, []);
-
+    let location = window.location.href.split("/")[4]+[" kyc"];
+    const customersStore = useCustomersStore(location);
+    const customersIds = useCustomersIds(customersStore.customers);
+    const customersSelection = useSelection(customersIds);
+    const router = useRouter();
 
     return (
-        <div>
-            <Seo title="Event Mart | KYC verification"/>
+        <>
+            <Seo title="Event Mart: Vendors"/>
             <Box
                 component="main"
                 sx={{
@@ -210,301 +42,50 @@ const Page = () => {
             >
                 <Container maxWidth="xl">
                     <Stack spacing={4}>
-                        <Stack sx={{marginTop: '-40px'}}
-                               direction="row" justifyContent="space-between" spacing={4}>
+                        <Stack
+                            sx={{marginTop: "-40px"}}
+                            direction="row"
+                            justifyContent="space-between"
+                            spacing={4}
+                        >
                             <Stack spacing={1}>
-                                <Typography variant="h4">KYC Verification</Typography>
-                                {/*<Breadcrumbs separator={<BreadcrumbsSeparator/>}>*/}
-                                {/*    <Link*/}
-                                {/*        color='#4338CA'*/}
-                                {/*        component={RouterLink}*/}
-                                {/*        href={paths.dashboard.index}*/}
-                                {/*        variant="subtitle2"*/}
-                                {/*    >*/}
-                                {/*        Dashboard*/}
-                                {/*    </Link>*/}
-                                {/*    <Typography*/}
-                                {/*        color="text.primary"*/}
-                                {/*        variant="subtitle2"*/}
-                                {/*    >*/}
-                                {/*        KYC List*/}
-                                {/*    </Typography>*/}
-                                {/*</Breadcrumbs>*/}
+                                <Typography variant="h4">Vendor KYC Verification</Typography>
                             </Stack>
                         </Stack>
-                        <Card>
-                            <Stack
-                                alignItems="center"
-                                direction="row"
-                                flexWrap="wrap"
-                                spacing={3}
-                                sx={{p: 3}}
-                            >
-                                <Tabs value={activeTab} onChange={handleTabChange}>
-                                    <Tab label="ALL" onClick={(event) => handleTabChange(event, 0)} style={activeTab === 0 ? { fontWeight: 'bold' } : {}} />
-                                    <Tab label="Verified" onClick={(event) => handleTabChange(event, 1)} style={activeTab === 1 ? { fontWeight: 'bold' } : {}} />
-                                    <Tab label="Pending" onClick={(event) => handleTabChange(event, 2)} style={activeTab === 2 ? { fontWeight: 'bold' } : {}} />
-                                    <Tab label="Reject" onClick={(event) => handleTabChange(event, 3)} style={activeTab === 3 ? { fontWeight: 'bold' } : {}} />
-                                </Tabs>
-                            </Stack>
-                            <TabPanel value={value} index={0}>
-                                <Grid
-                                    sx={{mt: 4,}}
-                                >
-                                    {vendor.map((vendor) => {
+                        <Card alignitems="center">
+                            <KycListSearch
+                                onChangeActive={customersStore.onChangeActive}
+                                isActive={customersStore.isActive}
+                                sortBy={customersStore.isActive}
+                            />
+                            <KycTable
+                                role={customersStore.role}
+                                isActive={customersStore.isActive}
+                                hasMore={customersStore.hasMore}
+                                getCustomers={customersStore.handleCustomersGet}
+                                sortOn={customersStore.sortOn}
+                                sortOrder={customersStore.sortOrder}
+                                handleSort={customersStore.handleSort}
+                                count={customersStore.customersCount}
+                                items={customersStore.customers}
+                                onDeselectAll={customersSelection.handleDeselectAll}
+                                onDeselectOne={customersSelection.handleDeselectOne}
+                                onRowsPerPageChange={(e) => {
+                                    customersStore.setRowsPerPage(+e.target.value);
 
-                                        return (
-
-                                            <Card key={vendor.id} sx={{paddingBottom: "1%", marginBottom: "2%"}}>
-                                                <PropertyList>
-                                                    <Grid alignItems="center" sx={{py: "4%"}} container spacing={4}>
-                                                        <Grid xs={12} md={3}>
-                                                            <PropertyListItem
-                                                                label="Business Name"
-                                                                value={vendor?.name?(vendor?.name):"---" }
-                                                            />
-                                                        </Grid>
-                                                        <Grid xs={12} md={3}>
-                                                            <PropertyListItem
-                                                                label="Customer Name"
-                                                                value={vendor?.user.firstName + "" + vendor?.user.lastName}
-                                                            /></Grid>
-                                                        <Grid xs={12} md={2}>
-                                                            <PropertyListItem
-                                                                label="Phone"
-                                                                value={vendor?.user.phoneNumber}
-                                                            /></Grid>
-                                                        <Grid xs={12} md={2}>
-                                                            {vendor?.isVerified ? (
-                                                                    <SeverityPill color="success">VERIFIED</SeverityPill>) :
-                                                                (vendor?.isRejected ? (<SeverityPill
-                                                                    color="error">REJECT</SeverityPill>) : (
-                                                                    <SeverityPill
-                                                                        color="warning">PENDING</SeverityPill>))}
-
-                                                        </Grid>
-                                                        <Grid xs={12} md={2}>
-                                                            <Button
-                                                                component={RouterLink}
-                                                                href={`${paths.kycVerification.businessCustomer.index}/${vendor.id}`}
-                                                            >View Details</Button>
-                                                        </Grid>
-                                                    </Grid>
-
-                                                </PropertyList>
-                                            </Card>
-
-                                        );
-                                    })}
-                                    <TablePagination
-                                        component="div"
-                                        count={count}
-                                        onPageChange={(e, v) => handlePageChange(e, v)}
-                                        onRowsPerPageChange={(e) => {
-                                            setRowsPerPage(+e.target.value);
-                                            setPage(0);
-                                        }}
-                                        page={page}
-                                        rowsPerPage={rowsPerPage}
-                                        rowsPerPageOptions={[5, 10, 25, 50]}
-                                    />
-                                </Grid>
-                            </TabPanel>
-                            <TabPanel value={value} index={1}>
-                                <Grid
-                                    sx={{mt: 4,}}
-                                >
-                                    {vendor.filter(vendor => vendor.isVerified)
-                                        .map((vendor) => {
-
-                                            return (
-                                                <Card key={vendor.id} sx={{paddingBottom: "1%", marginBottom: "2%"}}>
-                                                    <PropertyList>
-                                                        <Grid alignItems="center" sx={{py: "4%"}} container spacing={4}>
-                                                            <Grid xs={12} md={3}>
-                                                                <PropertyListItem
-                                                                    label="Business Name"
-                                                                    value={vendor?.name}
-                                                                />
-                                                            </Grid>
-                                                            <Grid xs={12} md={3}>
-                                                                <PropertyListItem
-                                                                    label="Customer Name"
-                                                                    value={vendor?.user.firstName + "" + vendor?.user.lastName}
-                                                                /></Grid>
-                                                            <Grid xs={12} md={2}>
-                                                                <PropertyListItem
-                                                                    label="Phone"
-                                                                    value={vendor?.user.phoneNumber}
-                                                                /></Grid>
-                                                            <Grid xs={12} md={2}>
-                                                                {vendor?.isVerified ? (
-                                                                        <SeverityPill sx={{marginTop: "15%}"}}
-                                                                                      color="success">VERIFIED</SeverityPill>) :
-                                                                    (<SeverityPill sx={{marginTop: "15%}"}}
-                                                                                   color="warning">PENDING</SeverityPill>)}
-
-                                                            </Grid>
-                                                            <Grid xs={12} md={2}>
-                                                                <Button
-                                                                    component={RouterLink}
-                                                                    href={`${paths.kycVerification.businessCustomer.index}/${vendor.id}`}
-                                                                >View Details</Button>
-                                                            </Grid>
-                                                        </Grid>
-
-                                                    </PropertyList>
-                                                    {/* <CardActions>
-        <Button
-          color="inherit"
-          size="small"
-        >
-          Reset Password
-        </Button>
-      </CardActions> */}
-                                                </Card>
-
-                                            );
-                                        })}
-                                    <TablePagination
-                                        component="div"
-                                        count={count}
-                                        onPageChange={(e, v) => handlePageChange(e, v)}
-                                        onRowsPerPageChange={(e) => {
-                                            setRowsPerPage(+e.target.value);
-                                            setPage(0);
-                                        }}
-                                        page={page}
-                                        rowsPerPage={rowsPerPage}
-                                        rowsPerPageOptions={[5, 10, 25, 50]}
-                                    />
-                                </Grid>
-                            </TabPanel>
-                            <TabPanel value={value} index={2}>
-                                {vendor.filter(vendor => !vendor.isVerified && !vendor.isRejected)
-                                    .map((vendor) => {
-
-                                        return (
-                                            <Card key={vendor.id} sx={{paddingBottom: "1%", marginBottom: "2%"}}>
-                                                <PropertyList>
-                                                    <Grid alignItems="center" sx={{py: "4%"}} container spacing={4}>
-                                                        <Grid xs={12} md={3}>
-                                                            <PropertyListItem
-                                                                label="Business Name"
-                                                                value={vendor?.name}
-                                                            />
-                                                        </Grid>
-                                                        <Grid xs={12} md={3}>
-                                                            <PropertyListItem
-                                                                label="Customer Name"
-                                                                value={vendor?.user.firstName + "" + vendor?.user.lastName}
-                                                            /></Grid>
-                                                        <Grid xs={12} md={2}>
-                                                            <PropertyListItem
-                                                                label="Phone"
-                                                                value={vendor?.user.phoneNumber}
-                                                            /></Grid>
-                                                        <Grid xs={12} md={2}>
-                                                            {vendor?.isVerified ? (
-                                                                    <SeverityPill sx={{marginTop: "15%}"}}
-                                                                                  color="success">VERIFIED</SeverityPill>) :
-                                                                (<SeverityPill sx={{marginTop: "15%}"}}
-                                                                               color="warning">PENDING</SeverityPill>)}
-
-                                                        </Grid>
-                                                        <Grid xs={12} md={2}>
-                                                            <Button
-                                                                component={RouterLink}
-                                                                href={`${paths.kycVerification.businessCustomer.index}/${vendor.id}`}
-                                                            >View Details</Button>
-                                                        </Grid>
-                                                    </Grid>
-                                                </PropertyList>
-                                            </Card>
-
-                                        );
-                                    })}
-                                <TablePagination
-                                    component="div"
-                                    count={count}
-                                    onPageChange={(e, v) => handlePageChange(e, v)}
-                                    onRowsPerPageChange={(e) => {
-                                        setRowsPerPage(+e.target.value);
-                                        setPage(0);
-                                    }}
-                                    page={page}
-                                    rowsPerPage={rowsPerPage}
-                                    rowsPerPageOptions={[5, 10, 25, 50]}
-                                />
-                            </TabPanel>
-                            <TabPanel value={value} index={3}>
-                                {vendor.filter(vendor => vendor.isRejected)
-                                    .map((vendor) => {
-
-                                        return (
-                                            <Card key={vendor.id} sx={{paddingBottom: "1%", marginBottom: "2%"}}>
-                                                <PropertyList>
-                                                    <Grid alignItems="center" sx={{py: "4%"}} container spacing={4}>
-                                                        <Grid xs={12} md={3}>
-                                                            <PropertyListItem
-                                                                label="Business Name"
-                                                                value={vendor?.name}
-                                                            />
-                                                        </Grid>
-                                                        <Grid xs={12} md={3}>
-                                                            <PropertyListItem
-                                                                label="Customer Name"
-                                                                value={vendor?.user.firstName + "" + vendor?.user.lastName}
-                                                            /></Grid>
-                                                        <Grid xs={12} md={2}>
-                                                            <PropertyListItem
-                                                                label="Phone"
-                                                                value={vendor?.user.phoneNumber}
-                                                            /></Grid>
-                                                        <Grid xs={12} md={2}>
-                                                            <SeverityPill sx={{marginTop: "15%}"}}
-                                                                          color="error">REJECT</SeverityPill>
-                                                        </Grid>
-                                                        <Grid xs={12} md={2}>
-                                                            <Button
-                                                                component={RouterLink}
-                                                                href={`${paths.kycVerification.businessCustomer.index}/${vendor.id}`}
-                                                            >View Details</Button>
-                                                        </Grid>
-                                                    </Grid>
-
-                                                </PropertyList>
-                                                {/* <CardActions>
-        <Button
-          color="inherit"
-          size="small"
-        >
-          Reset Password
-        </Button>
-      </CardActions> */}
-                                            </Card>
-
-                                        );
-                                    })}
-                                <TablePagination
-                                    component="div"
-                                    count={count}
-                                    onPageChange={(e, v) => handlePageChange(e, v)}
-                                    onRowsPerPageChange={(e) => {
-                                        setRowsPerPage(+e.target.value);
-                                        setPage(0);
-                                    }}
-                                    page={page}
-                                    rowsPerPage={rowsPerPage}
-                                    rowsPerPageOptions={[5, 10, 25, 50]}
-                                />
-                            </TabPanel>
-
+                                }}
+                                onSelectAll={customersSelection.handleSelectAll}
+                                onSelectOne={customersSelection.handleSelectOne}
+                                page={customersStore.page}
+                                rowsPerPage={customersStore.rowsPerPage}
+                                selected={customersSelection.selected}
+                                handlePageChange={customersStore.handlePageChange}
+                            />
                         </Card>
                     </Stack>
                 </Container>
             </Box>
-        </div>
+        </>
     );
 };
 

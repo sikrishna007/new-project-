@@ -126,10 +126,10 @@ const Page = ({customer}) => {
                                         <Typography variant="body2"  sx={{ color: "#111927",
                                             fontSize: "16px",
                                             fontWeight: "400",lineHeight: "22px"}}>
-                                            {customer?.isVerified ? (
+                                            {customer?.user.kycStatus.status === "verified" ? (
                                                     <SeverityPill color="success">VERIFIED</SeverityPill>) :
-                                                (customer?.isRejected ? (<SeverityPill
-                                                    color="error">REJECT</SeverityPill>) : (
+                                                (customer?.user.kycStatus.status === "rejected"  ? (<SeverityPill
+                                                    color="error">REJECTED</SeverityPill>) : (
                                                     <SeverityPill
                                                         color="warning">PENDING</SeverityPill>))}
                                         </Typography>
@@ -212,11 +212,7 @@ const Page = ({customer}) => {
                                                 textAlign: 'center',
                                             }}
                                         >
-                                            <input
-                                                type="file"
-                                                style={{ display: 'none' }}
-                                                disabled={true}
-                                            />
+
                                             <div>
                                                 <FilePresentIcon style={{ marginRight: '10px' }} /></div>
                                             <div style={{display:"flex",flexDirection: 'column'}}>
