@@ -1,21 +1,11 @@
-import React, {useCallback, useEffect, useState} from 'react';
-import {Box, Tab, Tabs} from '@mui/material';
+import React from 'react';
+import {Box} from '@mui/material';
 import {Seo} from "../../../components/seo";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Card from "@mui/material/Card";
 import {Layout as DashboardLayout} from "../../../layouts/admin-dashboard";
-import Cookies from "js-cookie";
-import {endpoints} from "../../../endpoints";
-import {SeverityPill} from "../../../components/severity-pill";
-import Grid from "@mui/material/Unstable_Grid2";
-import {PropertyList} from "../../../components/property-list";
-import {PropertyListItem} from "../../../components/property-list-item-custom";
-import TablePagination from "@mui/material/TablePagination";
-import Button from "@mui/material/Button";
-import {RouterLink} from "../../../components/router-link";
-import {paths} from "../../../paths";
 import {useCustomersIds, useCustomersStore} from "@/utils/userDataFilters";
 import {useSelection} from "@/hooks/use-selection";
 import {useRouter} from "next/router";
@@ -24,7 +14,7 @@ import {KycTable} from "@/custom-components/kyc/KycTable";
 
 const Page = () => {
 
-    let location = window.location.href.split("/")[4]+[" kyc"];
+    let location = window.location.href.split("/")[4] + [" kyc"];
     const customersStore = useCustomersStore(location);
     const customersIds = useCustomersIds(customersStore.customers);
     const customersSelection = useSelection(customersIds);
@@ -32,7 +22,7 @@ const Page = () => {
 
     return (
         <>
-            <Seo title="Event Mart: Vendors"/>
+            <Seo title="Event Mart: Business Customers"/>
             <Box
                 component="main"
                 sx={{
@@ -49,7 +39,7 @@ const Page = () => {
                             spacing={4}
                         >
                             <Stack spacing={1}>
-                                <Typography variant="h4">Vendor KYC Verification</Typography>
+                                <Typography variant="h4">Business Customers KYC Verification</Typography>
                             </Stack>
                         </Stack>
                         <Card alignitems="center">
