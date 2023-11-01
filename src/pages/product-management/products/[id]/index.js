@@ -291,29 +291,16 @@ const Page = ({product, vendor}) => {
                             <CardHeader title="Images"/>
                             <PropertyList>
                                 <Grid container spacing={0}>
-                                    <Grid xs={6} md={3}>
-                                        <Card sx={{width: "60%", margin: "5% 5%"}}>
-                                            <CardMedia
-                                            />
-                                        </Card>
-                                    </Grid>
-                                    <Grid xs={6} md={3}>
-                                        <Card sx={{width: "60%", margin: "5% 5%"}}>
-                                            <CardMedia
-                                            />
-                                        </Card>
-                                    </Grid>
-                                    <Grid xs={6} md={3}>
-                                        <Card sx={{width: "60%", margin: "5% 5%"}}>
-                                            <CardMedia
-                                            />
-                                        </Card>
-                                    </Grid>
-                                    <Grid xs={6} md={3}>
-                                        <Card sx={{width: "60%", margin: "5% 5%"}}>
-
-                                        </Card>
-                                    </Grid>
+                                    {product?.files.map((file) =>
+                                        <Grid xs={6} md={3}>
+                                            <Card sx={{width: "60%", margin: "5% 5%"}}>
+                                                <CardMedia
+                                                    component="img"
+                                                    image={file.filePath}
+                                                    alt={product?.name}
+                                                />
+                                            </Card>
+                                        </Grid>)}
                                 </Grid>
                             </PropertyList>
                         </Card>

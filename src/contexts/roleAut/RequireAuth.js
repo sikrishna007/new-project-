@@ -39,11 +39,11 @@ const RoleBasedGuard = (props) => {
 
     let commanFields = ['/profile/[id]','/','/dashboard','/product-management/products','/product-management/products/[id]','/product-management/category','/product-management/category/[id]','/product-management/subCategory','/product-management/subCategory/[id]'];
 
-    let vendorManager = ['/product-management/products/edit/[id]',"/product-management/products/add",'/users/vendors','/users/vendors/[id]','/users/vendors/add','/users/vendors/edit/[id]','/event-category','/event-category/[id]'];
+    let vendorManager = ['/profile/[id]','/profile/edit/[id]','/','/product-management/products/edit/[id]',"/product-management/products/add",'/users/vendors','/users/vendors/[id]','/users/vendors/add','/users/vendors/edit/[id]','/event-category','/event-category/[id]'];
 
-    let vendor = ['/profile/[id]','/','/dashboard','/product-management/products','/product-management/products/[id]','/product-management/category','/product-management/subCategory'];
-    let eventManager = ['/users/vendors','/users/vendors/[id]','/event-category','/event-category/[id]'];
-    let salesManager = ['/users/vendors','/users/vendors/[id]','/users/vendors/add','/users/vendors/edit/[id]','/users/customers','/users/customers/[id]','/users/customers/add','/users/customers/edit/[id]'];
+    let vendor = ['/profile/[id]','/profile/edit/[id]','/','/dashboard','/product-management/products','/product-management/products/[id]','/product-management/category','/product-management/subCategory'];
+    let eventManager = ['/profile/[id]','/profile/edit/[id]','/users/vendors','/users/vendors/[id]','/event-category','/event-category/[id]'];
+    let salesManager = ['/profile/[id]','/profile/edit/[id]','/users/vendors','/users/vendors/[id]','/users/vendors/add','/users/vendors/edit/[id]','/users/customers','/users/customers/[id]','/users/customers/add','/users/customers/edit/[id]'];
     let marketing = ['/users/vendors','/users/vendors/[id]'];
     let accountant = ['/users/vendors','/users/vendors/[id]','/users/employees','/users/employees/[id]'];
     let customerSupport =['/users/vendors','/users/vendors/[id]','/event-category','/event-category/[id]']

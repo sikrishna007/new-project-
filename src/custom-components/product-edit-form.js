@@ -142,7 +142,7 @@ export const ProductEditForm = (props) => {
             hsnSacCode:Yup.object().required("Code  is required"),
             subCategoryName: Yup.object().required("Sub Category  is required"),
             description: Yup.string().max(5000),
-            name: Yup.string().max(45).required("product title is required"),
+            name: Yup.string().max(45).required("product title is required").matches(/^[^\s].*$/, "Spaces at the beginning are not allowed"),
             costPrice: Yup.number().required("Cost price is required"),
             organizationShare:Yup.number().required("Organization Share is required"),
             vendorShare:Yup.number().required("Vendor Share is required"),
@@ -582,6 +582,7 @@ export const ProductEditForm = (props) => {
                                             handleEventAdd(value);
                                         }
                                     }}
+                                    inputValue={''} // This sets the input value to an empty string
                                 />
                                     <Stack
                                         alignItems="center"
@@ -630,6 +631,12 @@ export const ProductEditForm = (props) => {
                                                 </InputAdornment>
                                             ),
                                         }}
+                                            onKeyDown={(e) => {
+                                                const allowedKeys = /^[0-9]*\.?[0-9]*$/;
+                                                if (!(allowedKeys.test(e.key) || e.key === 'Backspace')) {
+                                                    e.preventDefault();
+                                                }
+                                            }}
                                         />
                                     </Stack>
                                 </Grid>
@@ -650,6 +657,12 @@ export const ProductEditForm = (props) => {
                                                         ₹
                                                     </InputAdornment>
                                                 ),
+                                            }}
+                                            onKeyDown={(e) => {
+                                                const allowedKeys = /^[0-9]*\.?[0-9]*$/;
+                                                if (!(allowedKeys.test(e.key) || e.key === 'Backspace')) {
+                                                    e.preventDefault();
+                                                }
                                             }}
                                         />
                                     </Stack>
@@ -694,6 +707,12 @@ export const ProductEditForm = (props) => {
                                                         ₹
                                                     </InputAdornment>
                                                 ),
+                                            }}
+                                            onKeyDown={(e) => {
+                                                const allowedKeys = /^[0-9]*\.?[0-9]*$/;
+                                                if (!(allowedKeys.test(e.key) || e.key === 'Backspace')) {
+                                                    e.preventDefault();
+                                                }
                                             }}
                                         />
 

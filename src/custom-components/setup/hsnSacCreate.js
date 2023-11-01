@@ -34,9 +34,9 @@ const initialValues = {
 };
 
 const validationSchema = Yup.object({
-    sgstPercentage: Yup.string().required("Sgst is required"),
-    cgstPercentage: Yup.string().required("Cgst is required"),
-    igstPercentage: Yup.string().required("Igst is required"),
+    sgstPercentage: Yup.string().required("SGST is required"),
+    cgstPercentage: Yup.string().required("CGST is required"),
+    igstPercentage: Yup.string().required("IGST is required"),
     code: Yup.string().max(255).required().label("Code"),
 });
 
@@ -160,6 +160,12 @@ const HsnSacCreate = ({CodeName, codePath, isHsn}) => {
                                                         onBlur={formik.handleBlur}
                                                         onChange={formik.handleChange}
                                                         value={formik.values.code}
+                                                        onKeyDown={(e) => {
+                                                            const allowedKeys = /^[0-9]*\.?[0-9]*$/;
+                                                            if (!(allowedKeys.test(e.key) || e.key === 'Backspace')) {
+                                                                e.preventDefault();
+                                                            }
+                                                        }}
                                                     />
                                                 </Stack>
                                             </Grid>
@@ -189,6 +195,12 @@ const HsnSacCreate = ({CodeName, codePath, isHsn}) => {
                                                         onBlur={formik.handleBlur}
                                                         onChange={formik.handleChange}
                                                         value={formik.values.sgstPercentage}
+                                                        onKeyDown={(e) => {
+                                                            const allowedKeys = /^[0-9]*\.?[0-9]*$/;
+                                                            if (!(allowedKeys.test(e.key) || e.key === 'Backspace')) {
+                                                                e.preventDefault();
+                                                            }
+                                                        }}
                                                     />
                                                 </Stack>
                                             </Grid>
@@ -211,6 +223,12 @@ const HsnSacCreate = ({CodeName, codePath, isHsn}) => {
                                                         onBlur={formik.handleBlur}
                                                         onChange={formik.handleChange}
                                                         value={formik.values.cgstPercentage}
+                                                        onKeyDown={(e) => {
+                                                            const allowedKeys = /^[0-9]*\.?[0-9]*$/;
+                                                            if (!(allowedKeys.test(e.key) || e.key === 'Backspace')) {
+                                                                e.preventDefault();
+                                                            }
+                                                        }}
                                                     />
                                                 </Stack>
                                             </Grid>
@@ -233,6 +251,12 @@ const HsnSacCreate = ({CodeName, codePath, isHsn}) => {
                                                         onBlur={formik.handleBlur}
                                                         onChange={formik.handleChange}
                                                         value={formik.values.igstPercentage}
+                                                        onKeyDown={(e) => {
+                                                            const allowedKeys = /^[0-9]*\.?[0-9]*$/;
+                                                            if (!(allowedKeys.test(e.key) || e.key === 'Backspace')) {
+                                                                e.preventDefault();
+                                                            }
+                                                        }}
                                                     />
                                                 </Stack>
                                             </Grid>

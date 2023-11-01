@@ -23,8 +23,15 @@ import {useMockedUser} from "@/hooks/use-mocked-user";
 import Cookies from "js-cookie";
 import {endpoints} from "@/endpoints";
 
+import {useRouter} from "next/router";
+import {paths} from "src/paths";
+
 const UserProfile = ({employee}) => {
 
+
+    let location = window.location.href.split("/")[4];
+
+    const router = useRouter();
     let role = Cookies.get("role")
     return (
         <>
@@ -122,7 +129,6 @@ const UserProfile = ({employee}) => {
                                     </Stack>
                                 </Box>
                                 <Avatar
-                                    // src={avatar}
                                     sx={{
                                         height: 180,
                                         width: 180,
@@ -168,9 +174,9 @@ const UserProfile = ({employee}) => {
                                     {employee.user?.firstName} {employee.user?.lastName}</Typography>
                                 <div>
                                     <Button
-                                        // onClick={() =>
-                                        //     router.push(paths.eventCategory.edit + router.query.id)
-                                        // }
+                                        onClick={() =>
+                                        router.push(paths.profile.edit +'/'+ router.query.id)
+                                                 }
                                         color="inherit"
                                         style={{backgroundColor: "#4338CA", color: "white"}}
                                         endIcon={
@@ -316,15 +322,14 @@ const UserProfile = ({employee}) => {
 }
 
 export const getServerSideProps = async (context) => {
-    // let role = Cookies.get("role")
-    // let pathName
-    // role === "ADMIN" ? pathName = "employees" : pathName = "vendor"
-    // let endpoint = endpoints.userManagement[pathName].index
+    let role = context.req.cookies["role"]
+    console.log("role", role)
+    let pathName = role === "VENDOR" ? "vendors" : "employees"
     const id = context.req.cookies.id;
     const token = context.req.cookies.accessToken;
     const res = await fetch(
         process.env.NEXT_PUBLIC_BASE_URL +
-        endpoints.userManagement.employees.index+
+        endpoints.userManagement[pathName].index+
         "/" +
         context.params.id,
         {

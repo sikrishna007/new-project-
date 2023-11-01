@@ -30,6 +30,7 @@ import {ToastError} from "@/icons/ToastError";
 import CommonDialog from "@/custom-components/CommonDialog";
 import {search} from "@/utils/util";
 
+import {fileUpload, multiFileUpload, MultiFileUpload, search} from "@/utils/util";
 
 export const ProductCreateForm = (props) => {
     const router = useRouter();
@@ -45,6 +46,7 @@ export const ProductCreateForm = (props) => {
     const [tags, setTags] = useState([]);
     const [createDialogOpen, setCreateDialogOpen] = useState(false);
     const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
+    const [file, setFile] = useState();
     const handleCreateDialogOpen = () => {
         setCreateDialogOpen(true);
     };
@@ -156,7 +158,9 @@ export const ProductCreateForm = (props) => {
                         tags: formik.values.tags,
                         inStock: formik.values.inStock,
                         eventCategories: newArray,
-                        // files: {},
+                        files: {
+                            id: file?.id
+                        },
                     }),
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -205,7 +209,7 @@ export const ProductCreateForm = (props) => {
             cgst: "",
             sgst: "",
             igst: "",
-            images: [],
+            files: [],
             submit: null,
             unitOfMeasurement: "1",
             sku: "",
@@ -216,10 +220,11 @@ export const ProductCreateForm = (props) => {
             hsnSacCode:Yup.object().required("Code  is required"),
             subCategoryName: Yup.object().required("Sub Category  is required"),
             description: Yup.string().max(5000),
-            name: Yup.string().max(45).required("product title is required"),
+            name: Yup.string().max(45).required("product title is required").matches(/^[^\s].*$/, "Spaces at the beginning are not allowed"),
             costPrice: Yup.number().required("Cost price is required"),
             organizationShare:Yup.number().required("Organization Share is required"),
             vendorShare:Yup.number().required("Vendor Share is required"),
+            tags: Yup.array().of(Yup.string().matches(/^[^\s].*$/, "Spaces at the beginning are not allowed"))
         }),
         onSubmit: submitProduct
     });
@@ -241,6 +246,10 @@ export const ProductCreateForm = (props) => {
         setFiles([]);
     }, []);
 
+    const onUpload = async ()=>{
+        let data = await multiFileUpload(files[0])
+        setFile( data)
+    }
     const getVendors = async () => {
         try {
             let token = Cookies.get("accessToken");
@@ -614,6 +623,7 @@ export const ProductCreateForm = (props) => {
                                             handleEventAdd(value);
                                         }
                                     }}
+                                    inputValue={''} // This sets the input value to an empty string
                                 />
                                     <Stack
                                         alignItems="center"
@@ -662,6 +672,12 @@ export const ProductCreateForm = (props) => {
                                                     </InputAdornment>
                                                 ),
                                             }}
+                                            onKeyDown={(e) => {
+                                                const allowedKeys = /^[0-9]*\.?[0-9]*$/;
+                                                if (!(allowedKeys.test(e.key) || e.key === 'Backspace')) {
+                                                    e.preventDefault();
+                                                }
+                                            }}
                                         />
                                     </Stack>
                                 </Grid>
@@ -682,6 +698,12 @@ export const ProductCreateForm = (props) => {
                                                         ₹
                                                     </InputAdornment>
                                                 ),
+                                            }}
+                                            onKeyDown={(e) => {
+                                                const allowedKeys = /^[0-9]*\.?[0-9]*$/;
+                                                if (!(allowedKeys.test(e.key) || e.key === 'Backspace')) {
+                                                    e.preventDefault();
+                                                }
                                             }}
                                         />
                                     </Stack>
@@ -726,6 +748,12 @@ export const ProductCreateForm = (props) => {
                                                         ₹
                                                     </InputAdornment>
                                                 ),
+                                            }}
+                                            onKeyDown={(e) => {
+                                                const allowedKeys = /^[0-9]*\.?[0-9]*$/;
+                                                if (!(allowedKeys.test(e.key) || e.key === 'Backspace')) {
+                                                    e.preventDefault();
+                                                }
                                             }}
                                         />
 
@@ -825,6 +853,8 @@ export const ProductCreateForm = (props) => {
                                     accept={{"image/*": []}}
                                     caption="(SVG, JPG, PNG, or gif maximum 900x400)"
                                     files={files}
+                                    file={file}
+                                    onUpload={onUpload}
                                     onDrop={handleFilesDrop}
                                     onRemove={handleFileRemove}
                                     onRemoveAll={handleFilesRemoveAll}

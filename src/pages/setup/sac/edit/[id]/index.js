@@ -1,6 +1,6 @@
 import {endpoints} from "@/endpoints";
 import HsnSacEdit from "@/custom-components/setup/hsnSacEdit";
-
+import {Layout as DashboardLayout} from "@/layouts/admin-dashboard";
 const Page = ({code}) => {
     return(
         <HsnSacEdit
@@ -40,4 +40,5 @@ export const getServerSideProps = async (context) => {
     };
 };
 
+Page.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
 export default Page;

@@ -73,21 +73,21 @@ const ItemEdit = ({title, pathUrl, category}) => {
                 Yup.object({
                     longDescription: Yup.string().max(5000),
                     images: Yup.array(),
-                    name: Yup.string().max(45).required().matches(/^[A-Za-z ]+$/, 'Event category name should only contain alphabets'),
+                    name: Yup.string().max(45).required().matches(/^[A-Za-z ]+$/, 'Event category name should only contain alphabets').matches(/^[^\s].*$/, "Spaces at the beginning are not allowed"),
                 })
                 :
                 location === "category" ?
                     Yup.object({
                         longDescription: Yup.string().max(5000),
                         images: Yup.array(),
-                        name: Yup.string().max(45).required().matches(/^[A-Za-z ]+$/, 'Product Category name should only contain alphabets'),
+                        name: Yup.string().max(45).required().matches(/^[A-Za-z ]+$/, 'Product Category name should only contain alphabets').matches(/^[^\s].*$/, "Spaces at the beginning are not allowed"),
                     })
                     :
                     Yup.object({
                         longDescription: Yup.string().max(5000),
                         images: Yup.array(),
                         categoryName: Yup.object().required(),
-                        name: Yup.string().max(45).required().matches(/^[A-Za-z ]+$/, 'Event category name should only contain alphabets'),
+                        name: Yup.string().max(45).required().matches(/^[A-Za-z ]+$/, 'Event category name should only contain alphabets').matches(/^[^\s].*$/, "Spaces at the beginning are not allowed"),
                     }),
 
         onSubmit: async (values, helpers) => {

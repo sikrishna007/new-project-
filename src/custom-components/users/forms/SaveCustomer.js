@@ -10,6 +10,8 @@ import toast from "react-hot-toast";
 import {ToastError} from "@/icons/ToastError";
 import {useRouter} from "next/router";
 
+import Cookies from "js-cookie";
+
 
 
 export const CreateCustomer = (props) => {
@@ -91,7 +93,7 @@ export const CreateCustomer = (props) => {
     );
 };
 
-export const EditCustomer = ({formik, hasChanges}) => {
+export const EditCustomer = ({formik, hasChanges, profileId}) => {
     const router = useRouter();
     let location = window.location.href.split("/")[4];
     const [createDialogOpen, setCreateDialogOpen] = useState(false);
@@ -156,7 +158,11 @@ export const EditCustomer = ({formik, hasChanges}) => {
                                 handleCreateDialogClose();
                                 customerSave();}
                             else {
-                                router.push(`/users/${location}`);
+                                if (location === "edit") {
+                                    router.push(`/profile/${profileId}`);
+                                }else {
+                                    router.push(`/users/${location}`);
+                                }
                                 handleCreateDialogClose();
                             }
                         }}

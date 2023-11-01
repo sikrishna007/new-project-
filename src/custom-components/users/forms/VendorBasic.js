@@ -19,6 +19,11 @@ export const VendorBasic = ({formik}) => {
 
     const [phoneNumberCount, setPhoneNumberCount] = useState(0)
     const [whatsappNumberCount, setWhatsappNumberCount] = useState(0)
+
+    useEffect(() => {
+        setPhoneNumberCount(formik.values.phoneNumber.length)
+        setWhatsappNumberCount(formik.values.whatsappNumber.length)
+    }, []);
     return (
         <Card>
             <CardHeader title="Personal Information"/>
