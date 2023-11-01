@@ -323,7 +323,6 @@ const UserProfile = ({employee}) => {
 
 export const getServerSideProps = async (context) => {
     let role = context.req.cookies["role"]
-    console.log("role", role)
     let pathName = role === "VENDOR" ? "vendors" : "employees"
     const id = context.req.cookies.id;
     const token = context.req.cookies.accessToken;
