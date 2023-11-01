@@ -45,9 +45,8 @@ export const BusinessCustomer = (props) => {
                             label="PAN Number"
                             name="panNumber"
                             onBlur={formik.handleBlur}
-                            onChange={formik.handleChange}
-
-                            value={formik.values.panNumber}
+                            onChange={(e) => formik.handleChange(e, e.target.value.toUpperCase())}
+                            value={formik.values.panNumber.toUpperCase()}
                         />
                     </Grid>
                     <Grid xs={12} md={6}>
@@ -58,9 +57,9 @@ export const BusinessCustomer = (props) => {
                             label="GST Number"
                             name="gstNumber"
                             onBlur={formik.handleBlur}
-                            onChange={formik.handleChange}
+                            onChange={(e) => formik.handleChange(e, e.target.value.toUpperCase())}
 
-                            value={formik.values.gstNumber}
+                            value={formik.values.gstNumber.toUpperCase()}
                         />
                     </Grid>
 

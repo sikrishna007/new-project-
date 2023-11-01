@@ -75,6 +75,7 @@ export const AddForm = (props) => {
             pincode: "",
             role: location === "vendors" ? "VENDOR" : location === "customers" ? "BUSINESS CUSTOMER" : location === "employees" ? "ADMIN" : "",
             name: "",
+            gstNumber:"",
             termsAndConditions: "",
             shortDescription: "",
             latitudes: "",
@@ -92,8 +93,7 @@ export const AddForm = (props) => {
                     country: Yup.string().max(255).required("Country is required"),
                     city: Yup.string().max(255).required("City is required"),
                     state: Yup.string().max(255).required("State is required"),
-                    // gstNumber:Yup.string().matches(/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/, "Must be a valid GST Number"),
-                    pincode: Yup.string().max(255).required("Pincode is required"),
+                    gstNumber:Yup.string().matches(/^[0-9]{2}[a-zA-Z]{5}[0-9]{4}[a-zA-Z]{1}[1-9a-zA-Z]{1}Z[0-9a-zA-Z]{1}$/, "Must be a valid GST Number"),pincode: Yup.string().max(255).required("Pincode is required"),
                     email: Yup.string()
                         .matches(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, "Must be a valid email")
                         .required("Email is required"),
@@ -118,6 +118,7 @@ export const AddForm = (props) => {
                     phoneNumber: Yup.string().matches(/^[0-9]+$/, 'Phone number should only contain numbers').min(10, 'Phone number must be atleast 10 numbers').max(10, 'Phone number must be  10 numbers').required("Phone Number is Required"),
                     whatsappNumber: Yup.string().matches(/^[0-9]+$/, 'Whatsapp number should only contain numbers').min(10, 'Whatsapp number must be atleast 10 numbers').max(10, 'Whatsapp number must be  10 numbers'),
                     panNumber: Yup.string().matches(/^[a-zA-Z]{5}[0-9]{4}[a-zA-Z]{1}$/, 'Must be a valid PAN Number'),
+                    gstNumber:Yup.string().matches(/^[0-9]{2}[a-zA-Z]{5}[0-9]{4}[a-zuyA-Z]{1}[1-9a-zA-Z]{1}Z[0-9a-zA-Z]{1}$/, "Must be a valid GST Number"),
                     // state: Yup.number().max(255),
                 }) : Yup.object({
                     empId: Yup.string().max(255).required("Employee Id is required"),

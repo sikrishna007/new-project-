@@ -38,8 +38,8 @@ export const Vendor = (props) => {
                             label="GST Number"
                             name="gstNumber"
                             onBlur={formik.handleBlur}
-                            onChange={formik.handleChange}
-                            value={formik.values.gstNumber}
+                            onChange={(e) => formik.handleChange(e, e.target.value.toUpperCase())}
+                            value={formik.values.gstNumber.toUpperCase()}
                         />
                     </Grid>
                     <Grid xs={12} md={6}>
