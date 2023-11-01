@@ -17,11 +17,11 @@ import Button from "@mui/material/Button";
 import {Link} from "@mui/material";
 import Cookies from "js-cookie";
 import RoleBasedView from "@/contexts/roleAut/RoleBasedView";
+import {useEffect} from "react";
 
 
 const Page = () => {
     let location = window.location.href.split("/")[4];
-    let role = Cookies.get("role");
     const customersStore = useItemsStore(location);
     const customersIds = useCustomersIds(customersStore.customers);
     const customersSelection = useSelection(customersIds);
@@ -128,6 +128,7 @@ const Page = () => {
                                     onChangeActive={customersStore.onChangeActive}
                                     isActive={customersStore.isActive}
                                     searchCustomers={customersStore.handleCustomerSearch}
+                                    getVendorProducts={customersStore.getVendorProducts}
                                 />
                             </Stack>
                         </Grid>
