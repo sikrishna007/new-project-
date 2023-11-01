@@ -1,4 +1,4 @@
-import {useCallback, useRef} from "react";
+import {useCallback, useEffect, useRef, useState} from "react";
 import Card from "@mui/material/Card";
 import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
@@ -8,6 +8,11 @@ import SvgIcon from "@mui/material/SvgIcon";
 import SearchMdIcon from "@untitled-ui/icons-react/build/esm/SearchMd";
 import TextField from "@mui/material/TextField";
 import PropTypes from "prop-types";
+import Autocomplete from "@mui/material/Autocomplete";
+import * as React from "react";
+import {getList} from "@/utils/util";
+import {endpoints} from "@/endpoints";
+import Cookies from "js-cookie";
 
 const sortOptions = [
     {
@@ -27,10 +32,23 @@ const sortOptions = [
 export const ItemSearch = ({isStatusShow=true, ...props}) => {
     const {
         isActive,
+        getVendorProducts,
         searchCustomers,
         onChangeActive,
     } = props;
+    let location = window.location.href.split("/")[4];
+    let role = Cookies.get("role");
+    const [vendors, setVendors] = useState([]);
+    const fetchVendors = async () => {
+        let params =`${endpoints.userManagement.vendors.index}?pageNo=0&pageSize=100&&sortOn=user.firstName&sortOrder=asc`;
+        const data = await getList(params);
+        await setVendors(data.data)
+    }
 
+    useEffect(() => {
+        if(role!=="VENDOR" && location==="products"){
+            fetchVendors();}
+    }, []); // Fetch vendors when the component mounts
     return (
         <Card>
             <Stack
@@ -58,6 +76,15 @@ export const ItemSearch = ({isStatusShow=true, ...props}) => {
                         onChange={(event)=>searchCustomers(event.target.value)}
                     />
                 </Box>
+                {location==="products"?<Autocomplete
+                    sx={{width: "200px"}}
+                    options={vendors}
+                    getOptionLabel={option => option.user.firstName + " " + option.user.lastName}
+                    renderInput={(params) => <TextField {...params} label="Vendors"/>}
+                    onChange={(event, value) => {
+                        getVendorProducts(value?.id)
+                    }}
+                />:""}
                 {isStatusShow && <TextField
                     label="Status"
                     name="status"

@@ -40,7 +40,7 @@ const getTableHeaders = () => {
             {key: "offeringSubCategories.offeringCategories.name", label: "CATEGORY"},
             {key: "inStock", label: "STOCK"},
             {key: "unitPrice", label: "PRICE"},
-            {key: "vendor", label: "VENDOR"},
+            // {key: "vendor", label: "VENDOR"},
             {key: "createdAt", label: "Created"},
             {key: "updatedAt", label: "Updated"},
         ];
@@ -68,35 +68,35 @@ export const ProductTable = (props) => {
     const [vendors, setVendors] = useState([]);
 
     // Fetch vendors and store them in the 'vendors' state
-    const fetchVendors = async () => {
-        try {
-            let token = Cookies.get("accessToken");
-            const response = await fetch(
-                process.env.NEXT_PUBLIC_BASE_URL + endpoints.userManagement.vendors.index +
-                `?pageNo=0&pageSize=100&isActive=true&sortOn=createdBy&sortOrder=desc`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
-            const data = await response.json();
-            setVendors(data.data);
-        } catch (error) {
-            console.error("Error fetching vendors:", error);
-        }
-    };
-
-    useEffect(() => {
-        if(role!=="VENDOR"){
-        fetchVendors();}
-    }, []); // Fetch vendors when the component mounts
-
-    // Function to get vendor name by vendor ID
-    const getVendorNameById = (vendorId) => {
-        const vendor = vendors.find((v) => v.id === vendorId);
-        return vendor ? vendor.user.firstName +" "+ vendor.user.lastName: "N/A"; // Return "N/A" if vendor not found
-    };
+    // const fetchVendors = async () => {
+    //     try {
+    //         let token = Cookies.get("accessToken");
+    //         const response = await fetch(
+    //             process.env.NEXT_PUBLIC_BASE_URL + endpoints.userManagement.vendors.index +
+    //             `?pageNo=0&pageSize=100&isActive=true&sortOn=createdBy&sortOrder=desc`,
+    //             {
+    //                 headers: {
+    //                     Authorization: `Bearer ${token}`,
+    //                 },
+    //             }
+    //         );
+    //         const data = await response.json();
+    //         setVendors(data.data);
+    //     } catch (error) {
+    //         console.error("Error fetching vendors:", error);
+    //     }
+    // };
+    //
+    // useEffect(() => {
+    //     if(role!=="VENDOR"){
+    //     fetchVendors();}
+    // }, []); // Fetch vendors when the component mounts
+    //
+    // // Function to get vendor name by vendor ID
+    // const getVendorNameById = (vendorId) => {
+    //     const vendor = vendors.find((v) => v.id === vendorId);
+    //     return vendor ? vendor.user.firstName +" "+ vendor.user.lastName: "N/A"; // Return "N/A" if vendor not found
+    // };
 
 
 
@@ -333,11 +333,11 @@ export const ProductTable = (props) => {
                                     <TableCell sx={{textAlign: "left"}}>
                                             ₹ {product?.unitPrice}
                                     </TableCell>
-                                    {role === "VENDOR"?"":<TableCell sx={{textAlign: "left"}}>
-                                        <Typography variant="subtitle2">
-                                            {getVendorNameById(product?.vendor)}
-                                        </Typography>
-                                    </TableCell>}
+                                    {/*{role === "VENDOR"?"":<TableCell sx={{textAlign: "left"}}>*/}
+                                    {/*    <Typography variant="subtitle2">*/}
+                                    {/*        {getVendorNameById(product?.vendor)}*/}
+                                    {/*    </Typography>*/}
+                                    {/*</TableCell>}*/}
                                     <TableCell sx={{textAlign: "left"}}>
                                             {new Date(product?.createdAt).toLocaleDateString(undefined, {
                                                 day: "2-digit",

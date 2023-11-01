@@ -62,6 +62,7 @@ export const useItemsStore = (location) => {
 
     const handleCustomersGet = useCallback(async (page = 0, limit = 10, isActive = "", sortOn = "updatedAt",sortOrder = "desc") => {
         if(sortOn ===""){sortOn="updatedAt";sortOrder="desc"}
+
         const getEndpoint=(location)=> {
             console.log(location)
 
@@ -89,7 +90,7 @@ export const useItemsStore = (location) => {
                     endpoint = `${endpoints.product.index}?pageNo=${page}&pageSize=${limit}&isActive=${isActive}&sortOn=${sortOn}&sortOrder=${sortOrder}`;
             }}
            else{
-               let id = Cookies.get("id")
+                let id = Cookies.get("id")
                 endpoint = `/offerings/vendor/${id}`;
             }
             return endpoint
@@ -109,7 +110,24 @@ export const useItemsStore = (location) => {
 
     }, []);
 
-
+    const getVendorProducts=useCallback(async(vendorId)=>{
+        console.log(vendorId)
+        if(vendorId === undefined){
+            handleCustomersGet()
+        }
+        else {
+            let params = `/offerings/vendor/${vendorId}`;
+            const data = await getList(params);
+            setState({
+                customers: data.data,
+                customersCount: data.totalElements,
+                hasMore: data.hasMore,
+                sortOn:sortOn,
+                sortOrder:sortOrder,
+                isActive: isActive,
+            });
+        }
+    },[])
 
 
     const onChangeActive = (e, v) => {
@@ -144,6 +162,7 @@ export const useItemsStore = (location) => {
         rowsPerPage,
         handleCustomersGet,
         handleCustomerSearch,
+        getVendorProducts,
         onChangeActive,
         handleSort,
         handlePageChange,
