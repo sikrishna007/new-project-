@@ -41,7 +41,6 @@ const Page = ({customer}) => {
                                     color="text.primary"
                                     component={RouterLink}
                                     href={paths.userManagement.customers.index}
-
                                     underline="hover"
                                 >
                                     <SvgIcon sx={{mr: 1}}>
@@ -49,7 +48,6 @@ const Page = ({customer}) => {
                                     </SvgIcon>
                                 </Link>
                                 <Typography variant="h4">Edit Customer</Typography>
-
                             </div>
                         </Stack>
                         <EditForm customer={customer} setOpen={setOpen}/>

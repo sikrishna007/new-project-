@@ -28,8 +28,6 @@ import Chip from "@mui/material/Chip";
 import Autocomplete from "@mui/material/Autocomplete";
 import {ToastError} from "@/icons/ToastError";
 import CommonDialog from "@/custom-components/CommonDialog";
-import {search} from "@/utils/util";
-
 import {fileUpload, multiFileUpload, MultiFileUpload, search} from "@/utils/util";
 
 export const ProductCreateForm = (props) => {

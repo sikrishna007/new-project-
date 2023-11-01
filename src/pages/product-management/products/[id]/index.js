@@ -292,7 +292,7 @@ const Page = ({product, vendor}) => {
                             <PropertyList>
                                 <Grid container spacing={0}>
                                     {product?.files.map((file) =>
-                                        <Grid xs={6} md={3}>
+                                        <Grid key={file.id} xs={6} md={3}>
                                             <Card sx={{width: "60%", margin: "5% 5%"}}>
                                                 <CardMedia
                                                     component="img"
