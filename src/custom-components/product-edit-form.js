@@ -69,10 +69,9 @@ export const ProductEditForm = (props) => {
         // console.log("files.length",files.length)
         // console.log("selectedFilesBef",selectedFiles)
         // console.log("fileBef--->",file)
-        const fileArray = file ?  file.map((obj) => ({id: obj.id, filePath: obj.filePath, filePurpose: "file-purpose"})): "";
+        const fileArray = file ?  file.map((obj) => ({id: obj.id, filePath: obj.filePath, filePurpose: obj.filePurpose==="thumbnail"?obj.filePurpose:"file-purpose"})): "";
         // console.log("Hellooo")
-        const selectedFileArray = selectedFiles ? selectedFiles.map((obj) => ({id: obj.id, filePurpose: "file-purpose"})) : "";
-        // console.log("Hellooo")
+        const selectedFileArray = selectedFiles ? selectedFiles.map((obj) => ({id: obj.id,filePurpose: obj.filePurpose==="thumbnail"?obj.filePurpose:"file-purpose"})) : "";// console.log("Hellooo")
         // console.log("selectedFilesAft",selectedFileArray)
         // console.log("fileAft--->",file)
         // console.log("fileLength--->",file.length)
@@ -80,7 +79,6 @@ export const ProductEditForm = (props) => {
         // console.log("FileArray1---->",fileArray)
         // console.log("fileArray1Length--->",fileArray.length)
         // console.log("fileArray1[2]--->",fileArray[2])
-
         fileArray ? fileArray.push(...selectedFiles) : ""
         // console.log("FileArray2---->",fileArray)
         // console.log("fileArray2Length--->",fileArray.length)
@@ -194,6 +192,8 @@ export const ProductEditForm = (props) => {
     const [file, setFile] = useState();
     const [files, setFiles] = useState([]);
     const [selectedFiles, setSelectedFiles] = useState([...product?.files])
+    const [selectedThumbnail, setSelectedThumbnail] = useState(null)
+    const [thumbnail, setThumbnail] = useState("file-purpose")
     // console.log("files---->;;",selectedFiles)
     // console.log("file---->????",file)
     // console.log("product---->....",product)
@@ -283,10 +283,21 @@ export const ProductEditForm = (props) => {
     }, []);
 
     const handleFileRemove = useCallback((file) => {
+        console.log("fileRemove--->",files)
         setFiles((prevFiles) => {
             return prevFiles.filter((_file) => _file.path !== file.path);
         });
     }, []);
+    console.log("fileRemove22222--->",files)
+
+    const handleSavedFileRemove = useCallback((file) => {
+        // console.log("I'm removing")
+        setSelectedFiles((prevFiles) => {
+            // console.log("I'm removing 2222")
+            return prevFiles.filter((_file) => _file.path !== file.path);
+        });
+    }, []);
+    // console.log("fffff",selectedFiles)
 
     const handleFilesRemoveAll = useCallback(() => {
         setFiles([]);
@@ -294,7 +305,7 @@ export const ProductEditForm = (props) => {
     const onUpload = async () => {
         let data
         if(selectedFiles.length <5){
-         data = await multiFileUploadPatch(files)
+         data = await multiFileUpload(files)
             // console.log("selectedFiles-----G",selectedFiles)
             // console.log("data-----G",data)
             setSelectedFiles([...selectedFiles,...data])
@@ -373,6 +384,14 @@ export const ProductEditForm = (props) => {
         getHsnSacCodes(value)
     }
 
+    const handleRadioChangeThumbnail =(event, filePath) =>{
+        setSelectedThumbnail(filePath);
+        const updatedSelectedFiles = selectedFiles.map((file) => ({
+            ...file,
+            filePurpose: file.filePath === filePath ? "thumbnail" : "file-purpose",
+        }));
+        setSelectedFiles(updatedSelectedFiles);
+    }
 
     return (
         <form>
@@ -883,28 +902,28 @@ export const ProductEditForm = (props) => {
                                     selectedFiles={selectedFiles}
                                     product={product}
                                 />
-                                {product?.files.map((file) =>
-                                <Grid mt={5} xs={12} md={8}  sx={{display: "flex", direction: "row",width:"100px"}}>
-                                    <Card sx={{width: "70px", height: "fitContent"}}>
-                                        <CardMedia
-                                            component="img"
-                                            image={file?.filePath}
-                                            alt={product?.name}
-                                        />
-                                    </Card>
-                                    <Card>
-                                        <Tooltip title="Remove">
-                                            <IconButton
-                                                edge="end"
-                                                onClick={() => onRemove?.(file)}
-                                            >
-                                                <SvgIcon>
-                                                    <XIcon/>
-                                                </SvgIcon>
-                                            </IconButton>
-                                        </Tooltip>
-                                    </Card>
-                                </Grid>)}
+                                {product?.files.map((file, index) => (
+                                    <Grid mt={5} xs={12} md={8} sx={{ display: "flex", direction: "row", alignItems: "center", width: "100%", gap: "8px" }} key={file.filePath}>
+                                        <RadioGroup
+                                            name={`thumbnailRadio_${index}`} // Use the index as a unique identifier
+                                            value={selectedThumbnail}
+                                            onChange={(event) => handleRadioChangeThumbnail(event, file.filePath)} // Pass file.filePath
+                                        >
+                                            <FormControlLabel
+                                                value={file.filePath}
+                                                control={<Radio />}
+                                            />
+                                        </RadioGroup>
+                                        <Card sx={{ width: "70px", height: "fitContent" }}>
+                                            <CardMedia
+                                                component="img"
+                                                image={file.filePath}
+                                                alt={product?.name}
+                                            />
+                                        </Card>
+                                        <Card></Card>
+                                    </Grid>
+                                ))}
                             </Grid>
                         </Grid>
                     </CardContent>

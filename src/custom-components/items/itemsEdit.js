@@ -175,7 +175,7 @@ const ItemEdit = ({title, pathUrl, category}) => {
     const handleGetCat =async (input)=>{
         let path = `${endpoints.category.index}`;
         let result = await search(input,path);
-        setCategories(result.data);
+        setCategories(result.data.filter(category => category.isActive === true));
     }
     useEffect(() => {
         handleGetCat("")

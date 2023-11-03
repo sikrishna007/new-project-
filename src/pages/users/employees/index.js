@@ -117,6 +117,7 @@ const Page = () => {
                                 isActive={customersStore.isActive}
                                 onChangeRole={customersStore.onChangeRole}
                                 role={customersStore.role}
+                                searchCustomers={customersStore.handleCustomerSearch}
                             />
                             <CustomerTable
                                 role={customersStore.role}

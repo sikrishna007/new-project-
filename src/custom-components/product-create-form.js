@@ -123,7 +123,10 @@ export const ProductCreateForm = (props) => {
             });
         }
         const newArray = selectedEvent.map((obj) => ({id: obj.id}));
-        const fileArray = file.map((obj) => ({id: obj.id, filePurpose: "file-purpose"}));
+        let fileArray = file.map((obj) => ({id: obj.id, filePurpose: "file-purpose"}));
+        console.log("fileArray",fileArray)
+        fileArray[0].filePurpose = "thumbnail"
+        console.log("fileArray2",fileArray)
         try {
             let token = Cookies.get("accessToken")
             const response = await fetch(
@@ -278,8 +281,6 @@ export const ProductCreateForm = (props) => {
     const [selectedSacCode, setSelectedSacCode] = useState(null);
 
     React.useEffect(() => {
-
-
         if (selectedHsnCode) {
             formik.setValues({
                 ...formik.values,
@@ -302,34 +303,19 @@ export const ProductCreateForm = (props) => {
         }
     }, [selectedHsnCode, selectedSacCode]);
 
-    const getSubCat = async (id) => {
-
-        let token = Cookies.get("accessToken");
-
-        const subCategories = await fetch(
-            process.env.NEXT_PUBLIC_BASE_URL + endpoints.category.index + "/" + id + endpoints.subCategory.index,
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            }
-        );
-        const {data: subCategoryData} = await subCategories.json();
-        formik.values.category = id;
-        setSubCategories(subCategoryData);
+    const getSubCat = async (input) => {
+        let path = `${endpoints.subCategory.index}`;
+        let result = await search(input, path);
+        setSubCategories(result.data.filter(subCategory => subCategory.isActive === true));
     }
 
-    const [isGoods, setIsGoods] = useState(null);
-
-    const [showHSNDropdown, setShowHSNDropdown] = useState(true);
-    const [showSACDropdown, setShowSACDropdown] = useState(false);
-
-    const [cat, setCat] = useState('')
     const handleGetCat = async (input) => {
         let path = `${endpoints.category.index}`;
         let result = await search(input, path);
-        setCategories(result.data);
+        setCategories(result.data.filter(category => category.isActive === true));
     }
+
+    const [isGoods, setIsGoods] = useState(null);
 
     const getHsnSacCodes = async (isHsn) => {
         let token = Cookies.get("accessToken");
@@ -349,6 +335,7 @@ export const ProductCreateForm = (props) => {
     useEffect(() => {
         handleGetCat("")
     }, []);
+
     const handleRadioChange = (event) => {
         let value = event.target.value === "true"
         setIsGoods(value)
@@ -465,6 +452,7 @@ export const ProductCreateForm = (props) => {
                                     <Autocomplete
                                         options={subCategories}
                                         getOptionLabel={(option) => option.name}
+                                        onInputChange={(event, newInputValue) => getSubCat(newInputValue)}
                                         renderInput={(params) => (
                                             <TextField
                                                 {...params}
