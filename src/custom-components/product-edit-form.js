@@ -24,8 +24,13 @@ import {ToastError} from "@/icons/ToastError";
 import {endpoints} from "@/endpoints";
 import {paths} from "@/paths";
 import CommonDialog from "@/custom-components/CommonDialog";
-import {search} from "@/utils/util";
+import {multiFileUpload, multiFileUploadPatch, search} from "@/utils/util";
 import {FileDropzone} from "@/components/file-dropzone";
+import {CardMedia} from "@mui/material";
+import IconButton from "@mui/material/IconButton";
+import SvgIcon from "@mui/material/SvgIcon";
+import XIcon from "@untitled-ui/icons-react/build/esm/X";
+import Tooltip from "@mui/material/Tooltip";
 
 export const ProductEditForm = (props) => {
 
@@ -33,8 +38,10 @@ export const ProductEditForm = (props) => {
     const validation = () => {
 
         const newArray = selectedEvent.map((obj) => ({id: obj.id}));
+        // const fileArray = file.map((obj) => ({id: obj.id}));
         formik.setFieldValue("eventCategories",newArray)
         formik.setFieldValue("tags",tags)
+        // formik.setFieldValue("files",fileArray)
         if (Object.keys(formik.errors).length > 0) {
             toast.error("Please fill in all the required fields", {
                 position: "top-right",
@@ -54,48 +61,69 @@ export const ProductEditForm = (props) => {
                 icon: <ToastError/>,
             });
         }
-
         formik.handleSubmit();
-
     }
+
     const submitProduct = async (values,helper) => {
+
+        // console.log("files.length",files.length)
+        // console.log("selectedFilesBef",selectedFiles)
+        // console.log("fileBef--->",file)
+        const fileArray = file ?  file.map((obj) => ({id: obj.id, filePath: obj.filePath, filePurpose: "file-purpose"})): "";
+        // console.log("Hellooo")
+        const selectedFileArray = selectedFiles ? selectedFiles.map((obj) => ({id: obj.id, filePurpose: "file-purpose"})) : "";
+        // console.log("Hellooo")
+        // console.log("selectedFilesAft",selectedFileArray)
+        // console.log("fileAft--->",file)
+        // console.log("fileLength--->",file.length)
+        //
+        // console.log("FileArray1---->",fileArray)
+        // console.log("fileArray1Length--->",fileArray.length)
+        // console.log("fileArray1[2]--->",fileArray[2])
+
+        fileArray ? fileArray.push(...selectedFiles) : ""
+        // console.log("FileArray2---->",fileArray)
+        // console.log("fileArray2Length--->",fileArray.length)
+        // console.log("fileArray2[6]--->",fileArray[6])
         try {
             let token = Cookies.get("accessToken")
-            const response = await fetch(
-                process.env.NEXT_PUBLIC_BASE_URL + endpoints.product.index + "/" + product?.id,
-                {
-                    method: "PATCH",
-                    body: JSON.stringify({
-                        // name: formik.values.name,
-                        name: formik.values.name
-                            .toLowerCase()
-                            .split(' ')
-                            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-                            .join(' '),
-                        vendor: formik.values.vendor,
-                        isGoods: formik.values.isGoods,
-                        offeringSubCategories: {
-                            id: formik.values.subCategoryName.id
+                const response = await fetch(
+                    process.env.NEXT_PUBLIC_BASE_URL + endpoints.product.index + "/" + product?.id,
+                    {
+                        method: "PATCH",
+                        body: JSON.stringify({
+                            // name: formik.values.name,
+                            name: formik.values.name
+                                .toLowerCase()
+                                .split(' ')
+                                .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                                .join(' '),
+                            vendor: formik.values.vendor.id,
+                            isGoods: formik.values.isGoods,
+                            offeringSubCategories: {
+                                id: formik.values.subCategoryName.id
+                            },
+                            longDescription: formik.values.longDescription,
+                            shortDescription: "active",
+                            vendorPrice: formik.values.vendorShare,
+                            unitPrice: (parseFloat(formik.values.organizationShare || 0)) + (parseFloat(formik.values.vendorShare || 0)),
+                            discountPrice: formik.values.costPrice,
+                            hsnSacCode: {id:formik.values.hsnSacCode.id},
+                            unitOfMeasurement: {
+                                id: "1"
+                            },
+                            tags: formik.values.tags,
+                            inStock: formik.values.inStock,
+                            eventCategories: formik.values.eventCategories,
+                            files: selectedFileArray,
+                        }),
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            "Content-Type": "application/json",
                         },
-                        longDescription: formik.values.longDescription,
-                        shortDescription: "active",
-                        vendorPrice: formik.values.vendorShare,
-                        unitPrice: (parseFloat(formik.values.organizationShare || 0)) + (parseFloat(formik.values.vendorShare || 0)),
-                        discountPrice: formik.values.costPrice,
-                        hsnSacCode: {id:formik.values.hsnSacCode.id},
-                        unitOfMeasurement: {
-                            id: "1"
-                        },
-                        tags: formik.values.tags,
-                        inStock: formik.values.inStock,
-                        eventCategories: formik.values.eventCategories,
-                    }),
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        "Content-Type": "application/json",
-                    },
-                }
-            );
+                    }
+                );
+
             if (!response.ok) {
                 throw new Error(response);
             }
@@ -136,6 +164,7 @@ export const ProductEditForm = (props) => {
             isGoods: product.isGoods,
             unitOfMeasurement: product.unitOfMeasurement || "",
             inStock: product?.inStock,
+            files:product?.files,
         },
         validationSchema: Yup.object({
             categoryName: Yup.object().required("Category  is required"),
@@ -149,6 +178,8 @@ export const ProductEditForm = (props) => {
         }),
         onSubmit: submitProduct
     });
+
+    // console.log("files->",formik.values.files)
     const router = useRouter();
     const [hsnSacCodes, setHsnSacCodes] = useState([]);
     const [categories, setCategories] = useState([]);
@@ -160,11 +191,17 @@ export const ProductEditForm = (props) => {
     const [tags, setTags] = useState([...product?.tags]);
     const [createDialogOpen, setCreateDialogOpen] = useState(false);
     const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
+    const [file, setFile] = useState();
+    const [files, setFiles] = useState([]);
+    const [selectedFiles, setSelectedFiles] = useState([...product?.files])
+    // console.log("files---->;;",selectedFiles)
+    // console.log("file---->????",file)
+    // console.log("product---->....",product)
+    // console.log("Filessss---->>",files)
 
     const getSubCat = async (id) => {
 
         let token = Cookies.get("accessToken");
-        // console.log(id);
 
         const subCategories = await fetch(
             process.env.NEXT_PUBLIC_BASE_URL + endpoints.category.index + "/" + id  + endpoints.subCategory.index,
@@ -175,7 +212,6 @@ export const ProductEditForm = (props) => {
             }
         );
         const {data: subCategoryData} = await subCategories.json();
-        // console.log(subCategoryData);
         setSubCategories(subCategoryData);
     }
     const handleCreateDialogOpen = () => {
@@ -209,7 +245,6 @@ export const ProductEditForm = (props) => {
         });
     }, []);
     const handleEvenDelete = useCallback((event) => {
-        // console.log(selectedEvent);
         setSelectedEvent((prevState) => {
             return prevState.filter((t) => t !== event);
         });
@@ -240,6 +275,33 @@ export const ProductEditForm = (props) => {
 
     const [selectedHsnCode, setSelectedHsnCode] = useState(null);
     const [selectedSacCode, setSelectedSacCode] = useState(null);
+
+    const handleFilesDrop = useCallback((newFiles) => {
+        setFiles((prevFiles) => {
+            return [...prevFiles, ...newFiles];
+        });
+    }, []);
+
+    const handleFileRemove = useCallback((file) => {
+        setFiles((prevFiles) => {
+            return prevFiles.filter((_file) => _file.path !== file.path);
+        });
+    }, []);
+
+    const handleFilesRemoveAll = useCallback(() => {
+        setFiles([]);
+    }, []);
+    const onUpload = async () => {
+        let data
+        if(selectedFiles.length <5){
+         data = await multiFileUploadPatch(files)
+            // console.log("selectedFiles-----G",selectedFiles)
+            // console.log("data-----G",data)
+            setSelectedFiles([...selectedFiles,...data])
+        }
+        formik.setFieldValue("files", selectedFiles)
+        setFile(selectedFiles)
+    }
 
     const getVendors = async () => {
         try {
@@ -570,7 +632,8 @@ export const ProductEditForm = (props) => {
                                 <Typography variant="h6" sx={{display: "flex"}}>Event Category </Typography>
                             </Grid>
                             <Grid xs={12} md={8}>
-                                <Stack spacing={3}><Autocomplete
+                                <Stack spacing={3}>
+                                    <Autocomplete
                                     // options={eventCategories}
                                     options={availableEventCategories}
                                     getOptionLabel={(option) => option.name}
@@ -582,7 +645,7 @@ export const ProductEditForm = (props) => {
                                             handleEventAdd(value);
                                         }
                                     }}
-                                    inputValue={''} // This sets the input value to an empty string
+                                    // inputValue={''} // This sets the input value to an empty string
                                 />
                                     <Stack
                                         alignItems="center"
@@ -807,14 +870,41 @@ export const ProductEditForm = (props) => {
                                 </Stack>
                             </Grid>
                             <Grid xs={12} md={8}>
-                                {/*<FileDropzone*/}
-                                {/*    accept={{"image/*": []}}*/}
-                                {/*    caption="(SVG, JPG, PNG, or gif maximum 900x400)"*/}
-                                {/*    // files={files}*/}
-                                {/*    // onDrop={handleFilesDrop}*/}
-                                {/*    // onRemove={handleFileRemove}*/}
-                                {/*    // onRemoveAll={handleFilesRemoveAll}*/}
-                                {/*/>*/}
+                                <FileDropzone
+                                    maxFiles={4}
+                                    accept={{"image/*": []}}
+                                    caption="(SVG, JPG, PNG, or gif maximum 900x400)"
+                                    files={files}
+                                    file={file}
+                                    onUpload={onUpload}
+                                    onDrop={handleFilesDrop}
+                                    onRemove={handleFileRemove}
+                                    onRemoveAll={handleFilesRemoveAll}
+                                    selectedFiles={selectedFiles}
+                                    product={product}
+                                />
+                                {product?.files.map((file) =>
+                                <Grid mt={5} xs={12} md={8}  sx={{display: "flex", direction: "row",width:"100px"}}>
+                                    <Card sx={{width: "70px", height: "fitContent"}}>
+                                        <CardMedia
+                                            component="img"
+                                            image={file?.filePath}
+                                            alt={product?.name}
+                                        />
+                                    </Card>
+                                    <Card>
+                                        <Tooltip title="Remove">
+                                            <IconButton
+                                                edge="end"
+                                                onClick={() => onRemove?.(file)}
+                                            >
+                                                <SvgIcon>
+                                                    <XIcon/>
+                                                </SvgIcon>
+                                            </IconButton>
+                                        </Tooltip>
+                                    </Card>
+                                </Grid>)}
                             </Grid>
                         </Grid>
                     </CardContent>
@@ -834,7 +924,6 @@ export const ProductEditForm = (props) => {
                     </Button>
                 </Stack>
                 <CommonDialog
-                    title={"Save"}
                     onConfirm={() => {
                         validation(formik);
                         handleCreateDialogClose();
@@ -844,7 +933,6 @@ export const ProductEditForm = (props) => {
                     description={"Are you sure you want to Save Changes ?"}
                 />
                 <CommonDialog
-                    title={"Yes"}
                     onConfirm={() => {
                         router.push(paths.productManagement.products.index);
                         handleCancelDialogClose();

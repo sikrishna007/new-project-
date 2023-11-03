@@ -3,19 +3,16 @@ import {useCallback, useEffect, useState} from "react";
 import toast from "react-hot-toast";
 import * as Yup from "yup";
 import {useFormik} from "formik";
-import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import FormControlLabel from "@mui/material/FormControlLabel";
-import FormHelperText from "@mui/material/FormHelperText";
 import Grid from "@mui/material/Unstable_Grid2";
 import Stack from "@mui/material/Stack";
 import Switch from "@mui/material/Switch";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import {FileDropzone} from "src/components/file-dropzone";
-import {QuillEditor} from "src/components/quill-editor";
 import {paths} from "src/paths";
 import {useRouter} from "src/hooks/use-router";
 import Radio from "@mui/material/Radio";
@@ -28,11 +25,10 @@ import Chip from "@mui/material/Chip";
 import Autocomplete from "@mui/material/Autocomplete";
 import {ToastError} from "@/icons/ToastError";
 import CommonDialog from "@/custom-components/CommonDialog";
-import {fileUpload, multiFileUpload, MultiFileUpload, search} from "@/utils/util";
+import {multiFileUpload, search} from "@/utils/util";
 
 export const ProductCreateForm = (props) => {
     const router = useRouter();
-    const [files, setFiles] = useState([]);
     const [vendors, setVendors] = useState([]);
     const [hsnSacCodes, setHsnSacCodes] = useState([]);
     const [categories, setCategories] = useState([]);
@@ -45,12 +41,12 @@ export const ProductCreateForm = (props) => {
     const [createDialogOpen, setCreateDialogOpen] = useState(false);
     const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
     const [file, setFile] = useState();
+    const [files, setFiles] = useState([]);
     const handleCreateDialogOpen = () => {
         setCreateDialogOpen(true);
     };
 
     const handleCreateDialogClose = (formik) => {
-
         setCreateDialogOpen(false);
     };
 
@@ -93,7 +89,7 @@ export const ProductCreateForm = (props) => {
         setAvailableEventCategories([...availableEventCategories, event]);
     };
 
-    const Productsave=()=>{
+    const Productsave = () => {
         if (Object.keys(formik.errors).length > 0) {
             toast.error("Please fill in all the required fields", {
                 position: "top-right",
@@ -102,8 +98,7 @@ export const ProductCreateForm = (props) => {
                 },
                 icon: <ToastError/>,
             });
-        }
-        else if(formik.values.name === "" ||formik.values.vendor === ""){
+        } else if (formik.values.name === "" || formik.values.vendor === "") {
             toast.error("Please fill in all the required fields", {
                 position: "top-right",
                 style: {
@@ -123,11 +118,12 @@ export const ProductCreateForm = (props) => {
                 style: {
                     backgroundColor: "#D65745",
                 },
-                icon: <ToastError />,
+                icon: <ToastError/>,
                 autoClose: 5000, // 5000 milliseconds (5 seconds)
             });
         }
         const newArray = selectedEvent.map((obj) => ({id: obj.id}));
+        const fileArray = file.map((obj) => ({id: obj.id, filePurpose: "file-purpose"}));
         try {
             let token = Cookies.get("accessToken")
             const response = await fetch(
@@ -135,7 +131,6 @@ export const ProductCreateForm = (props) => {
                 {
                     method: "POST",
                     body: JSON.stringify({
-                        // name: formik.values.name,
                         name: formik.values.name
                             .toLowerCase()
                             .split(' ')
@@ -143,22 +138,20 @@ export const ProductCreateForm = (props) => {
                             .join(' '),
                         vendor: formik.values.vendor,
                         isGoods: formik.values.isGoods,
-                        offeringSubCategories: {id:formik.values.subCategoryName.id},
+                        offeringSubCategories: {id: formik.values.subCategoryName.id},
                         longDescription: formik.values.longDescription,
                         shortDescription: "active",
                         vendorPrice: formik.values.vendorShare,
                         unitPrice: (parseFloat(formik.values.organizationShare || 0)) + (parseFloat(formik.values.vendorShare || 0)),
                         discountPrice: formik.values.costPrice,
-                        hsnSacCode: {id:formik.values.hsnSacCode.id},
+                        hsnSacCode: {id: formik.values.hsnSacCode.id},
                         unitOfMeasurement: {
                             id: "1"
                         },
                         tags: formik.values.tags,
                         inStock: formik.values.inStock,
                         eventCategories: newArray,
-                        files: {
-                            id: file?.id
-                        },
+                        files: fileArray,
                     }),
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -215,13 +208,13 @@ export const ProductCreateForm = (props) => {
         validationSchema: Yup.object({
             vendor: Yup.string().required("Vendor Name is required"),
             categoryName: Yup.object().required("Category  is required"),
-            hsnSacCode:Yup.object().required("Code  is required"),
+            hsnSacCode: Yup.object().required("Code  is required"),
             subCategoryName: Yup.object().required("Sub Category  is required"),
             description: Yup.string().max(5000),
             name: Yup.string().max(45).required("product title is required").matches(/^[^\s].*$/, "Spaces at the beginning are not allowed"),
             costPrice: Yup.number().required("Cost price is required"),
-            organizationShare:Yup.number().required("Organization Share is required"),
-            vendorShare:Yup.number().required("Vendor Share is required"),
+            organizationShare: Yup.number().required("Organization Share is required"),
+            vendorShare: Yup.number().required("Vendor Share is required"),
             tags: Yup.array().of(Yup.string().matches(/^[^\s].*$/, "Spaces at the beginning are not allowed"))
         }),
         onSubmit: submitProduct
@@ -244,9 +237,9 @@ export const ProductCreateForm = (props) => {
         setFiles([]);
     }, []);
 
-    const onUpload = async ()=>{
-        let data = await multiFileUpload(files[0])
-        setFile( data)
+    const onUpload = async () => {
+        let data = await multiFileUpload(files)
+        setFile(data)
     }
     const getVendors = async () => {
         try {
@@ -312,10 +305,9 @@ export const ProductCreateForm = (props) => {
     const getSubCat = async (id) => {
 
         let token = Cookies.get("accessToken");
-        // console.log(id);
 
         const subCategories = await fetch(
-            process.env.NEXT_PUBLIC_BASE_URL + endpoints.category.index + "/" + id  + endpoints.subCategory.index,
+            process.env.NEXT_PUBLIC_BASE_URL + endpoints.category.index + "/" + id + endpoints.subCategory.index,
             {
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -323,7 +315,6 @@ export const ProductCreateForm = (props) => {
             }
         );
         const {data: subCategoryData} = await subCategories.json();
-        // console.log(subCategoryData);
         formik.values.category = id;
         setSubCategories(subCategoryData);
     }
@@ -333,14 +324,14 @@ export const ProductCreateForm = (props) => {
     const [showHSNDropdown, setShowHSNDropdown] = useState(true);
     const [showSACDropdown, setShowSACDropdown] = useState(false);
 
-    const [cat,setCat]= useState('')
-    const handleGetCat =async (input)=>{
+    const [cat, setCat] = useState('')
+    const handleGetCat = async (input) => {
         let path = `${endpoints.category.index}`;
-        let result = await search(input,path);
+        let result = await search(input, path);
         setCategories(result.data);
     }
 
-    const getHsnSacCodes = async (isHsn)=>{
+    const getHsnSacCodes = async (isHsn) => {
         let token = Cookies.get("accessToken");
         const hsnSacCodes = await fetch(
             process.env.NEXT_PUBLIC_BASE_URL +
@@ -358,9 +349,9 @@ export const ProductCreateForm = (props) => {
     useEffect(() => {
         handleGetCat("")
     }, []);
-    const handleRadioChange =(event)=>{
+    const handleRadioChange = (event) => {
         let value = event.target.value === "true"
-        setIsGoods(value )
+        setIsGoods(value)
         formik.setFieldValue('hsnSacCode', ''); // Update Formik value
         getHsnSacCodes(value)
     }
@@ -428,7 +419,7 @@ export const ProductCreateForm = (props) => {
                                     renderInput={(params) => (
                                         <TextField
                                             {...params}
-                                            label={isGoods ?"Select HSN Code":"Select SAC Code"}
+                                            label={isGoods ? "Select HSN Code" : "Select SAC Code"}
                                             error={formik.touched.hsnSacCode && Boolean(formik.errors.hsnSacCode)}
                                             helperText={formik.touched.hsnSacCode && formik.errors.hsnSacCode}
                                         />
@@ -518,7 +509,7 @@ export const ProductCreateForm = (props) => {
                                         value={formik.values.description}
                                         fullWidth
                                         error={!!(
-                                            formik.touched.description &&formik.errors.description
+                                            formik.touched.description && formik.errors.description
                                         )}
                                         helperText={
                                             formik.touched.description && formik.errors.description
@@ -610,7 +601,8 @@ export const ProductCreateForm = (props) => {
                                 <Typography variant="h6" sx={{display: "flex"}}>Event Category </Typography>
                             </Grid>
                             <Grid xs={12} md={8}>
-                                <Stack spacing={3}><Autocomplete
+                                <Stack spacing={3}>
+                                    <Autocomplete
                                     options={availableEventCategories}
                                     getOptionLabel={(option) => option.name}
                                     renderInput={(params) => (
@@ -621,7 +613,7 @@ export const ProductCreateForm = (props) => {
                                             handleEventAdd(value);
                                         }
                                     }}
-                                    inputValue={''} // This sets the input value to an empty string
+                                    // inputValue={''} // This sets the input value to an empty string
                                 />
                                     <Stack
                                         alignItems="center"
@@ -629,15 +621,15 @@ export const ProductCreateForm = (props) => {
                                         flexWrap="wrap"
                                         spacing={1}
                                     >
-                                            {selectedEvent.map((event) => (
-                                                <Chip
-                                                    key={event.id}
-                                                    label={event.name}
-                                                    onDelete={() => {
-                                                        handleEventDelete(event);
-                                                    }}
-                                                />
-                                            ))}
+                                        {selectedEvent.map((event) => (
+                                            <Chip
+                                                key={event.id}
+                                                label={event.name}
+                                                onDelete={() => {
+                                                    handleEventDelete(event);
+                                                }}
+                                            />
+                                        ))}
                                     </Stack></Stack>
                             </Grid>
                         </Grid>
