@@ -1,14 +1,6 @@
-import numeral from 'numeral';
 import PropTypes from 'prop-types';
-import ArrowRightIcon from '@untitled-ui/icons-react/build/esm/ArrowRight';
-import Edit02Icon from '@untitled-ui/icons-react/build/esm/Edit02';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Checkbox from '@mui/material/Checkbox';
-import IconButton from '@mui/material/IconButton';
-import Link from '@mui/material/Link';
-import Stack from '@mui/material/Stack';
-import SvgIcon from '@mui/material/SvgIcon';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -17,30 +9,19 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 
 import {RouterLink} from 'src/components/router-link';
-import {paths} from 'src/paths';
 import {SeverityPill} from "@/components/severity-pill";
 import {TableContainer, TableSortLabel} from "@mui/material";
-import {ArrowDownward, ArrowUpward, ToggleOffOutlined, ToggleOnOutlined} from "@mui/icons-material";
-import CommonDialog from "../CommonDialog";
 import * as React from "react";
-import {useState} from "react";
-import {endpoints} from "@/endpoints";
-import {useRouter} from "next/router";
-import Tooltip from "@mui/material/Tooltip";
-import Cookies from "js-cookie";
-import {patchMethod} from "@/utils/util";
-import {status} from "nprogress";
 import {visuallyHidden} from "@mui/utils";
-import RoleBasedView from "@/contexts/roleAut/RoleBasedView";
 
 const getTableHeaders = () => {
-        return [
+    return [
 
-            {key:"name",label:"Business Name"},
-            {key:"user.firstName",label:"Name"},
-            {key:"user.emailId",label:"Email"},
-            {key:"user.phoneNumber",label:"Phone"},
-        ];
+        {key: "name", label: "Business Name"},
+        {key: "user.firstName", label: "Name"},
+        {key: "user.emailId", label: "Email"},
+        {key: "user.phoneNumber", label: "Phone"},
+    ];
 
 };
 
@@ -72,14 +53,14 @@ export const KycTable = (props) => {
                     <TableHead>
                         <TableRow>
                             {tableHeaders.map((header, index) => (
-                                <TableCell key={index} sx={{ textAlign: "left" }}>
+                                <TableCell key={index} sx={{textAlign: "left"}}>
                                     <TableSortLabel
                                         active={sortOn === header.key}
                                         direction={sortOn === header.key ? sortOrder : 'asc'}
                                         onClick={() => handleSort(header.key)}
                                     >
                                         {header.label}
-                                        {sortOn ===  header.key ? (
+                                        {sortOn === header.key ? (
                                             <Box component="span" sx={visuallyHidden}>
                                                 {sortOrder === 'desc' ? 'sorted descending' : 'sorted ascending'}
                                             </Box>
@@ -102,8 +83,8 @@ export const KycTable = (props) => {
                                         {customer?.name}
                                     </TableCell>
                                     <TableCell sx={{textAlign: "left"}}>
-                                                    {customer.user?.firstName} {" "}
-                                                    {customer.user?.lastName}
+                                        {customer.user?.firstName} {" "}
+                                        {customer.user?.lastName}
                                     </TableCell>
 
                                     <TableCell sx={{textAlign: "left"}}>
@@ -115,7 +96,7 @@ export const KycTable = (props) => {
                                     <TableCell sx={{textAlign: "left"}}>
                                         {customer?.user.kycStatus.status === "verified" ? (
                                                 <SeverityPill color="success">VERIFIED</SeverityPill>) :
-                                            (customer?.user.kycStatus.status === "rejected"  ? (<SeverityPill
+                                            (customer?.user.kycStatus.status === "rejected" ? (<SeverityPill
                                                 color="error">REJECTED</SeverityPill>) : (
                                                 <SeverityPill
                                                     color="warning">PENDING</SeverityPill>))}

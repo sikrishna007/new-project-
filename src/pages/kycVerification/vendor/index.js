@@ -1,33 +1,21 @@
-import React, {useCallback, useEffect, useState} from 'react';
-import {Box, Link, Tab, Tabs} from '@mui/material';
+import React from 'react';
+import {Box} from '@mui/material';
 import {Seo} from "@/components/seo";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Card from "@mui/material/Card";
 import {Layout as DashboardLayout} from "../../../layouts/admin-dashboard";
-import Cookies from "js-cookie";
-import {endpoints} from "@/endpoints";
-import {SeverityPill} from "@/components/severity-pill";
-import Grid from "@mui/material/Unstable_Grid2";
-import {PropertyList} from "../../../components/property-list";
-import {PropertyListItem} from "@/components/property-list-item-custom";
-import TablePagination from "@mui/material/TablePagination";
-import Button from "@mui/material/Button";
-import {paths} from "../../../paths";
 import {useRouter} from "next/router";
-import {RouterLink} from "../../../components/router-link";
 import {useCustomersIds, useCustomersStore} from "@/utils/userDataFilters";
 import {useSelection} from "@/hooks/use-selection";
-import {CustomerListSearch} from "@/custom-components/users/customer-list-search";
-import {CustomerTable} from "@/custom-components/users/CustomerTable";
 import {KycTable} from "@/custom-components/kyc/KycTable";
 import {KycListSearch} from "@/custom-components/kyc/Kyc-list-search";
 
 
 const Page = () => {
 
-    let location = window.location.href.split("/")[4]+[" kyc"];
+    let location = window.location.href.split("/")[4] + [" kyc"];
     const customersStore = useCustomersStore(location);
     const customersIds = useCustomersIds(customersStore.customers);
     const customersSelection = useSelection(customersIds);

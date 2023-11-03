@@ -41,7 +41,7 @@ const RoleBasedGuard = (props) => {
 
     let vendorManager = ['/profile/[id]','/profile/edit/[id]','/','/product-management/products/edit/[id]',"/product-management/products/add",'/users/vendors','/users/vendors/[id]','/users/vendors/add','/users/vendors/edit/[id]','/event-category','/event-category/[id]'];
 
-    let vendor = ['/profile/[id]','/profile/edit/[id]','/','/dashboard','/product-management/products','/product-management/products/[id]','/product-management/category','/product-management/subCategory'];
+    let vendor = ['/kycVerification/vendor/add','/profile/[id]','/profile/edit/[id]','/','/dashboard','/product-management/products','/product-management/products/[id]','/product-management/category','/product-management/subCategory'];
     let eventManager = ['/profile/[id]','/profile/edit/[id]','/users/vendors','/users/vendors/[id]','/event-category','/event-category/[id]'];
     let salesManager = ['/profile/[id]','/profile/edit/[id]','/users/vendors','/users/vendors/[id]','/users/vendors/add','/users/vendors/edit/[id]','/users/customers','/users/customers/[id]','/users/customers/add','/users/customers/edit/[id]'];
     let marketing = ['/users/vendors','/users/vendors/[id]'];
