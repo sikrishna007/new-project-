@@ -26,69 +26,25 @@ export const fileUpload = async(file)=>{
 }
 
 
-
-// Multiple fileUpload for products
-export const multiFileUpload = async(files)=>{
-    try {
-        const uploadFiles = []
-        const filesArray = Array.isArray(files) ? files : [files];
-
-        for (const file of filesArray){
-            const formData = new FormData();
-            formData.append('file', file);
-
-            const requestOptions = {
-                method: "POST",
-                headers: {
-                    Authorization: `Bearer ${token}`
-                },
-                body: formData
-            };
-            const response = await fetch(process.env.NEXT_PUBLIC_BASE_URL + "/files", requestOptions);
-            const data = await response.json();
-
-            // Save the filePath as "purpose" in the files object
-            // const updatedFile = { ...file, purpose: data.data[0].filePath };
-
-            uploadFiles.push(data.data[0]);
-            // uploadFiles.push(updatedFile);
-        }
-
-        return uploadFiles;
-
-    } catch (err) {
-        console.error(err);
-        return [];
-    }
-
-}
-
 export const multiFileUploadPatch = async(files)=>{
     try {
         const uploadFiles = []
         const filesArray = Array.isArray(files) ? files : [files];
-
         for (const file of filesArray){
-            const formData = new FormData();
+
             formData.append('file', file);
 
-            const requestOptions = {
-                method: "POST",
-                headers: {
-                    Authorization: `Bearer ${token}`
-                },
-                body: formData
-            };
-            const response = await fetch(process.env.NEXT_PUBLIC_BASE_URL + "/files", requestOptions);
-            const data = await response.json();
-
-            // Save the filePath as "purpose" in the files object
-            // const updatedFile = { ...file, purpose: data.data[0].filePath };
-
-            uploadFiles.push(data.data[0]);
-            // uploadFiles.push(updatedFile);
         }
-
+        const requestOptions = {
+            method: "POST",
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
+            body: formData
+        };
+        const response = await fetch(process.env.NEXT_PUBLIC_BASE_URL + "/files", requestOptions);
+        const data = await response.json();
+        let uploadFiles= await data.data
         return uploadFiles;
 
     } catch (err) {
@@ -115,9 +71,8 @@ export const handleGetById = async (id,path) => {
         console.error(err);
       }
     };
-export const patchMethod = async (id, temp, path) => {
+export const patchMethod = async (id, body, path) => {
     try {
-        let jsonString = JSON.stringify({isActive: temp});
 
         const requestOptions = {
             method: "PATCH", // Or 'PUT', 'GET', etc. depending on the type of request you want to make
@@ -126,7 +81,7 @@ export const patchMethod = async (id, temp, path) => {
                 "Content-Type": "application/json",
                 // Set the Content-Type to indicate that the request body is in JSON format
             },
-            body: jsonString, // Replace this with the data you want to send in the request body
+            body: body, // Replace this with the data you want to send in the request body
         };
         const response = await fetch(
             process.env.NEXT_PUBLIC_BASE_URL +path+

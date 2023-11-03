@@ -393,7 +393,7 @@ const Page = ({employee}) => {
 };
 
 export const getServerSideProps = async (context) => {
-    const id = context.req.cookies.id;
+   console.log("hi server")
     const token = context.req.cookies.accessToken;
     const res = await fetch(
         process.env.NEXT_PUBLIC_BASE_URL +

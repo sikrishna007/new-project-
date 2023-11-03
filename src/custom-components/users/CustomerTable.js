@@ -89,7 +89,8 @@ export const CustomerTable = (props) => {
     } = props;
     const activate_deactivate = async (id, temp) => {
         const path = location === 'employees' ? endpoints.userManagement.employees.index : location === 'customers' ? endpoints.userManagement.customers.index :endpoints.userManagement.vendors.index
-        const json = await patchMethod(id,temp,path)
+        let jsonString = JSON.stringify({isActive: temp});
+        const json = await patchMethod(id,jsonString,path)
         setStatus(json.status);
         props.getCustomers(page, rowsPerPage, props.isActive, role);
     };
