@@ -22,38 +22,28 @@ export const fileUpload = async(file)=>{
     } catch (err) {
         console.error(err);
     }
-
 }
 
-
-
-// Multiple fileUpload for products
 export const multiFileUpload = async(files)=>{
     try {
-        const uploadFiles = []
         const filesArray = Array.isArray(files) ? files : [files];
+        const formData = new FormData();
 
         for (const file of filesArray){
-            const formData = new FormData();
+
             formData.append('file', file);
 
-            const requestOptions = {
-                method: "POST",
-                headers: {
-                    Authorization: `Bearer ${token}`
-                },
-                body: formData
-            };
-            const response = await fetch(process.env.NEXT_PUBLIC_BASE_URL + "/files", requestOptions);
-            const data = await response.json();
-
-            // Save the filePath as "purpose" in the files object
-            // const updatedFile = { ...file, purpose: data.data[0].filePath };
-
-            uploadFiles.push(data.data[0]);
-            // uploadFiles.push(updatedFile);
         }
-
+        const requestOptions = {
+            method: "POST",
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
+            body: formData
+        };
+        const response = await fetch(process.env.NEXT_PUBLIC_BASE_URL + "/files", requestOptions);
+        const data = await response.json();
+        let uploadFiles= await data.data
         return uploadFiles;
 
     } catch (err) {
@@ -63,40 +53,75 @@ export const multiFileUpload = async(files)=>{
 
 }
 
-export const multiFileUploadPatch = async(files)=>{
-    try {
-        const uploadFiles = []
-        const filesArray = Array.isArray(files) ? files : [files];
-
-        for (const file of filesArray){
-            const formData = new FormData();
-            formData.append('file', file);
-
-            const requestOptions = {
-                method: "POST",
-                headers: {
-                    Authorization: `Bearer ${token}`
-                },
-                body: formData
-            };
-            const response = await fetch(process.env.NEXT_PUBLIC_BASE_URL + "/files", requestOptions);
-            const data = await response.json();
-
-            // Save the filePath as "purpose" in the files object
-            // const updatedFile = { ...file, purpose: data.data[0].filePath };
-
-            uploadFiles.push(data.data[0]);
-            // uploadFiles.push(updatedFile);
-        }
-
-        return uploadFiles;
-
-    } catch (err) {
-        console.error(err);
-        return [];
-    }
-
-}
+// Multiple fileUpload for products
+// export const multiFileUpload = async(files)=>{
+//     try {
+//         const uploadFiles = []
+//         const filesArray = Array.isArray(files) ? files : [files];
+//
+//         for (const file of filesArray){
+//             const formData = new FormData();
+//             formData.append('file', file);
+//
+//             const requestOptions = {
+//                 method: "POST",
+//                 headers: {
+//                     Authorization: `Bearer ${token}`
+//                 },
+//                 body: formData
+//             };
+//             const response = await fetch(process.env.NEXT_PUBLIC_BASE_URL + "/files", requestOptions);
+//             const data = await response.json();
+//             // Save the filePath as "purpose" in the files object
+//             // const updatedFile = { ...file, purpose: data.data[0].filePath };
+//
+//             uploadFiles.push(data.data[0]);
+//             // uploadFiles.push(updatedFile);
+//         }
+//
+//         return uploadFiles;
+//
+//     } catch (err) {
+//         console.error(err);
+//         return [];
+//     }
+//
+// }
+//
+// export const multiFileUploadPatch = async(files)=>{
+//     try {
+//         const uploadFiles = []
+//         const filesArray = Array.isArray(files) ? files : [files];
+//
+//         for (const file of filesArray){
+//             const formData = new FormData();
+//             formData.append('file', file);
+//
+//             const requestOptions = {
+//                 method: "POST",
+//                 headers: {
+//                     Authorization: `Bearer ${token}`
+//                 },
+//                 body: formData
+//             };
+//             const response = await fetch(process.env.NEXT_PUBLIC_BASE_URL + "/files", requestOptions);
+//             const data = await response.json();
+//
+//             // Save the filePath as "purpose" in the files object
+//             // const updatedFile = { ...file, purpose: data.data[0].filePath };
+//
+//             uploadFiles.push(data.data[0]);
+//             // uploadFiles.push(updatedFile);
+//         }
+//
+//         return uploadFiles;
+//
+//     } catch (err) {
+//         console.error(err);
+//         return [];
+//     }
+//
+// }
 
 export const handleGetById = async (id,path) => {
       try {
@@ -179,7 +204,6 @@ export const search = async (query,path)=>{
 
         return await response.json();
 
-        // }
     } catch (err) {
         console.error(err);
     }

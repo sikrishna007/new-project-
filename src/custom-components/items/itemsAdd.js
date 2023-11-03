@@ -25,6 +25,7 @@ import CommonDialog from "@/custom-components/CommonDialog";
 import Autocomplete from "@mui/material/Autocomplete";
 import {endpoints} from "@/endpoints";
 import {fileUpload, search} from "@/utils/util";
+import category from "@/pages/product-management/category";
 
 
 const ItemAdd = ({title, pathUrl}) => {
@@ -162,7 +163,7 @@ const ItemAdd = ({title, pathUrl}) => {
     const handleGetCat =async (input)=>{
         let path = `${endpoints.category.index}`;
         let result = await search(input,path);
-        setCategories(result.data);
+        setCategories(result.data.filter(category => category.isActive === true));
     }
     useEffect(() => {
         handleGetCat("")

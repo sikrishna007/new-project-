@@ -18,6 +18,10 @@ import Typography from '@mui/material/Typography';
 
 import { FileIcon } from 'src/components/file-icon';
 import { bytesToSize } from 'src/utils/bytes-to-size';
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
+import * as React from "react";
 
 export const FileDropzone = (props) => {
   const { caption, files = [], onRemove, onRemoveAll,file, onUpload, ...other } = props;

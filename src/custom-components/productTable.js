@@ -410,13 +410,10 @@ export const ProductTable = (props) => {
                     <CommonDialog
                         onConfirm={() => {
                             // Action to perform when confirmed
-                            // You can add your activate or deactivate logic here
                             if (commonDialogData.productIsActive) {
-                                // console.log("Deactivate",commonDialogData.productName,commonDialogData.productId)
                                 // Deactivate logic
                                 activate_deactivate(commonDialogData.productId, "false");
                             } else {
-                                // console.log("Activate",commonDialogData.productName,commonDialogData.productId)
                                 // Activate logic
                                 activate_deactivate(commonDialogData.productId, "true");
                             }
