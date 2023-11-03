@@ -79,7 +79,7 @@ export const ItemSearch = ({isStatusShow=true, ...props}) => {
                 {location==="products"?<Autocomplete
                     sx={{width: "200px"}}
                     options={vendors}
-                    getOptionLabel={option => option.user.firstName + " " + option.user.lastName}
+                    getOptionLabel={option => option.name}
                     renderInput={(params) => <TextField {...params} label="Vendors"/>}
                     onChange={(event, value) => {
                         getVendorProducts(value?.id)
