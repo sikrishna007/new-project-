@@ -26,12 +26,10 @@ export const fileUpload = async(file)=>{
 }
 
 
-// Multiple fileUpload for products
-export const multiFileUpload = async(files)=>{
+export const multiFileUploadPatch = async(files)=>{
     try {
+        const uploadFiles = []
         const filesArray = Array.isArray(files) ? files : [files];
-        const formData = new FormData();
-
         for (const file of filesArray){
 
             formData.append('file', file);

@@ -8,7 +8,7 @@ import {
     DialogActions,
 } from '@mui/material';
 
-const CommonDialog = ({ open, onClose, onConfirm, title, description}) => {
+const CommonDialog = ({ open, onClose, onConfirm, description}) => {
     return (
         <Dialog open={open} onClose={onClose} aria-labelledby="common-dialog-title">
             <DialogContent>
