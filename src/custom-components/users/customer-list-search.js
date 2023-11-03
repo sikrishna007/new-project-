@@ -9,6 +9,7 @@ import Stack from "@mui/material/Stack";
 import SvgIcon from "@mui/material/SvgIcon";
 import TextField from "@mui/material/TextField";
 import {getList} from "@/utils/util";
+import * as React from "react";
 
 
 const sortOptions = [
@@ -30,6 +31,7 @@ export const CustomerListSearch = (props) => {
     const {
         onChangeActive,
         onChangeRole,
+        searchCustomers,
         role,
         isActive,
         label = "",
@@ -83,17 +85,17 @@ export const CustomerListSearch = (props) => {
                 <Box sx={{flexGrow: 1}}>
                     <OutlinedInput
                         defaultValue=""
-                        disabled={true}
                         fullWidth
-                        inputProps={{ref: queryRef}}
-                        placeholder={`Search ${label}`}
-                        startAdornment={
+                        name="itemName"
+                        placeholder="Search"
+                        startAdornment={(
                             <InputAdornment position="start">
                                 <SvgIcon>
-                                    <SearchMdIcon/>
+                                    <SearchMdIcon />
                                 </SvgIcon>
                             </InputAdornment>
-                        }
+                        )}
+                        onChange={(event)=>searchCustomers(event.target.value)}
                     />
                 </Box>
                 {!nofilters && roles.length > 0 && (

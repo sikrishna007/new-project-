@@ -55,6 +55,7 @@ export const useItemsStore = (location) => {
             let data = await search(query, params)
             setState({
                 customers: data.data,
+                // customersCount: data.data.length(),
             });
         }
 

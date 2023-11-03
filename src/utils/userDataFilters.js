@@ -1,7 +1,7 @@
 import {useCallback, useEffect, useMemo, useState} from "react";
 import Cookies from "js-cookie";
 import {endpoints} from "@/endpoints";
-import {getList} from "@/utils/util";
+import {getList, search} from "@/utils/util";
 
  export const useCustomersStore = ( location ) => {
     const [page, setPage] = useState(0);
@@ -14,6 +14,37 @@ import {getList} from "@/utils/util";
         customers: [],
         customersCount: 0,
     });
+
+     const handleCustomerSearch = useCallback(async(query="")=>{
+         if(query===""){
+             handleCustomersGet()
+         }
+         else{
+             const getEndpoint=(location)=> {
+                 let endpoint;
+                  switch (location) {
+
+                     case 'employees':
+                             endpoint = `${endpoints.userManagement.employees.index}`;
+                         break;
+
+                     case 'customers':
+                         endpoint = `${endpoints.userManagement.customers.index}`;
+                         break;
+                     default: // Assuming 'vendors' as the default case
+                         endpoint = `${endpoints.userManagement.vendors.index}`;
+                 }
+                 return endpoint
+             }
+             let params = getEndpoint(location);
+             let data = await search(query, params)
+             setState({
+                 customers: data.data,
+                 // customersCount: data.data.length(),
+             });
+         }
+
+     },[])
 
 
 
@@ -104,6 +135,7 @@ import {getList} from "@/utils/util";
         page,
         rowsPerPage,
         handleCustomersGet,
+        handleCustomerSearch,
         onChangeActive,
         onChangeRole,
         handleSort,

@@ -123,7 +123,10 @@ export const ProductCreateForm = (props) => {
             });
         }
         const newArray = selectedEvent.map((obj) => ({id: obj.id}));
-        const fileArray = file.map((obj) => ({id: obj.id, filePurpose: "file-purpose"}));
+        let fileArray = file.map((obj) => ({id: obj.id, filePurpose: "file-purpose"}));
+        console.log("fileArray",fileArray)
+        fileArray[0].filePurpose = "thumbnail"
+        console.log("fileArray2",fileArray)
         try {
             let token = Cookies.get("accessToken")
             const response = await fetch(
