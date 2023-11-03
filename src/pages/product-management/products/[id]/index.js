@@ -26,7 +26,7 @@ import ArrowRightSharpIcon from "@mui/icons-material/ArrowRightSharp";
 import Cookies from "js-cookie";
 import RoleBasedView from "@/contexts/roleAut/RoleBasedView";
 
-const Page = ({product, vendor}) => {
+const Page = ({product}) => {
     const router = useRouter();
     let role=Cookies.get("role")
     return (
@@ -144,7 +144,7 @@ const Page = ({product, vendor}) => {
                                     </Grid>
                                     <Grid xs={12} md={4}>
                                         <PropertyListItem label="Vendor Name"
-                                                          value={vendor.user.firstName + ' ' + vendor.user.lastName}
+                                                          value={product.vendor.user.firstName + ' ' + product.vendor.user.lastName}
                                         />
                                     </Grid>
                                     <Grid xs={12} md={4}>
@@ -331,24 +331,9 @@ export const getServerSideProps = async (context) => {
         };
     }
     const {data} = await res.json();
-    // console.log(data[0].vendor);
-    const vend = await fetch(
-        process.env.NEXT_PUBLIC_BASE_URL +
-        endpoints.userManagement.vendors.index +
-        "/" +
-        data[0].vendor,
-        {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        }
-    );
-    const vendor = await vend.json();
-    // console.log(vendor);
     return {
         props: {
             product: data[0],
-            vendor: vendor.data[0],
         },
     };
 };
