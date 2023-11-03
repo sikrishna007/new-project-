@@ -29,13 +29,13 @@ import {CardMedia} from "@mui/material";
 
 const ItemEdit = ({title, pathUrl, category}) => {
     const router = useRouter();
-    const [files, setFiles] = useState([]);
     const [categories, setCategories] = useState([]);
     const [createDialogOpen, setCreateDialogOpen] = useState(false);
     const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
     const [descriptionCharCount, setDesctriptionCharCount]  = useState(0);
     const [hasChanges, setHasChanges] = useState(false);
     const [file ,setFile]=useState();
+    const [files, setFiles] = useState([]);
     const handleCreateDialogOpen = () => {
         setCreateDialogOpen(true);
     };
