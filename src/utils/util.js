@@ -140,9 +140,8 @@ export const handleGetById = async (id,path) => {
         console.error(err);
       }
     };
-export const patchMethod = async (id, temp, path) => {
+export const patchMethod = async (id, body, path) => {
     try {
-        let jsonString = JSON.stringify({isActive: temp});
 
         const requestOptions = {
             method: "PATCH", // Or 'PUT', 'GET', etc. depending on the type of request you want to make
@@ -151,7 +150,7 @@ export const patchMethod = async (id, temp, path) => {
                 "Content-Type": "application/json",
                 // Set the Content-Type to indicate that the request body is in JSON format
             },
-            body: jsonString, // Replace this with the data you want to send in the request body
+            body: body, // Replace this with the data you want to send in the request body
         };
         const response = await fetch(
             process.env.NEXT_PUBLIC_BASE_URL +path+

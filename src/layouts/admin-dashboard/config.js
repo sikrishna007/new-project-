@@ -195,6 +195,15 @@ export const useSections = () => {
                     path: paths.productManagement.products.index,
                   },
                 ],
+              },
+              {
+                title: t(tokens.nav.kycVerification),
+                path: "/kycVerification/vendor/add",
+                icon: (
+                    <SvgIcon fontSize="small">
+                      <VerifiedIcon/>
+                    </SvgIcon>
+                ),
               }
             ]
           }

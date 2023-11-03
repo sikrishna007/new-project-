@@ -72,7 +72,8 @@ export const ItemsTable = (props) => {
     } = props;
     const activate_deactivate = async (id, temp) => {
         const path = location ==="subCategory"? endpoints.subCategory.index:location ==="category"? endpoints.category.index:endpoints.eventCategories.index
-        const json = await patchMethod(id,temp,path)
+        let jsonString = JSON.stringify({isActive: temp});
+        const json = await patchMethod(id,jsonString,path)
         props.getCustomers(page, rowsPerPage, props.isActive);
     };
 

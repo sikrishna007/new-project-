@@ -1,5 +1,5 @@
 import {Layout as DashboardLayout} from "../../../../layouts/admin-dashboard";
-import React from "react";
+import React, {useState} from "react";
 import {endpoints} from "../../../../endpoints";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
@@ -18,8 +18,48 @@ import CardContent from "@mui/material/CardContent";
 import Grid from "@mui/material/Grid";
 import {SeverityPill} from "../../../../components/severity-pill";
 import Stack from "@mui/material/Stack";
+import Button from "@mui/material/Button";
+import CommonDialog from "@/custom-components/CommonDialog";
+import {useRouter} from "next/router";
+import {patchMethod} from "@/utils/util";
 
 const Page = ({customer}) => {
+    const [createDialogOpen, setCreateDialogOpen] = useState(false);
+    const[create,setCreate]=useState(false)
+    let router = useRouter();
+    const handleCreateDialogOpen = (value) => {
+        setCreate(value)
+        setCreateDialogOpen(true);
+    };
+
+    const handleCreateDialogClose = () => {
+        setCreateDialogOpen(false);
+    };
+    const verify_reject = async (id, temp) => {
+        const path =endpoints.userManagement.customers.index;
+        let jsonString;
+        if(temp === "reject"){
+            const body={
+                user:{
+                    kycStatus:{
+                        id:"7123313635396419583"
+                    }
+                }
+            }
+            jsonString= JSON.stringify(body);
+        }
+        else{
+            const body={
+                user:{
+                    kycStatus:{
+                        id:"7123313635396419582"
+                    }
+                }
+            }
+            jsonString= JSON.stringify(body);
+        }
+        const json = await patchMethod(id,jsonString,path)
+    };
     return (
         <>
             <Box sx={{ p: 2}}  >
@@ -177,7 +217,7 @@ const Page = ({customer}) => {
                     </Card></Container>
                     <Container sx={{mt: 5}}>
                         <Card>
-                            <CardHeader title="GST Details"/>
+                            <CardHeader title="Document Details"/>
                             <CardContent sx={{marginLeft:"5%"}}>
                                 <Stack direction="row" justifyContent="space-between"sx={{
                                     "@media (max-width:700px)": { flexDirection: 'column' },
@@ -204,28 +244,33 @@ const Page = ({customer}) => {
                                                 display:"flex",
                                                 border: '1px solid #ccc',
                                                 borderRadius:"5px",
-                                                backgroundColor: "#cfcfcf",
-                                                padding: '10px',
+                                                paddingTop:"1%",
+                                                justifyContent:"center",
                                                 cursor: 'pointer',
                                                 width: '250px',
-                                                margin: '10px',
                                                 textAlign: 'center',
                                             }}
                                         >
-
-                                            <div>
-                                                <FilePresentIcon style={{ marginRight: '10px' }} /></div>
-                                            <div style={{display:"flex",flexDirection: 'column'}}>
-                                                <u style={{  color:"#4338CA",}}>GST Document.pdf</u>{/*<span sx={{float:"left"}}>1.5Mb</span>*/}</div>
+                                            <a
+                                                href={customer.user.gstFile?.filePath}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                style={{ textDecoration: 'none', color: 'inherit' }}
+                                            >
+                                                <Grid container alignItems="center" spacing={1}>
+                                                    <Grid item>
+                                                        <img src='/assets/icons/icon-pdf.svg' alt="GST Icon" style={{ height: '50%'}} />
+                                                    </Grid>
+                                                    <Grid item>
+                                                        <Typography variant="body1" style={{ color: '#4338CA' }}>Gst Document</Typography>
+                                                    </Grid>
+                                                </Grid>
+                                            </a>
                                         </div>
+
                                     </Stack>
                                 </Stack>
                             </CardContent>
-                        </Card>
-                    </Container>
-                    <Container sx={{mt: 5}}>
-                        <Card>
-                            <CardHeader title="PAN Details"/>
                             <CardContent sx={{marginLeft:"5%"}}>
                                 <Stack direction="row" justifyContent="space-between"sx={{
                                     "@media (max-width:700px)": { flexDirection: 'column' },
@@ -252,30 +297,73 @@ const Page = ({customer}) => {
                                                 display:"flex",
                                                 border: '1px solid #ccc',
                                                 borderRadius:"5px",
-                                                backgroundColor: "#cfcfcf",
-                                                padding: '10px',
+                                                paddingTop:"1%",
+                                                justifyContent:"center",
                                                 cursor: 'pointer',
                                                 width: '250px',
-                                                margin: '10px',
                                                 textAlign: 'center',
                                             }}
                                         >
-                                            <input
-                                                type="file"
-                                                style={{ display: 'none' }}
-                                                disabled={true}
-
-                                            />
-                                            <div>
-                                                <FilePresentIcon style={{ marginRight: '10px' }} /></div>
-                                            <div style={{display:"flex",flexDirection: 'column'}}>
-                                                <u style={{ color:"#4338CA",}}>PAN Document.pdf</u>{/*<span sx={{float:"left"}}>1.5Mb</span>*/}</div>
+                                            <a
+                                                href={customer.user.PanFile?.filePath}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                style={{ textDecoration: 'none', color: 'inherit' }}
+                                            >
+                                                <Grid container alignItems="center" spacing={1}>
+                                                    <Grid item>
+                                                        <img src='/assets/icons/icon-pdf.svg' alt="GST Icon" style={{ height: '50%'}} />
+                                                    </Grid>
+                                                    <Grid item>
+                                                        <Typography variant="body1" style={{ color: '#4338CA' }}>Gst Document</Typography>
+                                                    </Grid>
+                                                </Grid>
+                                            </a>
                                         </div>
+
                                     </Stack>
                                 </Stack>
                             </CardContent>
                         </Card>
                     </Container>
+
+                    {customer.user.kycStatus.status === "verified"?"":<Container sx={{mt: 5}}>
+                        <CardContent>
+                            <Grid><Stack
+                                alignItems="center"
+                                direction="row"
+                                justifyContent="flex-end"
+                                spacing={1}
+                                sx={{marginLeft: "1%"}}
+                            >
+                                <Button
+                                    // onClick={() => router.push(paths.userManagement.vendors.index)}
+                                    onClick={() => handleCreateDialogOpen(false)}
+                                    color="error" size="small" variant="outlined">
+                                    REJECT
+                                </Button>
+                                <Button onClick={() => handleCreateDialogOpen(true)}
+                                        variant="contained">
+                                    ACCEPT
+                                </Button>
+                                <CommonDialog
+                                    onConfirm={() => {
+                                        if (create) {
+                                            handleCreateDialogClose();
+                                            verify_reject(vendor.id, "Verify")
+                                        } else {
+                                            handleCreateDialogClose();
+                                            verify_reject(vendor.id, "reject")
+
+                                        }
+                                    }}
+                                    onClose={handleCreateDialogClose}
+                                    open={createDialogOpen}
+                                    description={create ? "Are you sure you want to ACCEPT ?" : "Are you sure you want to REJECT ?"}
+                                />
+                            </Stack></Grid>
+                        </CardContent>
+                    </Container>}
                 </Container>
             </Box>
         </>

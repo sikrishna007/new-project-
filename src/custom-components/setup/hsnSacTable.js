@@ -44,7 +44,8 @@ export const HsnSacTable = (props) => {
 
     const activate_deactivate = async (id, temp) => {
         const path = endpoints.hsnSac.index
-        const json = await patchMethod(id, temp, path)
+        let jsonString = JSON.stringify({isActive: temp});
+        const json = await patchMethod(id,jsonString,path)
         props.getCustomers(page, rowsPerPage, props.isActive);
     };
 
