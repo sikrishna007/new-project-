@@ -305,7 +305,7 @@ export const ProductEditForm = (props) => {
     const onUpload = async () => {
         let data
         if(selectedFiles.length <5){
-         data = await multiFileUploadPatch(files)
+         data = await multiFileUpload(files)
             // console.log("selectedFiles-----G",selectedFiles)
             // console.log("data-----G",data)
             setSelectedFiles([...selectedFiles,...data])
