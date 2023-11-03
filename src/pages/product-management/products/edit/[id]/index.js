@@ -20,41 +20,6 @@ import {ProductEditForm} from "@/custom-components/product-edit-form";
 
 const Page = ({product}) => {
     usePageView();
-    const [vendor, setVendor] = useState([])
-    const getVendors = async () => {
-        try {
-            let token = Cookies.get("accessToken");
-
-            const response = await fetch(
-                process.env.NEXT_PUBLIC_BASE_URL +
-                endpoints.userManagement.vendors.index + "/" + product?.vendor,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
-            const data = await response.json();
-            setVendor(data.data[0]);
-        } catch (err) {
-            // console.error(err);
-            toast.error("Please fill in all the required fields", {
-                position: "top-right",
-                style: {
-                    backgroundColor: "#D65745",
-                },
-                icon: <ToastError/>,
-            });
-        }
-    }
-
-    useEffect(
-        () => {
-            getVendors();
-        },
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        []
-    );
     return (
         <>
             <Seo title="Dashboard: Product Create"/>
@@ -118,7 +83,7 @@ const Page = ({product}) => {
                             {/*</Breadcrumbs>*/}
                             {/*</div>*/}
                         </Stack>
-                        <ProductEditForm product={product} vendor={vendor}/>
+                        <ProductEditForm product={product} vendor={product.vendor}/>
                     </Stack>
                 </Container>
             </Box>
