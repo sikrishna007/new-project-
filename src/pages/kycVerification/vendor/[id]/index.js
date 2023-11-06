@@ -64,11 +64,11 @@ const Page = ({vendor}) => {
         if (json.status === "Success") {
             if(temp=== "reject"){
                 toast.success("Rejected");
-                router.push(paths.kycVerification.vendor)
+                router.push(paths.kycVerification.vendor.index)
             }
             else {
                 toast.success("Verified")
-                router.push(paths.kycVerification.vendor)
+                router.push(paths.kycVerification.vendor.index)
             }
         }
     };

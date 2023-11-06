@@ -22,6 +22,7 @@ import Button from "@mui/material/Button";
 import CommonDialog from "@/custom-components/CommonDialog";
 import {useRouter} from "next/router";
 import {patchMethod} from "@/utils/util";
+import toast from "react-hot-toast";
 
 const Page = ({customer}) => {
     const [createDialogOpen, setCreateDialogOpen] = useState(false);
@@ -59,6 +60,16 @@ const Page = ({customer}) => {
             jsonString= JSON.stringify(body);
         }
         const json = await patchMethod(id,jsonString,path)
+        if (json.status === "Success") {
+            if(temp=== "reject"){
+                toast.success("Rejected");
+                router.push(paths.kycVerification.vendor.index)
+            }
+            else {
+                toast.success("Verified")
+                router.push(paths.kycVerification.vendor.index)
+            }
+        }
     };
     return (
         <>

@@ -111,22 +111,6 @@ const UserProfile = ({employee}) => {
                                         }
                                     }}
                                 >
-                                    <Stack
-                                        alignItems="center"
-                                        direction="row"
-                                        spacing={1}
-                                    >
-                                        <SvgIcon color="inherit">
-                                            <Camera01Icon/>
-                                        </SvgIcon>
-                                        <Typography
-                                            color="inherit"
-                                            variant="subtitle2"
-                                            sx={{fontWeight: 700}}
-                                        >
-                                            Select
-                                        </Typography>
-                                    </Stack>
                                 </Box>
                                 <Avatar
                                     sx={{
