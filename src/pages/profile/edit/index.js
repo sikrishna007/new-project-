@@ -343,11 +343,9 @@ const UserProfileEdit = ({employee}) => {
                         <Stack spacing={4}>
                             {/*personal info*/}
                             <VendorBasic formik={formik}/>
-
-                            <Grid container spacing={3}>
-                                <Grid xs={12} md={3}>
-                                    <Typography variant="h6" sx={{display: "flex"}}>Employee Details</Typography>
-                                </Grid>
+                            <Card>
+                                <CardHeader title={"Employee Details"} />
+                                <CardContent>
                                 <Grid container spacing={6} xs={12} md={7}>
                                     <Grid item md={5}>
                                         <Stack spacing={3}>
@@ -378,8 +376,8 @@ const UserProfileEdit = ({employee}) => {
                                         </Stack>
                                     </Grid>
                                 </Grid>
-                            </Grid>
-
+                                </CardContent>
+                            </Card>
                             {role === "VENDOR" &&
                                 <Box sx={{mt: '20px'}}>
                                     <Card sx={{marginTop: ["0", "5%"], margin: ["auto", "8%"]}}>

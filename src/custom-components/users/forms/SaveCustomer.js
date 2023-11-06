@@ -159,7 +159,7 @@ export const EditCustomer = ({formik, hasChanges, profileId}) => {
                                 customerSave();}
                             else {
                                 if (location === "edit") {
-                                    router.push(`/profile/${profileId}`);
+                                    router.push(`/profile`);
                                 }else {
                                     router.push(`/users/${location}`);
                                 }
