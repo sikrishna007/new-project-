@@ -61,6 +61,16 @@ const Page = ({vendor}) => {
             jsonString= JSON.stringify(body);
         }
         const json = await patchMethod(id,jsonString,path)
+        if (json.status === "Success") {
+            if(temp=== "reject"){
+                toast.success("Rejected");
+                router.push(paths.kycVerification.vendor)
+            }
+            else {
+                toast.success("Verified")
+                router.push(paths.kycVerification.vendor)
+            }
+        }
     };
 
     return (

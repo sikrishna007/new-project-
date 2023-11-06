@@ -20,7 +20,7 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import CallIcon from '@mui/icons-material/Call';
 import EmailIcon from '@mui/icons-material/Email';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import CardContent from "@mui/material/CardContent";
 import Grid from "@mui/material/Unstable_Grid2";
 import {PropertyListItem} from "@/components/property-list-item-custom";
@@ -34,17 +34,39 @@ import TextField from "@mui/material/TextField";
 import {DesktopDatePicker} from "@mui/x-date-pickers/DesktopDatePicker";
 import {VendorBasic} from "@/custom-components/users/forms/VendorBasic";
 import {useFormik} from "formik";
-import {getSubmitHandlerEdit} from "@/utils/util";
+import {filePatch, getSubmitHandlerEdit} from "@/utils/util";
 import {useRouter} from "next/router";
 import MapComponent from "@/custom-components/users/forms/EventClickLatLng";
 import {LoadScript} from "@react-google-maps/api";
 import {EditCustomer} from "@/custom-components/users/forms/SaveCustomer";
 import * as Yup from "yup";
+import toast from "react-hot-toast";
 
 const UserProfileEdit = ({employee}) => {
     const router = useRouter();
     let role = Cookies.get("role")
     const [hasChanges, setHasChanges] = useState(false);
+    const fileInputRef = useRef(null);
+    const [profilePath, setProfilePath] = useState(employee.user?.profilePic?.filePath);
+    const handleImageUpload = () => {
+        // Trigger a click event on the file input element
+        fileInputRef.current.click();
+    };
+
+    const handleFileSelect = async (e) => {
+        const selectedFile = e.target.files[0];
+        if (selectedFile) {
+            const data = await filePatch(employee.user.profilePic?.id, selectedFile)
+            if (data !== null){
+                setProfilePath(data.filePath)
+                toast.success("Profile Uploaded Successfully")
+            }
+        }
+    };
+
+    useEffect(() => {
+
+    }, [profilePath]);
 
     const formik = useFormik({
         initialValues: {
@@ -270,6 +292,7 @@ const UserProfileEdit = ({employee}) => {
                                         alignItems="center"
                                         direction="row"
                                         spacing={1}
+                                        onClick={handleImageUpload}
                                     >
                                         <SvgIcon color="inherit">
                                             <Camera01Icon/>
@@ -287,13 +310,22 @@ const UserProfileEdit = ({employee}) => {
                                     sx={{
                                         height: 180,
                                         width: 180,
+                                        cursor: 'pointer', // Add cursor pointer to indicate it's clickable
                                     }}
-                                    src={employee.user?.profilePic?.filePath}
+                                    src={profilePath}
                                 >
                                     <SvgIcon>
                                         <User01Icon/>
                                     </SvgIcon>
                                 </Avatar>
+                            <input
+                                type="file"
+                                id="image-upload"
+                                accept="image/*"
+                                style={{ display: 'none' }}
+                                ref={fileInputRef}
+                                onChange={handleFileSelect}
+                            />
                             </Box>
                         </Box>
                     </Stack>
@@ -402,15 +434,14 @@ const UserProfileEdit = ({employee}) => {
 
 export const getServerSideProps = async (context) => {
     let role = context.req.cookies["role"]
+    let id = context.req.cookies["id"]
     let pathName
     role === "VENDOR" ? pathName = "vendors" : pathName = "employees"
-    const id = context.req.cookies.id;
     const token = context.req.cookies.accessToken;
     const res = await fetch(
         process.env.NEXT_PUBLIC_BASE_URL +
         endpoints.userManagement[pathName].index+
-        "/" +
-        context.params.id,
+        "/" +id,
         {
             headers: {
                 Authorization: `Bearer ${token}`,
