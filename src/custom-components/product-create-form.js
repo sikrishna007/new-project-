@@ -26,6 +26,7 @@ import Autocomplete from "@mui/material/Autocomplete";
 import {ToastError} from "@/icons/ToastError";
 import CommonDialog from "@/custom-components/CommonDialog";
 import {multiFileUpload, search} from "@/utils/util";
+import {CardMedia} from "@mui/material";
 
 export const ProductCreateForm = (props) => {
     const router = useRouter();
@@ -42,6 +43,10 @@ export const ProductCreateForm = (props) => {
     const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
     const [file, setFile] = useState();
     const [files, setFiles] = useState([]);
+    const [newFiles, setNewFiles] = useState([])
+    const [selectedThumbnail, setSelectedThumbnail] = useState(null)
+    console.log("files----<",files)
+    // console.log("fileee----<",file)
     const handleCreateDialogOpen = () => {
         setCreateDialogOpen(true);
     };
@@ -123,10 +128,11 @@ export const ProductCreateForm = (props) => {
             });
         }
         const newArray = selectedEvent.map((obj) => ({id: obj.id}));
-        let fileArray = file.map((obj) => ({id: obj.id, filePurpose: "file-purpose"}));
+
+        let fileArray = file ? file.map((obj) => ({id: obj.id,filePurpose: obj.filePurpose==="thumbnail"?obj.filePurpose:"file-purpose"})) : "";
         console.log("fileArray",fileArray)
-        fileArray[0].filePurpose = "thumbnail"
-        console.log("fileArray2",fileArray)
+        // fileArray[0].filePurpose = "thumbnail"
+        // console.log("fileArray2",fileArray)
         try {
             let token = Cookies.get("accessToken")
             const response = await fetch(
@@ -243,7 +249,11 @@ export const ProductCreateForm = (props) => {
     const onUpload = async () => {
         let data = await multiFileUpload(files)
         setFile(data)
+        setNewFiles(data)
+        setFiles("")
     }
+    console.log("file--->",file)
+    console.log("newFIle",newFiles)
     const getVendors = async () => {
         try {
             let token = Cookies.get("accessToken");
@@ -342,7 +352,14 @@ export const ProductCreateForm = (props) => {
         formik.setFieldValue('hsnSacCode', ''); // Update Formik value
         getHsnSacCodes(value)
     }
-
+    const handleRadioChangeThumbnail =(event, filePath) =>{
+        setSelectedThumbnail(filePath);
+        const updatedSelectedFiles = file.map((file) => ({
+            ...file,
+            filePurpose: file.filePath === filePath ? "thumbnail" : "file-purpose",
+        }));
+        setFile(updatedSelectedFiles);
+    }
     return (
         <form>
             <Stack spacing={4}>
@@ -837,6 +854,28 @@ export const ProductCreateForm = (props) => {
                                     onRemove={handleFileRemove}
                                     onRemoveAll={handleFilesRemoveAll}
                                 />
+                                {newFiles.map((file, index) => (
+                                    <Grid mt={5} xs={12} md={8} sx={{ display: "flex", direction: "row", alignItems: "center", width: "100%", gap: "8px" }} key={file.filePath}>
+                                        <RadioGroup
+                                            name={`thumbnailRadio_${index}`} // Use the index as a unique identifier
+                                            value={selectedThumbnail}
+                                            onChange={(event) => handleRadioChangeThumbnail(event, file.filePath)} // Pass file.filePath
+                                        >
+                                            <FormControlLabel
+                                                value={file.filePath}
+                                                control={<Radio />}
+                                            />
+                                        </RadioGroup>
+                                        <Card sx={{ width: "70px", height: "fitContent" }}>
+                                            <CardMedia
+                                                component="img"
+                                                image={file.filePath}
+                                                // alt={product?.name}
+                                            />
+                                        </Card>
+                                        <Card></Card>
+                                    </Grid>
+                                ))}
                             </Grid>
                         </Grid>
                     </CardContent>

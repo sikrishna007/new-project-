@@ -78,6 +78,7 @@ const Page = ({vendor}) => {
 
                 if (json.status === "Success") {
                     toast.success("Documents Uploaded Successfully");
+                    router.push(paths.dashboard.index)
                 } else {
                     toast.error("Error uploading documents. Please try again later.");
                 }

@@ -24,7 +24,7 @@ import Cookies from "js-cookie";
 import {endpoints} from "@/endpoints";
 
 import {useRouter} from "next/router";
-import {paths} from "src/paths";
+import {paths} from "@/paths";
 
 const UserProfile = ({employee}) => {
 
@@ -175,7 +175,7 @@ const UserProfile = ({employee}) => {
                                 <div>
                                     <Button
                                         onClick={() =>
-                                        router.push(paths.profile.edit +'/'+ router.query.id)
+                                        router.push(paths.profile.edit)
                                                  }
                                         color="inherit"
                                         style={{backgroundColor: "#4338CA", color: "white"}}
@@ -329,8 +329,7 @@ export const getServerSideProps = async (context) => {
     const res = await fetch(
         process.env.NEXT_PUBLIC_BASE_URL +
         endpoints.userManagement[pathName].index+
-        "/" +
-        context.params.id,
+        "/" +id,
         {
             headers: {
                 Authorization: `Bearer ${token}`,
