@@ -26,7 +26,7 @@ import {endpoints} from "@/endpoints";
 import {useRouter} from "next/router";
 import {paths} from "@/paths";
 
-const UserProfile = ({employee}) => {
+const Page = ({employee}) => {
 
 
     let location = window.location.href.split("/")[4];
@@ -337,5 +337,5 @@ export const getServerSideProps = async (context) => {
     };
 };
 
-UserProfile.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
-export default UserProfile;
+Page.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
+export default Page;
